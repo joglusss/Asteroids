@@ -6,14 +6,14 @@ namespace Asteroids.Initialize
 {
     public class InitializeScript : MonoBehaviour 
     {
-        [SerializeField] UIIndicators m_UIIndicators;
-        [SerializeField] ShipControl m_ShipControl;
-        [SerializeField] ObjectManager m_ObjectManager;
+        [SerializeField] UIIndicators _uiIndicators;
+        [SerializeField] ShipControl _shipControl;
+        [SerializeField] ObjectManager _objectManager;
 
         private void Start() {
-            m_ObjectManager.Init();
-            m_ShipControl.Init();
-            m_UIIndicators.Init();
+            _objectManager.Init();
+            _shipControl.Init();
+            _uiIndicators.Init();
         }
     }
 }

@@ -1,4 +1,5 @@
 using Asteroids.Objects;
+using Asteroids.Ship;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -6,55 +7,45 @@ using UnityEngine.UI;
 
 namespace Asteroids.Visual
 {
-    public class ImmortalBlink : MonoBehaviour, IResetable
+    public class ImmortalBlink : MonoBehaviour
     {
-        [SerializeField] Image shipImage;
-        [SerializeField] ShipControl shipControl;
-        [SerializeField] float scale;
+        [SerializeField] SpriteRenderer _shipImage;
+        [SerializeField] ShipStat _shipStat;
+        [SerializeField] float _scale;
 
-        private Action<int> changeHpDelegate;
-
-        void Start()
+        private void OnEnable()
         {
-            ((IResetable)this).InitialazeIRessetable();
+            _shipStat.HealthChanged += ShipBlink;
         }
 
-        void ShipBlink()
+        private void OnDisable()
+        {
+            _shipStat.HealthChanged -= ShipBlink;
+        }
+
+        private IEnumerator TimeCounter()
         {
 
-            IEnumerator TimeCounter()
+            Color color = _shipImage.color;
+
+            float time = 0.0f;
+            while (_shipStat.IsImmortal && _shipStat.gameObject.activeInHierarchy)
             {
+                color.a = Mathf.Abs(Mathf.Sin(time * _scale));
+                _shipImage.color = color;
 
-                Color color = shipImage.color;
-
-                float time = 0.0f;
-                while (time < shipControl.ImmortalTime && shipControl.gameObject.activeInHierarchy)
-                {
-                    color.a = Mathf.Abs(Mathf.Sin(time * scale));
-                    shipImage.color = color;
-
-                    time += Time.deltaTime;
-                    yield return null;
-                }
-
-                color.a = 1;
-                shipImage.color = color;
+                time += Time.deltaTime;
+                yield return null;
             }
 
+            color.a = 1;
+            _shipImage.color = color;
+        }
+
+        private void ShipBlink(int HP)
+        {
+            if (HP == 0) return;
             StartCoroutine(TimeCounter());
-        }
-
-        public void StopGame()
-        {
-            shipControl.ChangeHPEvent -= changeHpDelegate;
-        }
-
-        public void StartGame()
-        {
-            changeHpDelegate = (a) => ShipBlink();
-
-            shipControl.ChangeHPEvent += changeHpDelegate;
-
         }
     }
 

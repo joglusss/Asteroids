@@ -1,25 +1,21 @@
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 namespace Asteroids.Visual {
     public class Parallax : MonoBehaviour
     {
-        [SerializeField] float TotalScale;
-        [SerializeField] RawImage Background1;
-        [SerializeField] float Scale1;
-        [SerializeField] RawImage Background2;
-        [SerializeField] float Scale2;
-        [SerializeField] Rigidbody2D SpaceShipRb;
+        [SerializeField] float _totalScale;
+        [SerializeField] SpriteRenderer _background;
+        [SerializeField] float _scale1;
+        [SerializeField] float _scale2;
+        [SerializeField] Rigidbody2D _spaceShipRb;
 
         private Vector2 position = Vector2.zero;
 
-        public void Update()
+        private void Update()
         {
-            position += SpaceShipRb.linearVelocity * TotalScale;
-
-            Background1.uvRect = new Rect() { x = position.x * Scale1, y = position.y * Scale1, width = 1, height = 1 };
-            Background2.uvRect = new Rect() { x = position.x * Scale2, y = position.y * Scale2, width = 1, height = 1 };
+            position += _spaceShipRb.linearVelocity * _totalScale;
+            _background.material.SetVector("_Offset_1", new Vector2(position.x * _scale2, position.y * _scale2));
+            _background.material.SetVector("_Offset_2", new Vector2(position.x * _scale1, position.y * _scale1));
         }
     }
 

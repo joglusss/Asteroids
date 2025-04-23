@@ -1,51 +1,33 @@
 using UnityEngine;
-using System;
-using System.Collections;
 using Asteroids.Visual;
 
 namespace Asteroids.Objects
 {
-    public abstract class SpaceObject : MonoBehaviour, IResetable
+    public abstract class SpaceObject : MonoBehaviour
     {
-        [field: SerializeField] protected ObjectManager m_ObjectManager { get; private set; }
+        protected ObjectManager _objectManager { get; private set; }
+        protected SpaceObjectQueue _spaceObjectQueue { get; private set; }
 
-        [field: SerializeField] public float Lifetime { get; set; }
-        protected Coroutine coroutineLifetimeCounter;
-        protected IEnumerator LifetimeCounter()
+        private void OnDisable()
         {
-            if (Lifetime < 0.0f || float.IsInfinity(Lifetime))
-                yield break;
+            StopAllCoroutines();
+            _spaceObjectQueue?.ReturnObject(this);
+        }
 
-            yield return new WaitForSeconds(Lifetime);
-
-            coroutineLifetimeCounter = null;
-            ReturnDelegate.Invoke();
+        public virtual void Initialize(ObjectManager objectManager, SpaceObjectQueue spaceObjectQueue)
+        {
+            _objectManager = objectManager;
+            _spaceObjectQueue = spaceObjectQueue;
         }
 
         public abstract void Launch(Vector2 from, Vector2 direction);
-        public Action ReturnDelegate;
-
-        public void StopGame()
-        {
-            ReturnDelegate.Invoke();
-        }
-
-        public void StartGame() { }
-
-        protected virtual void Awake()
-        {
-            ((IResetable)this).InitialazeIRessetable();
-        }
-        public abstract void OnStartGame();
     }
+
+    public enum SpaceObjectTypeEnum { SpaceShip, Asteroid, Alien }
 
     public interface ISpaceInteract
     {
-
-        public enum SpaceObjectTypeEnum { SpaceShip, Asteroid, Alien }
-        public SpaceObjectTypeEnum SpaceObjectType { get; set; }
-
-        public void Interact(SpaceObjectTypeEnum collisionSpaceObjectType);
+        SpaceObjectTypeEnum SpaceObjectType { get;}
+        void Interact(SpaceObjectTypeEnum collisionSpaceObjectType);
     }
-
 }

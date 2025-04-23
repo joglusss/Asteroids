@@ -1,142 +1,94 @@
 using UnityEngine;
 using TMPro;
-using System.Collections.Generic;
 using System.Collections;
-using System;
 using Asteroids.Objects;
+using Asteroids.Ship;
+using Asteroids.Helpers;
+using System.Collections.Generic;
 
 namespace Asteroids.Visual
 {
-    public class UIIndicators : MonoBehaviour, IResetable
+    public class UIIndicators : MonoBehaviour
     {
-        [SerializeField] ObjectManager m_ObjectManager;
-        [SerializeField] TMP_Text m_TextMeshPro;
-        [SerializeField] ShipControl m_ShipControl;
+        [SerializeField] ObjectManager _objectManager;
+        [SerializeField] TMP_Text _textMeshPro;
+        [SerializeField] ShipControl _shipControl;
+        [SerializeField] ShipStat _shipStat;
+        [SerializeField] ShipWeapon _shipWeapon;
+        [SerializeField] Transform _scoreTextContainer;
+        [SerializeField] GameObject _scoreTextPrefab;
 
-        public void Init()
-        {
-            m_ObjectManager.alien.ObjectReturnToQueue += (a) => { ScoreCount += 20; ScoreTextUI(a.transform.position, 20); };
-            m_ObjectManager.asteroid.ObjectReturnToQueue += (a) => { ScoreCount += 10; ScoreTextUI(a.transform.position, 10); };
-            m_ObjectManager.smallAsteroid.ObjectReturnToQueue += (a) => { ScoreCount += 5; ScoreTextUI(a.transform.position, 5); };
-
-            ScoreTextQueueClass.ScoreTextContainer = ScoreTextContainer;
-            ScoreTextQueue.Initialize();
-
-            ((IResetable)this).InitialazeIRessetable();
-        }
+        private List<TMP_Text> _scoreTextOnScene = new List<TMP_Text>();
+        private ScoreTextQueue _scoreTextQueue;
+        private Camera _camera;
 
         public int ScoreCount { get; private set; }
 
-
-        [System.Serializable]
-        public class ScoreTextQueueClass : IResetable
+        public void Init()
         {
-            [SerializeField] private GameObject ObjectPrefab;
-
-            public static Transform ScoreTextContainer;
-
-            private Queue<TMP_Text> queue;
-
-            public void Initialize()
-            {
-
-                if (ObjectPrefab == null)
-                {
-                    Debug.LogError("ObjectPrefab was not found");
-                    return;
-                }
-
-                queue = new Queue<TMP_Text>();
-
-                ((IResetable)this).InitialazeIRessetable();
-            }
-
-            private void AddNewObject()
-            {
-                if (!Instantiate(ObjectPrefab, ScoreTextContainer).TryGetComponent(out TMP_Text newScoreText))
-                {
-                    Debug.LogError("ObjectPrefab doesn't have a component");
-                    return;
-                }
-
-                Queue<TMP_Text> link = queue;
-
-                newScoreText.gameObject.SetActive(false);
-                queue.Enqueue(newScoreText);
-
-                StopGameEvent += () => ReturnObject(newScoreText);
-            }
-
-            public TMP_Text DrawObject()
-            {
-                if (queue.Count == 0)
-                    AddNewObject();
-
-
-
-                TMP_Text returnScoreText = queue.Dequeue();
-                returnScoreText.gameObject.SetActive(true);
-                return returnScoreText;
-            }
-
-            public TMP_Text ReturnObject(TMP_Text returnScoreText)
-            {
-                if (queue.Count == 0)
-                    AddNewObject();
-
-                queue.Enqueue(returnScoreText);
-                returnScoreText.gameObject.SetActive(false);
-                return returnScoreText;
-            }
-
-
-            event Action StopGameEvent;
-            public void StopGame()
-            {
-                StopGameEvent?.Invoke();
-            }
-
-            public void StartGame() { }
+            _scoreTextQueue = new ScoreTextQueue(_scoreTextPrefab, _scoreTextContainer);
+            _camera = Camera.main;
         }
-        [field: SerializeField] public Transform ScoreTextContainer;
-        [field: SerializeField] public ScoreTextQueueClass ScoreTextQueue;
-
-        public void ScoreTextUI(Vector2 position, float count)
-        {
-            IEnumerator SetScoreText()
-            {
-                TMP_Text ScoreText = ScoreTextQueue.DrawObject();
-
-                ScoreText.text = "+" + count;
-                ScoreText.transform.position = position;
-
-                yield return new WaitForSeconds(1f);
-
-                ScoreTextQueue.ReturnObject(ScoreText);
-            }
-
-            if (this.gameObject.activeInHierarchy)
-                StartCoroutine(SetScoreText());
-        }
-
 
         private void Update()
         {
-            m_TextMeshPro.text = "HP:" + m_ShipControl.ShipHP + "\n";
-            m_TextMeshPro.text += "X:" + m_ShipControl.Position.x + "  Y:" + m_ShipControl.Position.y + "\n";
-            m_TextMeshPro.text += "Speed:" + m_ShipControl.Velosity.magnitude + "\n";
-            m_TextMeshPro.text += "Angle:" + m_ShipControl.Angle + "\n";
-            m_TextMeshPro.text += "Laser cooldown:" + m_ShipControl.CurrentLaserCooldown + "\n";
-            m_TextMeshPro.text += "Laser count:" + m_ShipControl.CurrentAvailableLaser + "\n";
-            m_TextMeshPro.text += "Score:" + ScoreCount + "\n";
+            _textMeshPro.text = "HP:" + _shipStat.HP + "\n";
+            _textMeshPro.text += "X:" + _shipControl.Position.x + "  Y:" + _shipControl.Position.y + "\n";
+            _textMeshPro.text += "Speed:" + _shipControl.Velosity.magnitude + "\n";
+            _textMeshPro.text += "Angle:" + _shipControl.Angle + "\n";
+            _textMeshPro.text += "Laser cooldown:" + _shipWeapon.CurrentLaserCooldown + "\n";
+            _textMeshPro.text += "Laser count:" + _shipWeapon.CurrentAvailableLaser + "\n";
+            _textMeshPro.text += "Score:" + ScoreCount + "\n";
         }
 
-        public void StopGame() { }
-
-        public void StartGame()
+        private void OnEnable() 
         {
+            _objectManager.AlienQueue.ObjectReturnToQueue += ScoreAlien;
+            _objectManager.AsteroidQueue.ObjectReturnToQueue += ScoreAsteroid;
+            _objectManager.SmallAsteroidQueue.ObjectReturnToQueue += ScoreSmallAsteroid;
+
             ScoreCount = 0;
         }
+
+        private void OnDisable()
+        {
+            _objectManager.AlienQueue.ObjectReturnToQueue -= ScoreAlien;
+            _objectManager.AsteroidQueue.ObjectReturnToQueue -= ScoreAsteroid;
+            _objectManager.SmallAsteroidQueue.ObjectReturnToQueue -= ScoreSmallAsteroid;
+
+            StopAllCoroutines();
+            foreach (TMP_Text item in _scoreTextOnScene)
+                _scoreTextQueue.ReturnObject(item);
+            _scoreTextOnScene.Clear();
+        }
+
+        public void ScoreTextUI(Vector2 position, float count)
+        {
+            position = _camera.WorldToScreenPoint(position);
+
+            if (this.gameObject.activeInHierarchy)
+                StartCoroutine(SetScoreText(position, count));
+        }
+
+        private IEnumerator SetScoreText(Vector2 position, float count)
+        {
+            TMP_Text ScoreText = _scoreTextQueue.DrawObject();
+            _scoreTextOnScene.Add(ScoreText);
+
+            ScoreText.text = "+" + count;
+            ScoreText.transform.position = position;
+
+            yield return new WaitForSeconds(1f);
+
+            _scoreTextOnScene.Remove(ScoreText);
+            _scoreTextQueue.ReturnObject(ScoreText);
+        }
+
+        private void ScoreAlien(SpaceObject a) { ScoreCount += 20; ScoreTextUI(a.transform.position, 20); }
+
+        private void ScoreAsteroid(SpaceObject a) { ScoreCount += 10; ScoreTextUI(a.transform.position, 10); }
+
+        private void ScoreSmallAsteroid(SpaceObject a) { ScoreCount += 5; ScoreTextUI(a.transform.position, 5); }
     }
 }
 

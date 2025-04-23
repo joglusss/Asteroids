@@ -3,20 +3,27 @@ using UnityEngine;
 
 namespace Asteroids.Objects
 {
-    public class Alien : Bullet
+    public class Alien : PhysicalSpaceObject
     {
-        [SerializeField] public float AngularSpeed;
+        [SerializeField] public float _angularSpeed;
+        
+        private Transform _target;
 
-        [SerializeField] private Transform target;
-        void Update()
+        public override void Initialize(ObjectManager objectManager, SpaceObjectQueue spaceObjectQueue)
         {
-            Vector2 force = (Vector2)transform.up * Speed * m_ObjectManager.speedScale * Time.deltaTime;
-            float angle = Vector2.SignedAngle(transform.up, target.position - transform.position) * AngularSpeed * Time.deltaTime;
+            base.Initialize(objectManager, spaceObjectQueue);
+
+            _target = objectManager.PlayerShip;
+        }
+
+        private void Update()
+        {
+            Vector2 force = (Vector2)transform.up * _speed * Time.deltaTime;
+            float angle = Vector2.SignedAngle(transform.up, _target.position - transform.position) * _angularSpeed * Time.deltaTime;
 
             m_rigidbody.AddForce(force, ForceMode2D.Impulse);
             m_rigidbody.AddTorque(angle);
         }
     }
-
 }
 

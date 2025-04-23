@@ -1,21 +1,19 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace Asteroids.Objects
 {
     public class Laser : SpaceObject
     {
-        protected RectTransform m_rectTransform;
-        public override void OnStartGame()
-        {
-            m_rectTransform = GetComponent<RectTransform>();
+        [SerializeField] private float _lifeTime;
 
-        }
+        protected Coroutine _coroutineLifetimeCounter;
 
         public override void Launch(Vector2 from, Vector2 direction)
         {
-            m_rectTransform.position = from;
-            m_rectTransform.up = direction;
+            transform.position = from;
+            transform.up = direction;
 
 
             List<RaycastHit2D> results = new List<RaycastHit2D>();
@@ -26,15 +24,21 @@ namespace Asteroids.Objects
                 {
                     if (hit.collider.TryGetComponent(out ISpaceInteract SpaceInteract))
                     {
-                        SpaceInteract.Interact(ISpaceInteract.SpaceObjectTypeEnum.SpaceShip);
+                        SpaceInteract.Interact(SpaceObjectTypeEnum.SpaceShip);
                     }
                 }
             }
 
-            coroutineLifetimeCounter = StartCoroutine(LifetimeCounter());
+            StartCoroutine(LifetimeCounter());
         }
 
+        private IEnumerator LifetimeCounter()
+        {
+            yield return new WaitForSeconds(_lifeTime);
 
+            _coroutineLifetimeCounter = null;
+            _spaceObjectQueue.ReturnObject(this);
+        }
     }
 
 }
