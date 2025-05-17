@@ -1,57 +1,50 @@
 using System.Collections;
 using UnityEngine;
+using Asteroids.Visual;
 using Asteroids.Objects;
-using UnityEngine.InputSystem;
+using Asteroids.SceneManage;
 
 namespace Asteroids.Ship
 {
-    [RequireComponent(typeof(Collider2D))]
-    public class ShipWeapon : MonoBehaviour
+    public class ShipWeapon : MonoBehaviour, IInitialize
     {
-        [SerializeField] private ObjectManager _objectManager;
-        [SerializeField] private float _laserCooldown;
+        [SerializeField] private float _laserCooldownDelay;
         [SerializeField] private int _maxLaserShot;
 
+        private ShipStatModel _model;
         private Coroutine _laserCounter;
+        private ObjectManager _objectManager;
 
-        public float CurrentLaserCooldown { get; private set; }
-        public int CurrentAvailableLaser { get; private set; }
-
-        private void OnEnable()
+        public void Initialize(DependencyContainer dependencyContainer)
         {
-            CurrentAvailableLaser = _maxLaserShot;
+            _objectManager = dependencyContainer.ObjectManagerLink;
+            _model = dependencyContainer.ShipStatModelLink;
 
-            InputSystem.actions.FindAction("Shot").performed += ShootBullet;
-            InputSystem.actions.FindAction("Laser").performed += ShootLaser;
-        }
-
-        private void OnDisable()
-        {
-            InputSystem.actions.FindAction("Shot").performed -= ShootBullet;
-            InputSystem.actions.FindAction("Laser").performed -= ShootLaser;
+            _model.LaserCount = _maxLaserShot;
+            _model.LaserCooldown = 0.0f;
         }
 
         private IEnumerator LaserCounter()
         {
 
-            while (CurrentAvailableLaser < _maxLaserShot)
+            while (_model.LaserCount < _maxLaserShot)
             {
-                float time = _laserCooldown;
-                while (time > 0.0f)
+                _model.LaserCooldown = _laserCooldownDelay;
+                while (_model.LaserCooldown > 0.0f)
                 {
-                    time = Mathf.Clamp(time - Time.deltaTime, 0.0f, _maxLaserShot);
-                    CurrentLaserCooldown = time;
+                    _model.LaserCooldown = Mathf.Clamp(_model.LaserCooldown - Time.deltaTime, 0.0f, _maxLaserShot);
+                    _model.LaserCooldown = _model.LaserCooldown;
                     yield return null;
                 }
 
-                CurrentAvailableLaser++;
+                _model.LaserCount++;
             }
 
             _laserCounter = null;
         }
 
-        private void ShootBullet(InputAction.CallbackContext callback) {
-
+        public void ShootBullet() 
+        {
             SpaceObject bullet = _objectManager.BulletQueue.DrawObject();
             if (bullet != null)
             {
@@ -59,18 +52,19 @@ namespace Asteroids.Ship
             }
         }
 
-        private void ShootLaser(InputAction.CallbackContext callback) {
-            if (CurrentAvailableLaser > 0)
+        public void ShootLaser() 
+        {
+            if (_model.LaserCount > 0)
             {
                 SpaceObject laser = _objectManager.LaserQueue.DrawObject();
                 if (laser != null)
                 {
-                    CurrentAvailableLaser--;
+                    _model.LaserCount--;
                     laser.Launch(this.transform.position + this.transform.up, this.transform.up);
                 }
             }
 
-            if (CurrentAvailableLaser < _maxLaserShot && _laserCounter == null)
+            if (_model.LaserCount < _maxLaserShot && _laserCounter == null)
                 _laserCounter = StartCoroutine(LaserCounter());
         }
     }

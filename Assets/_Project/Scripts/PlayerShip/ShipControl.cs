@@ -1,54 +1,57 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 using Asteroids.Helpers;
+using Asteroids.Visual;
+using Asteroids.SceneManage;
 
-namespace Asteroids.Objects
+namespace Asteroids.Ship
 {
     [RequireComponent(typeof(Rigidbody2D))]
-    public class ShipControl : MonoBehaviour
+    public class ShipControl : MonoBehaviour, IInitialize
     {
-        [SerializeField] private ObjectManager _objectManager;
         [SerializeField] private float _forwardSpeed = 7.0f;
         [SerializeField] private float _angularSpeed = -1000.0f;
 
+        private ShipStatModel _model;
         private Rigidbody2D _rigidbody;
-        private InputAction _moveInputAction;
-
-        public Vector2 Position { get => _rigidbody.position; }
-        public Vector2 Velosity { get => _rigidbody.linearVelocity; }
-        public float Angle { get => _rigidbody.rotation; }
+        private Vector2 _inputValue;
+        private Vector2[] _borderPoints;
+        private Vector2 _centerPoint;
 
         private void Update()
         {
             Movement();
+            UpdateModel();
 
-            if (GameMath.IsOutCanvas(_rigidbody.position, out Vector2 wallSide, _objectManager.CanvasSize))
-            {
-                GameMath.BorderTeleport(_rigidbody, wallSide, _objectManager.CanvasSize);
-            }
+            GameMath.TeleportToBorder(_rigidbody, _centerPoint, _borderPoints);
         }
 
-        private void OnEnable()
+        public void Initialize(DependencyContainer dependencyContainer)
         {
-            _rigidbody.position = _objectManager.CanvasSize / 2.0f;
-        }
+            _borderPoints = GameMath.CalculateBorderPoints();
+            _centerPoint = GameMath.BorderCenter();
 
-        public void Init()
-        {
             _rigidbody = GetComponent<Rigidbody2D>();
-            _moveInputAction = InputSystem.actions.FindAction("Move");
+            _model = dependencyContainer.ShipStatModelLink;
+            _rigidbody.position = _centerPoint;
         }
+
+        public void SetInputValue(Vector2 vector) => _inputValue = vector;
 
         private void Movement()
         {
-            Vector2 inputValue = _moveInputAction.ReadValue<Vector2>().normalized;
-
-            Vector2 force = inputValue.y > 0.0f ? (Vector2)transform.up * inputValue.y * _forwardSpeed * Time.deltaTime : Vector2.zero;
-            float angle = inputValue.x * _angularSpeed * Time.deltaTime;
+            Vector2 force = _inputValue.y > 0.0f ? _inputValue.y * _forwardSpeed * Time.deltaTime * transform.up : Vector2.zero;
+            float angle = _inputValue.x * _angularSpeed * Time.deltaTime;
 
             _rigidbody.AddForce(force, ForceMode2D.Impulse);
             _rigidbody.AddTorque(angle);
-        }        
+        }
+
+        private void UpdateModel()
+        {
+            _model.Coordinate = _rigidbody.position;
+            _model.Speed = _rigidbody.linearVelocity.magnitude;
+            _model.Angle = transform.eulerAngles.z;
+        }
     }
 
 }

@@ -1,39 +1,33 @@
 using Asteroids.Objects;
-using Asteroids.Visual;
+using Asteroids.SceneManage;
 using UnityEngine;
 using System.Collections;
-using System;
+using Asteroids.Visual;
 
 namespace Asteroids.Ship 
 {
     [RequireComponent(typeof(Collider2D))]
-    public class ShipStat : MonoBehaviour, ISpaceInteract
+    public class ShipStat : MonoBehaviour, ISpaceInteract, IInitialize
     {
-        public event Action<int> HealthChanged { add => _healthChanged += value; remove => _healthChanged -= value;}
-
-        private event Action<int> _healthChanged;
-
-        [SerializeField] private Menu _menuScript;
-        [SerializeField] private int _maxHealth;
+        [SerializeField] private int _startHealth;
         [SerializeField] private float _immortalityTime;
 
+        private ShipStatModel _model;
+        private SceneContainerHandler _sceneContainerHandler;
         private Coroutine _frameCounter;
         private Collider2D _collider;
 
-        [field: SerializeField] public SpaceObjectTypeEnum SpaceObjectType { get; private set; }
+        [field: SerializeField] public SpaceObjectType SpaceObjectType { get; private set; }
 
-        public bool IsImmortal => _frameCounter != null;
-        public int HP { get; private set; }
-
-        private void Awake()
+        public void Initialize(DependencyContainer dependencyContainer)
         {
+            _sceneContainerHandler = dependencyContainer.SceneContainerHandlerLink;
+            _model = dependencyContainer.ShipStatModelLink;
+
             _collider = GetComponent<Collider2D>();
-        }
 
-        private void OnEnable()
-        {
+            _model.Health = _startHealth;
             _frameCounter = StartCoroutine(FrameCounter());
-            HP = _maxHealth;
         }
 
         private void OnTriggerEnter2D(Collider2D collision)
@@ -42,27 +36,26 @@ namespace Asteroids.Ship
                 Interact(spaceObject.SpaceObjectType);
         }
 
-        public void Interact(SpaceObjectTypeEnum collisionSpaceObjectType)
+        public void Interact(SpaceObjectType collisionSpaceObjectType)
         {
-            if (_frameCounter == null && collisionSpaceObjectType != SpaceObjectTypeEnum.SpaceShip)
+            if (_frameCounter == null && collisionSpaceObjectType != SpaceObjectType.SpaceShip)
             {
-                if (HP > 0)
-                    _frameCounter = StartCoroutine(FrameCounter());
+                _model.Health--;
+                if (_model.Health == 0)
+                    _sceneContainerHandler.GoToMenu();
 
-                HP--;
-                _healthChanged?.Invoke(HP);
-
-                if (HP == 0)
-                    _menuScript.GoToMenu();
+                _frameCounter = StartCoroutine(FrameCounter());
             }
         }
 
         private IEnumerator FrameCounter()
         {
+            _model.Immortality = true;
             _collider.enabled = false;
             yield return new WaitForSeconds(_immortalityTime);
             _collider.enabled = true;
             _frameCounter = null;
+            _model.Immortality = false;
         }
     }
 }

@@ -1,108 +1,95 @@
+using System.Drawing;
 using UnityEngine;
 
 namespace Asteroids.Helpers {
     public static class GameMath
     {
-        public static bool IsOutCanvas(Vector2 position, out Vector2 wall, Vector2 borderSize)
+        public static Vector2 CalculateBorderSize() 
         {
-            wall = Vector2.zero;
-            float deltaDistance = 0;
-
-            if (position.x < 0.0f)
-            {
-                deltaDistance = -position.x;
-                wall = Vector2.left;
-            }
-
-            if (position.x > borderSize.x && deltaDistance < (position.x - borderSize.x))
-            {
-                deltaDistance = position.x - borderSize.x;
-                wall = Vector2.right;
-            }
-
-            if (position.y < 0.0f && deltaDistance < -position.y)
-            {
-                deltaDistance = -position.y;
-                wall = Vector2.down;
-            }
-
-            if (position.y > borderSize.y && deltaDistance < (position.y - borderSize.y))
-            {
-                wall = Vector2.up;
-            }
-
-
-            return wall != Vector2.zero;
+            Camera camera = Camera.main;
+            float halfHeight = camera.orthographicSize;
+            float halfWidth = camera.aspect * halfHeight;
+            camera.transform.position = new Vector3(halfWidth, halfHeight, camera.transform.position.z);
+            return new Vector2(halfWidth * 2.0f, halfHeight * 2.0f);
         }
 
-        public static void BorderTeleport(Rigidbody2D rb, Vector2 wall, Vector2 borderSize)
-        {
-            if (wall == Vector2.left)
-            {
-                rb.position = BorderTeleportPosition(Vector2.zero, Vector2.up * borderSize.y, rb.position, borderSize);
-                return;
-            }
-            if (wall == Vector2.right)
-            {
-                rb.position = BorderTeleportPosition(Vector2.right * borderSize.x, borderSize, rb.position, borderSize);
-                return;
-            }
-            if (wall == Vector2.down)
-            {
-                rb.position = BorderTeleportPosition(Vector2.zero, Vector2.right * borderSize.x, rb.position, borderSize);
-                return;
-            }
-            if (wall == Vector2.up)
-            {
-                rb.position = BorderTeleportPosition(Vector2.up * borderSize.y, borderSize, rb.position, borderSize);
-                return;
-            }
+        public static Vector2 BorderCenter() => Camera.main.transform.position;
 
+        public static Vector2[] CalculateBorderPoints()
+        {
+            Vector2 halfBorderSize = CalculateBorderSize() / 2.0f;
+            Vector2 center = BorderCenter();
+            Vector2[] points = new Vector2[4];
+
+            points[0] = new Vector2(-halfBorderSize.x, -halfBorderSize.y) + center;
+            points[1] = new Vector2(-halfBorderSize.x, halfBorderSize.y) + center;
+            points[2] = new Vector2(halfBorderSize.x, halfBorderSize.y) + center;
+            points[3] = new Vector2(halfBorderSize.x, -halfBorderSize.y) + center;
+
+            return points;
         }
 
-        public static Vector2 BorderTeleportPosition(Vector2 WallPoint1, Vector2 WallPoint2, Vector2 objectPoint, Vector2 borderSize)
+        public static void TeleportToBorder(Rigidbody2D rb, Vector2 center, Vector2[] borderPoints)
         {
+            if (LineIntersect(borderPoints[0], borderPoints[1], center, rb.position, out Vector2 IntersectPoint))
+                rb.position = IntersectPoint + rb.linearVelocity *  Time.deltaTime;
 
-            Vector2 intersectPoint = Vector2.zero;
-            Vector2 centerPoint = borderSize / 2.0f;
+            if (LineIntersect(borderPoints[1], borderPoints[2], center, rb.position, out IntersectPoint))
+                rb.position = IntersectPoint + rb.linearVelocity * Time.deltaTime;
 
-            intersectPoint = LineIntersect(centerPoint, objectPoint, WallPoint1, WallPoint2);
+            if (LineIntersect(borderPoints[2], borderPoints[3], center, rb.position, out IntersectPoint))
+                rb.position = IntersectPoint + rb.linearVelocity * Time.deltaTime;
 
-            Vector2 dirToShip = objectPoint - centerPoint;
-            Vector2 dirToIntersect = intersectPoint - centerPoint;
-
-            float distanceOutScreen = dirToShip.magnitude - 2.0f * (dirToShip.magnitude - dirToIntersect.magnitude);
-
-            Vector2 newObjectPosition = centerPoint + dirToShip.normalized * -distanceOutScreen;
-
-            return newObjectPosition;
+            if (LineIntersect(borderPoints[3], borderPoints[0], center, rb.position, out IntersectPoint))
+                rb.position = IntersectPoint + rb.linearVelocity * Time.deltaTime;
         }
 
-        public static Vector2 LineIntersect(Vector2 A, Vector2 B, Vector2 C, Vector2 D)
+        public static Vector2 TeleportToBorder(Vector2 position, Vector2 center, Vector2[] borderPoints)
         {
-            float a1 = B.y - A.y;
-            float b1 = A.x - B.x;
-            float c1 = a1 * (A.x) + b1 * (A.y);
+            if (LineIntersect(borderPoints[0], borderPoints[1], center, position, out Vector2 IntersectPoint))
+                return IntersectPoint;
 
-            float a2 = D.y - C.y;
-            float b2 = C.x - D.x;
-            float c2 = a2 * (C.x) + b2 * (C.y);
+            if (LineIntersect(borderPoints[1], borderPoints[2], center, position, out IntersectPoint))
+                return IntersectPoint;
 
-            float denominator = (D.y - C.y) * (B.x - A.x) - (D.x - C.x) * (B.y - A.y);
+            if (LineIntersect(borderPoints[2], borderPoints[3], center, position, out IntersectPoint))
+                return IntersectPoint;
 
-            if (denominator != 0f)
+            if (LineIntersect(borderPoints[3], borderPoints[0], center, position, out IntersectPoint))
+                return IntersectPoint;
+
+            return IntersectPoint;
+        }
+
+        public static bool LineIntersect( Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, out Vector2 IntersectionPoint)
+        {
+            IntersectionPoint = Vector2.zero;
+            double denominator = (p4.y - p3.y) * (p2.x - p1.x) - (p4.x - p3.x) * (p2.y - p1.y);
+
+            if (denominator == 0)
             {
-                float x = (b2 * c1 - b1 * c2) / denominator;
-                float y = (a1 * c2 - a2 * c1) / denominator;
-
-                return new Vector2(x, y);
+                return false;
             }
 
-            return Vector2.zero;
+            double t = ((p4.x - p3.x) * (p1.y - p3.y) - (p4.y - p3.y) * (p1.x - p3.x)) / denominator;
+            double u = -((p2.x - p1.x) * (p1.y - p3.y) - (p2.y - p1.y) * (p1.x - p3.x)) / denominator;
 
+            if (t >= 0 && t <= 1 && u >= 0 && u <= 1)
+            {
+                double x = p1.x + t * (p2.x - p1.x);
+                double y = p1.y + t * (p2.y - p1.y);
+
+                IntersectionPoint = new Vector2((float)x, (float)y);
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
-
-    
 }
+
+   
 

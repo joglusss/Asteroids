@@ -1,4 +1,5 @@
 using Asteroids.Objects;
+using Asteroids.SceneManage;
 using Asteroids.Ship;
 using System;
 using System.Collections;
@@ -9,18 +10,23 @@ namespace Asteroids.Visual
 {
     public class ImmortalBlink : MonoBehaviour
     {
-        [SerializeField] SpriteRenderer _shipImage;
-        [SerializeField] ShipStat _shipStat;
-        [SerializeField] float _scale;
+        [SerializeField] private SpriteRenderer _shipImage;
+        [SerializeField] private float _scale;
 
-        private void OnEnable()
-        {
-            _shipStat.HealthChanged += ShipBlink;
-        }
+        private bool _coroutineFlag;
 
-        private void OnDisable()
+
+        public void SwitchBlinking(bool value)
         {
-            _shipStat.HealthChanged -= ShipBlink;
+            if (value)
+            {
+                _coroutineFlag = true;
+                StartCoroutine(TimeCounter());
+            } 
+            else
+            {
+               _coroutineFlag = false;
+            }
         }
 
         private IEnumerator TimeCounter()
@@ -29,7 +35,7 @@ namespace Asteroids.Visual
             Color color = _shipImage.color;
 
             float time = 0.0f;
-            while (_shipStat.IsImmortal && _shipStat.gameObject.activeInHierarchy)
+            while (_coroutineFlag && gameObject.activeInHierarchy)
             {
                 color.a = Mathf.Abs(Mathf.Sin(time * _scale));
                 _shipImage.color = color;
@@ -40,12 +46,6 @@ namespace Asteroids.Visual
 
             color.a = 1;
             _shipImage.color = color;
-        }
-
-        private void ShipBlink(int HP)
-        {
-            if (HP == 0) return;
-            StartCoroutine(TimeCounter());
         }
     }
 

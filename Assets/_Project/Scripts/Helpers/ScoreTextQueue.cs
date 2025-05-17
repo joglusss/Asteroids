@@ -6,11 +6,11 @@ namespace Asteroids.Helpers
 {
     public class ScoreTextQueue
     {
-        private GameObject _objectPrefab;
-        private Transform _scoreTextContainer;
-        private Queue<TMP_Text> _queue;
+        private readonly TMP_Text _objectPrefab;
+        private readonly Transform _scoreTextContainer;
+        private readonly Queue<TMP_Text> _queue;
 
-        public ScoreTextQueue(GameObject objectPrefab, Transform scoreTextContainer)
+        public ScoreTextQueue(TMP_Text objectPrefab, Transform scoreTextContainer)
         {
             _objectPrefab = objectPrefab;
             _scoreTextContainer = scoreTextContainer;
@@ -19,14 +19,7 @@ namespace Asteroids.Helpers
 
         private void AddNewObject()
         {
-            if (!MonoBehaviour.Instantiate(_objectPrefab, _scoreTextContainer).TryGetComponent(out TMP_Text newScoreText))
-            {
-                Debug.LogError("ObjectPrefab doesn't have a component");
-                return;
-            }
-
-            Queue<TMP_Text> link = _queue;
-
+            TMP_Text newScoreText = Object.Instantiate(_objectPrefab, _scoreTextContainer);
             newScoreText.gameObject.SetActive(false);
             _queue.Enqueue(newScoreText);
         }
@@ -35,9 +28,6 @@ namespace Asteroids.Helpers
         {
             if (_queue.Count == 0)
                 AddNewObject();
-
-
-
             TMP_Text returnScoreText = _queue.Dequeue();
             returnScoreText.gameObject.SetActive(true);
             return returnScoreText;
@@ -47,7 +37,6 @@ namespace Asteroids.Helpers
         {
             if (_queue.Count == 0)
                 AddNewObject();
-
             _queue.Enqueue(returnScoreText);
             returnScoreText.gameObject.SetActive(false);
             return returnScoreText;

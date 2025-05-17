@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 5888498756342603551}
   - component: {fileID: 7710362874925532662}
   - component: {fileID: 3258883915110224196}
-  - component: {fileID: 7115255441780472564}
+  - component: {fileID: 3575450431718996818}
   m_Layer: 5
   m_Name: Alien
   m_TagString: Untagged
@@ -185,7 +185,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
---- !u!114 &7115255441780472564
+--- !u!114 &3575450431718996818
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -194,10 +194,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4911351516887001622}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2460372fcaf34604883c791eec3abed4, type: 3}
+  m_Script: {fileID: 11500000, guid: 20edbca434c997841828c8c4fc1a1bbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 7
+  _speed: 10
   <SpaceObjectType>k__BackingField: 1
-  _angularSpeed: 200
-  _target: {fileID: 0}
+  _angularSpeed: 100
