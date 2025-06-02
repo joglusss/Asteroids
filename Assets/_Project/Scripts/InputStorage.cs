@@ -1,24 +1,24 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
-using Asteroids.SceneManage;
-using Asteroids.Ship;
+using Zenject;
 
 namespace Asteroids.Input 
 {
-    public class InputStorage : MonoBehaviour, IInitialize
+    public class InputStorage : IInitializable
     {
-        [SerializeField] private UnityEvent<Vector2> MoveEvent;
-        [SerializeField] private UnityEvent LaserShotEvent;
-        [SerializeField] private UnityEvent BulletShotEvent;
-        [SerializeField] private UnityEvent EscapeEvent;
+        public Action<Vector2> MoveEvent;
+        public Action LaserShotEvent;
+        public Action BulletShotEvent;
+        public Action EscapeEvent;
 
         private InputAction _move;
         private InputAction _laserShot;
         private InputAction _bulletShot;
         private InputAction _escape;
 
-        private void Awake()
+        public void Initialize()
         {
             _move = InputSystem.actions.FindAction("Move");
             _bulletShot = InputSystem.actions.FindAction("Shot");
@@ -30,30 +30,6 @@ namespace Asteroids.Input
             _laserShot.performed += LaserShotInvoke;
             _bulletShot.performed += BulletShotInvoke;
             _escape.performed += EscapeInvoke;
-        }
-
-        private void OnDestroy()
-        {
-            _move.performed -= MoveInvoke;
-            _move.canceled -= MoveInvoke;
-            _laserShot.performed -= LaserShotInvoke;
-            _bulletShot.performed -= BulletShotInvoke;
-            _escape.performed -= EscapeInvoke;
-
-            MoveEvent.RemoveAllListeners();
-            LaserShotEvent.RemoveAllListeners();
-            BulletShotEvent.RemoveAllListeners();
-            EscapeEvent.RemoveAllListeners();
-        }
-
-
-        public void Initialize(DependencyContainer dependencyContainer)
-        {
-            MoveEvent.AddListener(dependencyContainer.ShipLink.GetComponent<ShipControl>().SetInputValue);
-
-            ShipWeapon shipWeaponTemp = dependencyContainer.ShipLink.GetComponent<ShipWeapon>();
-            LaserShotEvent.AddListener(shipWeaponTemp.ShootLaser);
-            BulletShotEvent.AddListener(shipWeaponTemp.ShootBullet);
         }
 
         private void MoveInvoke(InputAction.CallbackContext callbackContext) => MoveEvent?.Invoke(callbackContext.ReadValue<Vector2>());

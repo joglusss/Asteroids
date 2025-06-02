@@ -37,7 +37,7 @@ namespace Asteroids.Objects
 
         protected virtual void Demolish()
         {
-            SpaceObjectQueue.ReturnObject(this);
+            ReturnToQueue();
         }
     }
 

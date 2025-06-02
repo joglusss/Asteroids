@@ -1,11 +1,11 @@
 using System.IO;
 using System;
 using UnityEngine;
-using Asteroids.SceneManage;
+using Zenject;
 
 namespace Asteroids.Score
 {
-    public class ScoreManager : MonoBehaviour, IInitialize
+    public class ScoreManager : IInitializable, ILateDisposable
     {
         public event Action<int> LastScoreChanged;
 
@@ -15,9 +15,9 @@ namespace Asteroids.Score
         private SaveData _saveData;
         private string SavePath => Path.Combine(Application.dataPath, "saveScore.json");
 
-        public void Initialize(DependencyContainer dependencyContainer = null) => Load();
+        public void Initialize() => Load();
 
-        private void OnDestroy() => Save();
+        public void LateDispose() => Save();
 
         public void AddScore(int value)
         {
@@ -57,6 +57,5 @@ namespace Asteroids.Score
             string json = File.ReadAllText(SavePath);
             _saveData = JsonUtility.FromJson<SaveData>(json);
         }
-
     }
 }

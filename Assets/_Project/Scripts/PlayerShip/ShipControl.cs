@@ -2,16 +2,19 @@ using UnityEngine;
 using Asteroids.Helpers;
 using Asteroids.Visual;
 using Asteroids.SceneManage;
+using Zenject;
+using Asteroids.Input;
 
 namespace Asteroids.Ship
 {
     [RequireComponent(typeof(Rigidbody2D))]
-    public class ShipControl : MonoBehaviour, IInitialize
+    public class ShipControl : MonoBehaviour, IInitializable
     {
         [SerializeField] private float _forwardSpeed = 7.0f;
         [SerializeField] private float _angularSpeed = -1000.0f;
 
         private ShipStatModel _model;
+        private InputStorage _inputStorage;
         private Rigidbody2D _rigidbody;
         private Vector2 _inputValue;
         private Vector2[] _borderPoints;
@@ -25,17 +28,30 @@ namespace Asteroids.Ship
             GameMath.TeleportToBorder(_rigidbody, _centerPoint, _borderPoints);
         }
 
-        public void Initialize(DependencyContainer dependencyContainer)
+        private void OnDisable()
+        {
+            _inputStorage.MoveEvent -= SetInputValue;
+        }
+
+        public void Initialize()
         {
             _borderPoints = GameMath.CalculateBorderPoints();
             _centerPoint = GameMath.BorderCenter();
 
             _rigidbody = GetComponent<Rigidbody2D>();
-            _model = dependencyContainer.ShipStatModelLink;
             _rigidbody.position = _centerPoint;
+
+            _inputStorage.MoveEvent += SetInputValue;
         }
 
-        public void SetInputValue(Vector2 vector) => _inputValue = vector;
+        [Inject]
+        private void Construct(ShipStatModel statModel, InputStorage inputStorage)
+        {
+            _model = statModel;
+            _inputStorage = inputStorage;
+        }
+
+        private void SetInputValue(Vector2 vector) => _inputValue = vector;
 
         private void Movement()
         {

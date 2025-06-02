@@ -3,25 +3,42 @@ using UnityEngine;
 using Asteroids.Visual;
 using Asteroids.Objects;
 using Asteroids.SceneManage;
+using Zenject;
+using Asteroids.Input;
 
 namespace Asteroids.Ship
 {
-    public class ShipWeapon : MonoBehaviour, IInitialize
+    public class ShipWeapon : MonoBehaviour, IInitializable
     {
         [SerializeField] private float _laserCooldownDelay;
         [SerializeField] private int _maxLaserShot;
 
         private ShipStatModel _model;
+        private InputStorage _inputStorage;
         private Coroutine _laserCounter;
         private ObjectManager _objectManager;
 
-        public void Initialize(DependencyContainer dependencyContainer)
+        private void OnDisable()
         {
-            _objectManager = dependencyContainer.ObjectManagerLink;
-            _model = dependencyContainer.ShipStatModelLink;
+            _inputStorage.LaserShotEvent -= ShootLaser;
+            _inputStorage.BulletShotEvent -= ShootBullet;
+        }
 
+        public void Initialize()
+        {
             _model.LaserCount = _maxLaserShot;
             _model.LaserCooldown = 0.0f;
+
+            _inputStorage.LaserShotEvent += ShootLaser;
+            _inputStorage.BulletShotEvent += ShootBullet;
+        }
+
+        [Inject]
+        private void Container(ObjectManager objectManager, ShipStatModel shipStatModel, InputStorage inputStorage)
+        {
+            _objectManager = objectManager;
+            _model = shipStatModel;
+            _inputStorage = inputStorage;
         }
 
         private IEnumerator LaserCounter()
@@ -43,16 +60,16 @@ namespace Asteroids.Ship
             _laserCounter = null;
         }
 
-        public void ShootBullet() 
+        private void ShootBullet() 
         {
             SpaceObject bullet = _objectManager.BulletQueue.DrawObject();
             if (bullet != null)
             {
-                bullet.Launch(this.transform.position + this.transform.up, this.transform.up);
+                bullet.Launch(transform.position + transform.up, transform.up);
             }
         }
 
-        public void ShootLaser() 
+        private void ShootLaser() 
         {
             if (_model.LaserCount > 0)
             {
@@ -60,7 +77,7 @@ namespace Asteroids.Ship
                 if (laser != null)
                 {
                     _model.LaserCount--;
-                    laser.Launch(this.transform.position + this.transform.up, this.transform.up);
+                    laser.Launch(transform.position + transform.up, transform.up);
                 }
             }
 

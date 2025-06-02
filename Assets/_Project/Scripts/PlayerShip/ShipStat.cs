@@ -3,37 +3,35 @@ using Asteroids.SceneManage;
 using UnityEngine;
 using System.Collections;
 using Asteroids.Visual;
+using Zenject;
 
 namespace Asteroids.Ship 
 {
     [RequireComponent(typeof(Collider2D))]
-    public class ShipStat : MonoBehaviour, ISpaceInteract, IInitialize
+    public class ShipStat : MonoBehaviour, ISpaceInteract, IInitializable
     {
         [SerializeField] private int _startHealth;
         [SerializeField] private float _immortalityTime;
 
         private ShipStatModel _model;
-        private SceneContainerHandler _sceneContainerHandler;
         private Coroutine _frameCounter;
         private Collider2D _collider;
 
         [field: SerializeField] public SpaceObjectType SpaceObjectType { get; private set; }
 
-        public void Initialize(DependencyContainer dependencyContainer)
-        {
-            _sceneContainerHandler = dependencyContainer.SceneContainerHandlerLink;
-            _model = dependencyContainer.ShipStatModelLink;
-
-            _collider = GetComponent<Collider2D>();
-
-            _model.Health = _startHealth;
-            _frameCounter = StartCoroutine(FrameCounter());
-        }
-
         private void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.TryGetComponent<ISpaceInteract>(out ISpaceInteract spaceObject))
                 Interact(spaceObject.SpaceObjectType);
+        }
+
+        public void Initialize()
+        {
+            _collider = GetComponent<Collider2D>();
+
+            _model.Health = _startHealth;
+            _model.LifeStatus = true;
+            _frameCounter = StartCoroutine(FrameCounter());
         }
 
         public void Interact(SpaceObjectType collisionSpaceObjectType)
@@ -42,10 +40,16 @@ namespace Asteroids.Ship
             {
                 _model.Health--;
                 if (_model.Health == 0)
-                    _sceneContainerHandler.GoToMenu();
+                    _model.LifeStatus = false;
 
                 _frameCounter = StartCoroutine(FrameCounter());
             }
+        }
+
+        [Inject]
+        private void Construct(ShipStatModel shipStatModel)
+        {
+            _model = shipStatModel;
         }
 
         private IEnumerator FrameCounter()

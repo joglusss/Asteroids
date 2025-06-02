@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4231454775411109834}
   - component: {fileID: 2843882987892478013}
   - component: {fileID: 9186394059032259747}
-  - component: {fileID: 3477906594461366658}
+  - component: {fileID: 9106970115248236750}
   m_Layer: 5
   m_Name: Ship
   m_TagString: Untagged
@@ -161,7 +161,7 @@ MonoBehaviour:
   _startHealth: 3
   _immortalityTime: 4
   <SpaceObjectType>k__BackingField: 0
---- !u!114 &3477906594461366658
+--- !u!114 &9106970115248236750
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -170,11 +170,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1088582336271454025}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d9341d842788c064f80d08ec82c9babe, type: 3}
+  m_Script: {fileID: 11500000, guid: 459b6b25d5182204e928740f9773a9f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _shipImage: {fileID: 1650686999184190121}
-  _scale: 5
+  _scale: 11
 --- !u!1 &5665921751615802835
 GameObject:
   m_ObjectHideFlags: 0
@@ -185,7 +185,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1302131543243987776}
   - component: {fileID: 1200767616418654874}
-  - component: {fileID: 13515866025014854}
   - component: {fileID: 1650686999184190121}
   m_Layer: 5
   m_Name: ShipImage
@@ -221,20 +220,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5665921751615802835}
   m_CullTransparentMesh: 1
---- !u!114 &13515866025014854
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5665921751615802835}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d9341d842788c064f80d08ec82c9babe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _shipImage: {fileID: 1650686999184190121}
-  _scale: 5
 --- !u!212 &1650686999184190121
 SpriteRenderer:
   m_ObjectHideFlags: 0

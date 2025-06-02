@@ -9,7 +9,7 @@ namespace Asteroids.Objects
 
         private void Update()
         {
-                GameMath.TeleportToBorder(_rigidbody, ObjectManager.BorderCenter, ObjectManager.BorderPoints);
+            GameMath.TeleportToBorder(_rigidbody, ObjectManager.BorderCenter, ObjectManager.BorderPoints);
         }
 
         protected override void Demolish()

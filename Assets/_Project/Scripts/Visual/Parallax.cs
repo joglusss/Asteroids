@@ -1,8 +1,9 @@
 using UnityEngine;
-using Asteroids.SceneManage;
+using Zenject;
+using Asteroids.Ship;
 
 namespace Asteroids.Visual {
-    public class Parallax : MonoBehaviour, IInitialize
+    public class Parallax : MonoBehaviour
     {
         [SerializeField] private float _totalScale;
         [SerializeField] private SpriteRenderer _background;
@@ -19,9 +20,10 @@ namespace Asteroids.Visual {
             _background.material.SetVector("_Offset_2", new Vector2(position.x * _scale1, position.y * _scale1));
         }
 
-        public void Initialize(DependencyContainer dependencyContainer)
+        [Inject]
+        private void Construct(ShipControl shipControl)
         {
-            _spaceShipRb = dependencyContainer.ShipLink.GetComponent<Rigidbody2D>();
+            _spaceShipRb = shipControl.gameObject.GetComponent<Rigidbody2D>();
         }
     }
 

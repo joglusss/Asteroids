@@ -37,7 +37,7 @@ namespace Asteroids.Objects
             yield return new WaitForSeconds(_lifeTime);
 
             _coroutineLifetimeCounter = null;
-            SpaceObjectQueue.ReturnObject(this);
+            ReturnToQueue();
         }
     }
 

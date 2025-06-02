@@ -1,17 +1,13 @@
 using UnityEngine;
 using System.Collections;
 using Asteroids.Helpers;
-using Asteroids.SceneManage;
+using Zenject;
+using Asteroids.Ship;
 
 namespace Asteroids.Objects
 {
-    public class ObjectManager : MonoBehaviour, IInitialize
+    public class ObjectManager : MonoBehaviour, IInitializable
     {
-        [field: SerializeField] private SpaceObject _bulletPrefab;
-        [field: SerializeField] private SpaceObject _asteroidPrefab;
-        [field: SerializeField] private SpaceObject _smallAsteroidPrefab;
-        [field: SerializeField] private SpaceObject _alienPrefab;
-        [field: SerializeField] private SpaceObject _laserPrefab;
         [field: SerializeField] private LaunchCycleSetting _asteroidLaunchCycleSetting;
         [field: SerializeField] private LaunchCycleSetting _alienLaunchCycleSetting;
 
@@ -25,34 +21,31 @@ namespace Asteroids.Objects
         public Vector2[] BorderPoints { get; private set; }
         public Vector2 BorderCenter { get; private set; }
 
-        private Transform _spaceObjectContainer;
-
-        public void Initialize(DependencyContainer dependencyContainer)
+        public void Initialize()
         {
-            AlienTarget = dependencyContainer.ShipLink.transform;
-
             BorderSize = GameMath.CalculateBorderSize();
             BorderPoints = GameMath.CalculateBorderPoints();
             BorderCenter = GameMath.BorderCenter();
 
-            _spaceObjectContainer = new GameObject() { name = "SpaceObjectContainer" }.transform;
+            StartCoroutine(LaunchCycle(AsteroidQueue, _asteroidLaunchCycleSetting));
+            StartCoroutine(LaunchCycle(AlienQueue, _alienLaunchCycleSetting));
+        }
 
-            BulletQueue = new SpaceObjectQueue(_bulletPrefab, _spaceObjectContainer, this);
-            AsteroidQueue = new SpaceObjectQueue(_asteroidPrefab, _spaceObjectContainer, this);
-            SmallAsteroidQueue = new SpaceObjectQueue(_smallAsteroidPrefab, _spaceObjectContainer, this);
-            AlienQueue = new SpaceObjectQueue(_alienPrefab, _spaceObjectContainer, this);
-            LaserQueue = new SpaceObjectQueue(_laserPrefab, _spaceObjectContainer, this);
+        [Inject]
+        private void Construct(ShipControl shipControl, [Inject(Id = "Bullet")] SpaceObjectQueue bullet, [Inject(Id = "Asteroid")] SpaceObjectQueue asteroid, [Inject(Id = "SmallAsteroid")] SpaceObjectQueue smallAsteroid, [Inject(Id = "Alien")] SpaceObjectQueue alien, [Inject(Id = "Laser")] SpaceObjectQueue laser)
+        {
+            AlienTarget = shipControl.transform;
+
+            BulletQueue = bullet;
+            AsteroidQueue = asteroid;
+            SmallAsteroidQueue = smallAsteroid;
+            AlienQueue = alien;
+            LaserQueue = laser;
         }
 
         private void OnDisable()
         {
             StopAllCoroutines();
-        }
-
-        private void OnEnable()
-        {
-            StartCoroutine(LaunchCycle(AsteroidQueue, _asteroidLaunchCycleSetting));
-            StartCoroutine(LaunchCycle(AlienQueue, _alienLaunchCycleSetting));
         }
 
         private void LaunchObject(SpaceObject spaceObject)
@@ -74,7 +67,7 @@ namespace Asteroids.Objects
                 LaunchObject(objQueue.DrawObject());
             }
 
-            while (this.enabled)
+            while (enabled)
             {
                 LaunchObject(objQueue.DrawObject());
 

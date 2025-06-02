@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using Unity.VisualScripting;
+using Zenject;
 
 namespace Asteroids.Objects
 {
@@ -49,7 +50,8 @@ namespace Asteroids.Objects
         private SpaceObject CreateNewObject()
         {
             SpaceObject newSpaceObject = UnityEngine.Object.Instantiate(_spaceObjectPrefab, _objectsContainer);
-            newSpaceObject.Initialize(_objectManager, this);
+
+            newSpaceObject.Initialize(_objectManager, () => ReturnObject(newSpaceObject));
 
             return newSpaceObject;
         }

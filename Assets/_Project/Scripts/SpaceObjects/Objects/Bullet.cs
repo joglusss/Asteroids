@@ -10,7 +10,7 @@ namespace Asteroids.Objects
         private IEnumerator LifetimeCounter()
         {
             yield return new WaitForSeconds(_lifeTime);
-            SpaceObjectQueue.ReturnObject(this);
+            ReturnToQueue();
         }
 
         public override void Launch(Vector2 from, Vector2 direction)
