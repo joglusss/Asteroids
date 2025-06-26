@@ -27,10 +27,7 @@ namespace Asteroids.Ship
 
         public void Initialize()
         {
-            _collider = GetComponent<Collider2D>();
-
             _model.Health = _startHealth;
-            _model.LifeStatus = true;
             _frameCounter = StartCoroutine(FrameCounter());
         }
 
@@ -39,9 +36,6 @@ namespace Asteroids.Ship
             if (_frameCounter == null && collisionSpaceObjectType != SpaceObjectType.SpaceShip)
             {
                 _model.Health--;
-                if (_model.Health == 0)
-                    _model.LifeStatus = false;
-
                 _frameCounter = StartCoroutine(FrameCounter());
             }
         }
@@ -50,6 +44,7 @@ namespace Asteroids.Ship
         private void Construct(ShipStatModel shipStatModel)
         {
             _model = shipStatModel;
+            _collider = GetComponent<Collider2D>();
         }
 
         private IEnumerator FrameCounter()

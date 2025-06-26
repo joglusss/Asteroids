@@ -1,7 +1,8 @@
 using Asteroids.SceneManage;
-using Asteroids.Ship;
 using UnityEngine;
 using Zenject;
+using R3;
+
 
 namespace Asteroids.Ship
 {
@@ -9,44 +10,25 @@ namespace Asteroids.Ship
     {
         private ShipStatModel _model;
         private ShipStatView _view;
-        private ImmortalBlink _viewImmortalBlink;
-        private GameSceneContainerHandler _sceneContainerHandler;
+        private CompositeDisposable _compositeDisposable = new CompositeDisposable();
 
         public void Initialize()
         {
-            _model.ChangedHealth += ChangeHealth;
-            _model.ChangedCoordinates += ChangeCoordinates;
-            _model.ChangedAngle += ChangeAngle;
-            _model.ChangedSpeed += ChangeSpeed;
-            _model.ChangedLaserCount += ChangeLaserCount;
-            _model.ChangedLaserCooldown += ChangeLaserCooldown;
-
-            _model.ChangedImmortality += _viewImmortalBlink.SwitchBlinking;
-
-            _model.ChangedLifeStatus += ChangeLifeStatus;
+            _model.HealthSubscribe.Subscribe(ChangeHealth).AddTo(_compositeDisposable);
+            _model.CoordinatesSubscribe.Subscribe(ChangeCoordinates).AddTo(_compositeDisposable);
+            _model.AngleSubscribe.Subscribe(ChangeAngle).AddTo(_compositeDisposable);
+            _model.SpeedSubscribe.Subscribe(ChangeSpeed).AddTo(_compositeDisposable);
+            _model.LaserCountSubscribe.Subscribe(ChangeLaserCount).AddTo(_compositeDisposable);
+            _model.LaserCooldownSubscribe.Subscribe(ChangeLaserCooldown).AddTo(_compositeDisposable);
         }
 
-        public void LateDispose()
-        {
-            _model.ChangedHealth -= ChangeHealth;
-            _model.ChangedCoordinates -= ChangeCoordinates;
-            _model.ChangedAngle -= ChangeAngle;
-            _model.ChangedSpeed -= ChangeSpeed;
-            _model.ChangedLaserCount -= ChangeLaserCount;
-            _model.ChangedLaserCooldown -= ChangeLaserCooldown;
-
-            _model.ChangedImmortality -= _viewImmortalBlink.SwitchBlinking;
-
-            _model.ChangedLifeStatus -= ChangeLifeStatus;
-        }
+        public void LateDispose() => _compositeDisposable.Dispose();
 
         [Inject]
-        private void Construct(ShipStatModel shipStatModel, ShipStatView shipStatView, ShipControl shipControl, GameSceneContainerHandler sceneContainerHandler)
+        private void Construct(ShipStatModel shipStatModel, ShipStatView shipStatView)
         {
             _model = shipStatModel;
             _view = shipStatView;
-            _viewImmortalBlink = shipControl.GetComponent<ImmortalBlink>();
-            _sceneContainerHandler = sceneContainerHandler;
         }
 
         public void ChangeHealth(int a) => _view.ChangeHealth(a);
@@ -60,12 +42,6 @@ namespace Asteroids.Ship
         public void ChangeLaserCount(int a) => _view.ChangeLaserCount(a);
 
         public void ChangeLaserCooldown(float a) => _view.ChangeLaserCooldown(a);
-
-        public void ChangeLifeStatus(bool a) 
-        {
-            if (!a)
-                _sceneContainerHandler.GoToMenu();
-        }
     }
 
 }

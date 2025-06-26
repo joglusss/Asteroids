@@ -6,6 +6,6 @@ public class InputStorageInstaller : MonoInstaller
 {
     public override void InstallBindings()
     {
-        Container.BindInterfacesAndSelfTo<InputStorage>().FromNew().AsSingle();
+        Container.BindInterfacesAndSelfTo<KeyboardInputStorage>().AsSingle();
     }
 }

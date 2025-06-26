@@ -8,13 +8,13 @@ using Asteroids.Input;
 namespace Asteroids.Ship
 {
     [RequireComponent(typeof(Rigidbody2D))]
-    public class ShipControl : MonoBehaviour, IInitializable
+    public class ShipControl : MonoBehaviour, IInitializable, ILateDisposable
     {
         [SerializeField] private float _forwardSpeed = 7.0f;
         [SerializeField] private float _angularSpeed = -1000.0f;
 
         private ShipStatModel _model;
-        private InputStorage _inputStorage;
+        private IInput _inputStorage;
         private Rigidbody2D _rigidbody;
         private Vector2 _inputValue;
         private Vector2[] _borderPoints;
@@ -38,23 +38,31 @@ namespace Asteroids.Ship
             _borderPoints = GameMath.CalculateBorderPoints();
             _centerPoint = GameMath.BorderCenter();
 
-            _rigidbody = GetComponent<Rigidbody2D>();
             _rigidbody.position = _centerPoint;
 
             _inputStorage.MoveEvent += SetInputValue;
         }
 
+        public void LateDispose()
+        {
+            _inputStorage.MoveEvent -= SetInputValue;
+        }
+
         [Inject]
-        private void Construct(ShipStatModel statModel, InputStorage inputStorage)
+        private void Construct(ShipStatModel statModel, IInput inputStorage)
         {
             _model = statModel;
             _inputStorage = inputStorage;
+
+            _rigidbody = GetComponent<Rigidbody2D>();
         }
 
         private void SetInputValue(Vector2 vector) => _inputValue = vector;
 
         private void Movement()
         {
+            if (!_model.LifeStatus) return;
+
             Vector2 force = _inputValue.y > 0.0f ? _inputValue.y * _forwardSpeed * Time.deltaTime * transform.up : Vector2.zero;
             float angle = _inputValue.x * _angularSpeed * Time.deltaTime;
 
@@ -64,7 +72,7 @@ namespace Asteroids.Ship
 
         private void UpdateModel()
         {
-            _model.Coordinate = _rigidbody.position;
+            _model.Coordinates = _rigidbody.position;
             _model.Speed = _rigidbody.linearVelocity.magnitude;
             _model.Angle = transform.eulerAngles.z;
         }

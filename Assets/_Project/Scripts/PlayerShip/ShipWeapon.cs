@@ -14,7 +14,7 @@ namespace Asteroids.Ship
         [SerializeField] private int _maxLaserShot;
 
         private ShipStatModel _model;
-        private InputStorage _inputStorage;
+        private IInput _inputStorage;
         private Coroutine _laserCounter;
         private ObjectManager _objectManager;
 
@@ -34,7 +34,7 @@ namespace Asteroids.Ship
         }
 
         [Inject]
-        private void Container(ObjectManager objectManager, ShipStatModel shipStatModel, InputStorage inputStorage)
+        private void Construct(ObjectManager objectManager, ShipStatModel shipStatModel, IInput inputStorage)
         {
             _objectManager = objectManager;
             _model = shipStatModel;
@@ -49,8 +49,7 @@ namespace Asteroids.Ship
                 _model.LaserCooldown = _laserCooldownDelay;
                 while (_model.LaserCooldown > 0.0f)
                 {
-                    _model.LaserCooldown = Mathf.Clamp(_model.LaserCooldown - Time.deltaTime, 0.0f, _maxLaserShot);
-                    _model.LaserCooldown = _model.LaserCooldown;
+                    _model.LaserCooldown = (Mathf.Clamp(_model.LaserCooldown - Time.deltaTime, 0.0f, _maxLaserShot));
                     yield return null;
                 }
 
@@ -62,6 +61,8 @@ namespace Asteroids.Ship
 
         private void ShootBullet() 
         {
+            if (!_model.LifeStatus) return;
+
             SpaceObject bullet = _objectManager.BulletQueue.DrawObject();
             if (bullet != null)
             {
@@ -71,6 +72,8 @@ namespace Asteroids.Ship
 
         private void ShootLaser() 
         {
+            if (!_model.LifeStatus) return;
+
             if (_model.LaserCount > 0)
             {
                 SpaceObject laser = _objectManager.LaserQueue.DrawObject();

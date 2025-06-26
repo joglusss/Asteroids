@@ -12,7 +12,7 @@ namespace Asteroids.SceneManage
     public class GameSceneContainerHandler : IInitializable, ILateDisposable
     {
         private SceneContainer _sceneContainer;
-        private InputStorage _inputStorage;
+        private IInput _inputStorage;
 
         public void Initialize()
         {
@@ -25,7 +25,7 @@ namespace Asteroids.SceneManage
         }
 
         [Inject]
-        private void Construct(InputStorage inputStorage, SceneContainer sceneContainer)
+        private void Construct(IInput inputStorage, SceneContainer sceneContainer)
         {
             _inputStorage = inputStorage;
             _sceneContainer = sceneContainer;

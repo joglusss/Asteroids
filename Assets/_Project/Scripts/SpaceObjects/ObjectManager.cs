@@ -32,7 +32,13 @@ namespace Asteroids.Objects
         }
 
         [Inject]
-        private void Construct(ShipControl shipControl, [Inject(Id = "Bullet")] SpaceObjectQueue bullet, [Inject(Id = "Asteroid")] SpaceObjectQueue asteroid, [Inject(Id = "SmallAsteroid")] SpaceObjectQueue smallAsteroid, [Inject(Id = "Alien")] SpaceObjectQueue alien, [Inject(Id = "Laser")] SpaceObjectQueue laser)
+        private void Construct(
+            ShipControl shipControl, 
+            [Inject(Id = SpaceObjectID.Bullet)] SpaceObjectQueue bullet, 
+            [Inject(Id = SpaceObjectID.Asteroid)] SpaceObjectQueue asteroid, 
+            [Inject(Id = SpaceObjectID.SmallAsteroid)] SpaceObjectQueue smallAsteroid, 
+            [Inject(Id = SpaceObjectID.Alien)] SpaceObjectQueue alien, 
+            [Inject(Id = SpaceObjectID.Laser)] SpaceObjectQueue laser)
         {
             AlienTarget = shipControl.transform;
 

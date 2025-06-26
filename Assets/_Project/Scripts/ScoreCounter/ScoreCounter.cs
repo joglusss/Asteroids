@@ -2,6 +2,7 @@ using UnityEngine;
 using Asteroids.Objects;
 using Zenject;
 using System;
+using Asteroids.Total;
 
 namespace Asteroids.Score
 {
@@ -14,7 +15,7 @@ namespace Asteroids.Score
         public event Action<int, Vector2> ObjectDestroyed;
 
         private ObjectManager _objectManagerLink;
-        private ScoreManager _scoreManagerLink;
+        private DataHandler _dataHandler;
 
         public void LateDispose()
         {
@@ -29,19 +30,19 @@ namespace Asteroids.Score
             _objectManagerLink.AsteroidQueue.ObjectReturnedToQueue += AsteroidDestroy;
             _objectManagerLink.SmallAsteroidQueue.ObjectReturnedToQueue += SmallAsteroidDestroy;
 
-            _scoreManagerLink.ResetLastScore();
+            _dataHandler.LastScore = 0;
         }
 
         [Inject]
-        private void Construct(ObjectManager objectManager, ScoreManager scoreManager)
+        private void Construct(ObjectManager objectManager, DataHandler dataHandler)
         {
             _objectManagerLink = objectManager;
-            _scoreManagerLink = scoreManager;
+            _dataHandler = dataHandler;
         }
 
         private void CallMethods(int value, SpaceObject a)
         {
-            _scoreManagerLink.AddScore(value);
+            _dataHandler.LastScore += value;
             ObjectDestroyed?.Invoke(value, (Vector2)a.transform.position);
         }
 

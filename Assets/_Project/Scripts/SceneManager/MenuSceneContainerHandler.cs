@@ -1,43 +1,67 @@
 using Asteroids.Input;
 using Asteroids.SceneManage;
+using Asteroids.Total;
+using R3;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.UIElements;
 using Zenject;
 
-public class MenuSceneContainerHandler : IInitializable, ILateDisposable
+namespace Asteroids.SceneManage
 {
-    private SceneContainer _sceneContainer;
-    private Button _startGame;
-    private Button _exit;
-
-    public void Initialize()
+    public class MenuSceneContainerHandler : MonoBehaviour, IInitializable, ILateDisposable
     {
-        _startGame.onClick.AddListener(GoToGame);
-        _exit.onClick.AddListener(Exit);
-    }
+        [SerializeField] private UIDocument _uIDocument;
 
-    public void LateDispose()
-    {
-        _startGame.onClick.RemoveListener(GoToGame);
-        _exit.onClick.RemoveListener(Exit);
-    }
+        private CompositeDisposable _compositeDisposable = new CompositeDisposable();
+        private SceneContainer _sceneContainer;
+        private DataHandler _dataHandler;
+        private Button _startGame;
+        private Button _exit;
+        private Label _bestScore;
+        private Label _lastScore;
 
-    [Inject]
-    private void Construct([Inject(Id = "Start")] Button startGame, [Inject(Id = "Exit")] Button exit, SceneContainer sceneContainer)
-    {
-        _sceneContainer = sceneContainer;
-        _startGame = startGame;
-        _exit = exit;
-    }
+        public void Initialize()
+        {
+            _startGame = _uIDocument.rootVisualElement.Q<Button>("START_GAME");
+            _exit = _uIDocument.rootVisualElement.Q<Button>("EXIT");
+            _bestScore = _uIDocument.rootVisualElement.Q<Label>("BEST_SCORE");
+            _lastScore = _uIDocument.rootVisualElement.Q<Label>("LAST_SCORE");
 
-    private void GoToGame()
-    {
-        _sceneContainer.LoadGameScene();
-    }
+            _startGame.RegisterCallback<ClickEvent>(GoToGame);
+            _exit.RegisterCallback<ClickEvent>(Exit);
 
-    private void Exit()
-    {
-        Application.Quit();
-    }
+            _compositeDisposable.Add(_dataHandler.BestScoreSub.Subscribe(UpdateBestScore));
+            _compositeDisposable.Add(_dataHandler.LastScoreSub.Subscribe(UpdateLastScore));
+        }
 
+        public void LateDispose()
+        {
+            _startGame.UnregisterCallback<ClickEvent>(GoToGame);
+            _exit.UnregisterCallback<ClickEvent>(Exit);
+
+            _compositeDisposable.Dispose();
+        }
+
+        [Inject]
+        private void Construct(
+            SceneContainer sceneContainer, DataHandler dataHandler)
+        {
+            _sceneContainer = sceneContainer;
+            _dataHandler = dataHandler;
+        }
+
+        private void GoToGame(ClickEvent e)
+        {
+            _sceneContainer.LoadGameScene();
+        }
+
+        private void Exit(ClickEvent e)
+        {
+            Application.Quit();
+        }
+
+        private void UpdateBestScore(int value) => _bestScore.text = "BEST SCORE: " + value;
+
+        private void UpdateLastScore(int value) => _lastScore.text = "Last score: " + value;
+    }
 }

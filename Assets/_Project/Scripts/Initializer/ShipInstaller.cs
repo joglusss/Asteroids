@@ -1,4 +1,5 @@
 using Asteroids.Ship;
+using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
@@ -13,18 +14,19 @@ namespace Asteroids.Installers
         {
             Container.BindInterfacesAndSelfTo<ShipStatView>().FromInstance(_shipStatView).AsSingle();
 
-            Container.BindInterfacesAndSelfTo<ShipStatModel>().FromNew().AsSingle().NonLazy();
-            Container.BindInterfacesAndSelfTo<ShipStatPresenter>().FromNew().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<ShipStatModel>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<ShipStatPresenter>().AsSingle().NonLazy();
 
-            var shipInstance = Instantiate(_shipControl);
-
-            Container.BindInterfacesAndSelfTo<ShipControl>().FromInstance(shipInstance.GetComponent<ShipControl>()).AsSingle().Lazy();
-            Container.BindInterfacesAndSelfTo<ShipStat>().FromInstance(shipInstance.GetComponent<ShipStat>()).AsSingle().Lazy();
-            Container.BindInterfacesAndSelfTo<ShipWeapon>().FromInstance(shipInstance.GetComponent<ShipWeapon>()).AsSingle().Lazy();
-
-            Container.QueueForInject(shipInstance.GetComponent<ShipControl>());
-            Container.QueueForInject(shipInstance.GetComponent<ShipStat>());
-            Container.QueueForInject(shipInstance.GetComponent<ShipWeapon>());
+            System.Type[] types = new System.Type[] 
+            {   
+                typeof(ShipAnimationControl),
+                typeof(ShipControl), 
+                typeof(ShipStat), 
+                typeof(ShipWeapon),
+                typeof(IInitializable), 
+                typeof(ILateDisposable)
+            };
+            Container.Bind(types).FromComponentsInNewPrefab(_shipControl).AsSingle().Lazy();
         }
     }
 }

@@ -1,36 +1,42 @@
 using UnityEngine;
 using TMPro;
 using Zenject;
+using Asteroids.Total;
+using R3;
+using UnityEngine.UIElements;
 
 namespace Asteroids.Score
 {
     public class LastScoreView : MonoBehaviour, IInitializable, ILateDisposable
     {
-        [SerializeField] private TMP_Text _scoreText;
+        [SerializeField] UIDocument _uiDocument;
         [SerializeField] private string _startText;
 
-        private ScoreManager _scoreManager;
+        private DataHandler _dataHandler;
+        private CompositeDisposable _compositeDisposable = new CompositeDisposable();
+        private Label _currentScore;
 
         public void Initialize()
         {
-            _scoreManager.LastScoreChanged += UpdateText;
+            _currentScore = _uiDocument.rootVisualElement.Q<Label>("LAST_SCORE");
+            _compositeDisposable.Add(_dataHandler.LastScoreSub.Subscribe(UpdateText));
             UpdateText(0);
         }
 
         public void LateDispose()
         {
-            _scoreManager.LastScoreChanged -= UpdateText;
+            _compositeDisposable.Dispose();
         }
 
         private void UpdateText(int value)
         {
-            _scoreText.text = _startText + _scoreManager.LastScore;
+            _currentScore.text = _startText + _dataHandler.LastScore;
         }
 
         [Inject]
-        private void Construct(ScoreManager scoreManager)
+        private void Construct(DataHandler dataSaver)
         {
-            _scoreManager = scoreManager;
+            _dataHandler = dataSaver;
         }
     }
 }

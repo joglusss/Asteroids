@@ -16,11 +16,11 @@ namespace Asteroids.Objects
 
         public event Action<SpaceObject> ObjectReturnedToQueue;
 
-        public SpaceObjectQueue(SpaceObject prefab, Transform container, ObjectManager objectManager)
+        public SpaceObjectQueue(SpaceObject prefab, ObjectManager objectManager)
         {
             _objectManager = objectManager;
             _spaceObjectPrefab = prefab;
-            _objectsContainer = container;
+            _objectsContainer = objectManager.transform;
             _queue = new Queue<SpaceObject>();
         }
 

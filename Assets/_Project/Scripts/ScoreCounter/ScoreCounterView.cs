@@ -2,13 +2,13 @@ using Asteroids.Helpers;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
 using Zenject;
 
 namespace Asteroids.Score
 {
     public class ScoreCounterView : MonoBehaviour, IInitializable, ILateDisposable
     {
-        [SerializeField] private TMP_Text _currenScoreText;
         [SerializeField] private TMP_Text _scoreTextPrefab;
         [SerializeField] private float _lifeTime;
 
@@ -16,6 +16,7 @@ namespace Asteroids.Score
         private ScoreTextQueue _scoreTextQueue;
         private WaitForSeconds _waitForSeconds;
         private ScoreCounter _scoreCounter;
+        private Label _currentScore;
 
         public void Initialize()
         {

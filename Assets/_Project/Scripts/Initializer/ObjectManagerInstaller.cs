@@ -17,17 +17,11 @@ namespace Asteroids.Installers
         {
             Container.BindInterfacesAndSelfTo<ObjectManager>().FromInstance(_objectManager).AsSingle();
 
-            SpaceObjectQueue bulletQueue = new(_bulletPrefab, _objectManager.transform, _objectManager);
-            SpaceObjectQueue asteroidQueue = new(_asteroidPrefab, _objectManager.transform, _objectManager);
-            SpaceObjectQueue smallAsteroidQueue = new(_smallAsteroidPrefab, _objectManager.transform, _objectManager);
-            SpaceObjectQueue alienQueue = new(_alienPrefab, _objectManager.transform, _objectManager);
-            SpaceObjectQueue laserQueue = new(_laserPrefab, _objectManager.transform, _objectManager);
-
-            Container.Bind<SpaceObjectQueue>().WithId("Bullet").FromInstance(bulletQueue).AsTransient();
-            Container.Bind<SpaceObjectQueue>().WithId("Asteroid").FromInstance(asteroidQueue).AsTransient();
-            Container.Bind<SpaceObjectQueue>().WithId("SmallAsteroid").FromInstance(smallAsteroidQueue).AsTransient();
-            Container.Bind<SpaceObjectQueue>().WithId("Alien").FromInstance(alienQueue).AsTransient();
-            Container.Bind<SpaceObjectQueue>().WithId("Laser").FromInstance(laserQueue).AsTransient();
+            Container.Bind<SpaceObjectQueue>().WithId(SpaceObjectID.Asteroid).AsTransient().WithArguments(_asteroidPrefab, _objectManager);
+            Container.Bind<SpaceObjectQueue>().WithId(SpaceObjectID.SmallAsteroid).AsTransient().WithArguments(_smallAsteroidPrefab, _objectManager);
+            Container.Bind<SpaceObjectQueue>().WithId(SpaceObjectID.Alien).AsTransient().WithArguments(_alienPrefab, _objectManager);
+            Container.Bind<SpaceObjectQueue>().WithId(SpaceObjectID.Laser).AsTransient().WithArguments(_laserPrefab, _objectManager);
+            Container.Bind<SpaceObjectQueue>().WithId(SpaceObjectID.Bullet).AsTransient().WithArguments(_bulletPrefab, _objectManager);
         }
     }
 }
