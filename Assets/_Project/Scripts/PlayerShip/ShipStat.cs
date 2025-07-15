@@ -19,6 +19,13 @@ namespace Asteroids.Ship
 
         [field: SerializeField] public SpaceObjectType SpaceObjectType { get; private set; }
 
+        [Inject]
+        private void Construct(ShipStatModel shipStatModel)
+        {
+            _model = shipStatModel;
+            _collider = GetComponent<Collider2D>();
+        }
+
         private void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.TryGetComponent<ISpaceInteract>(out ISpaceInteract spaceObject))
@@ -38,13 +45,6 @@ namespace Asteroids.Ship
                 _model.Health--;
                 _frameCounter = StartCoroutine(FrameCounter());
             }
-        }
-
-        [Inject]
-        private void Construct(ShipStatModel shipStatModel)
-        {
-            _model = shipStatModel;
-            _collider = GetComponent<Collider2D>();
         }
 
         private IEnumerator FrameCounter()

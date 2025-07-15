@@ -21,23 +21,13 @@ namespace Asteroids.Objects
         public Vector2[] BorderPoints { get; private set; }
         public Vector2 BorderCenter { get; private set; }
 
-        public void Initialize()
-        {
-            BorderSize = GameMath.CalculateBorderSize();
-            BorderPoints = GameMath.CalculateBorderPoints();
-            BorderCenter = GameMath.BorderCenter();
-
-            StartCoroutine(LaunchCycle(AsteroidQueue, _asteroidLaunchCycleSetting));
-            StartCoroutine(LaunchCycle(AlienQueue, _alienLaunchCycleSetting));
-        }
-
         [Inject]
         private void Construct(
-            ShipControl shipControl, 
-            [Inject(Id = SpaceObjectID.Bullet)] SpaceObjectQueue bullet, 
-            [Inject(Id = SpaceObjectID.Asteroid)] SpaceObjectQueue asteroid, 
-            [Inject(Id = SpaceObjectID.SmallAsteroid)] SpaceObjectQueue smallAsteroid, 
-            [Inject(Id = SpaceObjectID.Alien)] SpaceObjectQueue alien, 
+            ShipControl shipControl,
+            [Inject(Id = SpaceObjectID.Bullet)] SpaceObjectQueue bullet,
+            [Inject(Id = SpaceObjectID.Asteroid)] SpaceObjectQueue asteroid,
+            [Inject(Id = SpaceObjectID.SmallAsteroid)] SpaceObjectQueue smallAsteroid,
+            [Inject(Id = SpaceObjectID.Alien)] SpaceObjectQueue alien,
             [Inject(Id = SpaceObjectID.Laser)] SpaceObjectQueue laser)
         {
             AlienTarget = shipControl.transform;
@@ -47,6 +37,16 @@ namespace Asteroids.Objects
             SmallAsteroidQueue = smallAsteroid;
             AlienQueue = alien;
             LaserQueue = laser;
+        }
+
+        public void Initialize()
+        {
+            BorderSize = GameMath.CalculateBorderSize();
+            BorderPoints = GameMath.CalculateBorderPoints();
+            BorderCenter = GameMath.BorderCenter();
+
+            StartCoroutine(LaunchCycle(AsteroidQueue, _asteroidLaunchCycleSetting));
+            StartCoroutine(LaunchCycle(AlienQueue, _alienLaunchCycleSetting));
         }
 
         private void OnDisable()

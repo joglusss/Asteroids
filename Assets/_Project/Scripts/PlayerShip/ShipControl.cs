@@ -4,11 +4,12 @@ using Asteroids.Visual;
 using Asteroids.SceneManage;
 using Zenject;
 using Asteroids.Input;
+using System;
 
 namespace Asteroids.Ship
 {
     [RequireComponent(typeof(Rigidbody2D))]
-    public class ShipControl : MonoBehaviour, IInitializable, ILateDisposable
+    public class ShipControl : MonoBehaviour, IInitializable, IDisposable
     {
         [SerializeField] private float _forwardSpeed = 7.0f;
         [SerializeField] private float _angularSpeed = -1000.0f;
@@ -19,6 +20,14 @@ namespace Asteroids.Ship
         private Vector2 _inputValue;
         private Vector2[] _borderPoints;
         private Vector2 _centerPoint;
+
+        [Inject]
+        private void Construct(ShipStatModel statModel, IInput inputStorage)
+        {
+            _model = statModel;
+            _inputStorage = inputStorage;
+            _rigidbody = GetComponent<Rigidbody2D>();
+        }
 
         private void Update()
         {
@@ -43,18 +52,9 @@ namespace Asteroids.Ship
             _inputStorage.MoveEvent += SetInputValue;
         }
 
-        public void LateDispose()
+        public void Dispose()
         {
             _inputStorage.MoveEvent -= SetInputValue;
-        }
-
-        [Inject]
-        private void Construct(ShipStatModel statModel, IInput inputStorage)
-        {
-            _model = statModel;
-            _inputStorage = inputStorage;
-
-            _rigidbody = GetComponent<Rigidbody2D>();
         }
 
         private void SetInputValue(Vector2 vector) => _inputValue = vector;

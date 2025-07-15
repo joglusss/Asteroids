@@ -2,23 +2,31 @@ using Asteroids.Input;
 using Asteroids.SceneManage;
 using Asteroids.Total;
 using R3;
+using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Zenject;
 
 namespace Asteroids.SceneManage
 {
-    public class MenuSceneContainerHandler : MonoBehaviour, IInitializable, ILateDisposable
+    public class MenuSceneService : MonoBehaviour, IInitializable, IDisposable
     {
         [SerializeField] private UIDocument _uIDocument;
 
         private CompositeDisposable _compositeDisposable = new CompositeDisposable();
         private SceneContainer _sceneContainer;
-        private DataHandler _dataHandler;
+        private SaveManager _dataHandler;
         private Button _startGame;
         private Button _exit;
         private Label _bestScore;
         private Label _lastScore;
+
+        [Inject]
+        private void Construct(SceneContainer sceneContainer, SaveManager dataHandler)
+        {
+            _sceneContainer = sceneContainer;
+            _dataHandler = dataHandler;
+        }
 
         public void Initialize()
         {
@@ -34,20 +42,12 @@ namespace Asteroids.SceneManage
             _compositeDisposable.Add(_dataHandler.LastScoreSub.Subscribe(UpdateLastScore));
         }
 
-        public void LateDispose()
+        public void Dispose()
         {
             _startGame.UnregisterCallback<ClickEvent>(GoToGame);
             _exit.UnregisterCallback<ClickEvent>(Exit);
 
             _compositeDisposable.Dispose();
-        }
-
-        [Inject]
-        private void Construct(
-            SceneContainer sceneContainer, DataHandler dataHandler)
-        {
-            _sceneContainer = sceneContainer;
-            _dataHandler = dataHandler;
         }
 
         private void GoToGame(ClickEvent e)

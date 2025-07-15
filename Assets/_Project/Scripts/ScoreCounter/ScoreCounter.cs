@@ -6,7 +6,7 @@ using Asteroids.Total;
 
 namespace Asteroids.Score
 {
-    public class ScoreCounter: MonoBehaviour, IInitializable, ILateDisposable
+    public class ScoreCounter: MonoBehaviour, IInitializable, IDisposable
     {
         [SerializeField] private int AsteroidCost;
         [SerializeField] private int SmallAsteroidCost;
@@ -15,9 +15,16 @@ namespace Asteroids.Score
         public event Action<int, Vector2> ObjectDestroyed;
 
         private ObjectManager _objectManagerLink;
-        private DataHandler _dataHandler;
+        private SaveManager _dataHandler;
 
-        public void LateDispose()
+        [Inject]
+        private void Construct(ObjectManager objectManager, SaveManager dataHandler)
+        {
+            _objectManagerLink = objectManager;
+            _dataHandler = dataHandler;
+        }
+
+        public void Dispose()
         {
             _objectManagerLink.AlienQueue.ObjectReturnedToQueue -= AlienDestroy;
             _objectManagerLink.AsteroidQueue.ObjectReturnedToQueue -= AsteroidDestroy;
@@ -31,13 +38,6 @@ namespace Asteroids.Score
             _objectManagerLink.SmallAsteroidQueue.ObjectReturnedToQueue += SmallAsteroidDestroy;
 
             _dataHandler.LastScore = 0;
-        }
-
-        [Inject]
-        private void Construct(ObjectManager objectManager, DataHandler dataHandler)
-        {
-            _objectManagerLink = objectManager;
-            _dataHandler = dataHandler;
         }
 
         private void CallMethods(int value, SpaceObject a)

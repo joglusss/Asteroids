@@ -1,12 +1,12 @@
 using R3;
+using System;
 using System.IO;
-using UnityEditor.Overlays;
 using UnityEngine;
 using Zenject;
 
 namespace Asteroids.Total
 {
-    public class DataHandler : IInitializable, ILateDisposable
+    public class SaveManager : IInitializable, IDisposable
     {
         public Observable<int> BestScoreSub => _bestScore;
         public Observable<int> LastScoreSub => _lastScore;
@@ -28,30 +28,29 @@ namespace Asteroids.Total
 
         private readonly ReactiveProperty<int> _bestScore = new();
         private readonly ReactiveProperty<int> _lastScore = new();
-        private string SavePath => Path.Combine(Application.dataPath, "Data.json");
+        private IDataSaver _dataSaver;
+
+        [Inject]
+        private void Construct(IDataSaver dataSaver)
+        { 
+            _dataSaver = dataSaver;
+        }
 
         public void Initialize()
         {
-            SaveData Data = new SaveData();
-
-            if (File.Exists(SavePath))
-            {
-                string json = File.ReadAllText(SavePath);
-                Data = JsonUtility.FromJson<SaveData>(json);
-            }
+            SaveData Data = _dataSaver.Load();
 
             BestScore = Data.BestScore;
             LastScore = Data.LastScore;
         }
 
-        public void LateDispose() 
+        public void Dispose() 
         {
-            string json = JsonUtility.ToJson(new SaveData()
+            _dataSaver.Save(new SaveData()
             {
                 BestScore = BestScore,
                 LastScore = LastScore,
-            });
-            File.WriteAllText(SavePath, json);
+            });  
         }
     }
 }

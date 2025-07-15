@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2570584036262730409}
   - component: {fileID: 7555184038331303354}
-  - component: {fileID: 6268847883701488651}
+  - component: {fileID: 6561084311523835139}
   m_Layer: 5
   m_Name: MenuUIDocument
   m_TagString: Untagged
@@ -52,7 +52,7 @@ MonoBehaviour:
   m_WorldSpaceSizeMode: 1
   m_WorldSpaceWidth: 1920
   m_WorldSpaceHeight: 1080
---- !u!114 &6268847883701488651
+--- !u!114 &6561084311523835139
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -61,7 +61,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3543316679287918484}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: efdaa9bdc0eba8f42ae2cf0b8441dd30, type: 3}
+  m_Script: {fileID: 11500000, guid: 2be266f8c65d79a43b17f9a8a4285f83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _uIDocument: {fileID: 7555184038331303354}

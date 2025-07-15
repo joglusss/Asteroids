@@ -1,4 +1,5 @@
 using Asteroids.Helpers;
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -7,7 +8,7 @@ using Zenject;
 
 namespace Asteroids.Score
 {
-    public class ScoreCounterView : MonoBehaviour, IInitializable, ILateDisposable
+    public class ScoreCounterView : MonoBehaviour, IInitializable, IDisposable
     {
         [SerializeField] private TMP_Text _scoreTextPrefab;
         [SerializeField] private float _lifeTime;
@@ -18,6 +19,12 @@ namespace Asteroids.Score
         private ScoreCounter _scoreCounter;
         private Label _currentScore;
 
+        [Inject]
+        private void Construct(ScoreCounter scoreCounter)
+        {
+            _scoreCounter = scoreCounter;
+        }
+
         public void Initialize()
         {
             _camera = Camera.main;
@@ -27,18 +34,12 @@ namespace Asteroids.Score
             _scoreCounter.ObjectDestroyed += ScoreAdding;
         }
 
-        public void LateDispose()
+        public void Dispose()
         {
             _scoreCounter.ObjectDestroyed -= ScoreAdding;
         }
 
         public void ScoreAdding(int value, Vector2 position) => StartCoroutine(Timer(value, position));
-
-        [Inject]
-        private void Construct(ScoreCounter scoreCounter)
-        { 
-            _scoreCounter = scoreCounter;
-        }
 
         private IEnumerator Timer(int value, Vector2 position)
         {

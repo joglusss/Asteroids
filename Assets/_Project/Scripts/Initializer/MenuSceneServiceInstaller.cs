@@ -1,20 +1,21 @@
 using Asteroids.SceneManage;
+using System;
 using UnityEngine;
 using Zenject;
 
 namespace Asteroids.Installers
 {
-    public class MenuContainerHandlerInstaller : MonoInstaller
+    public class MenuSceneServiceInstaller : MonoInstaller
     {
-        [SerializeField] private MenuSceneContainerHandler _menuUIPrefab;
+        [SerializeField] private MenuSceneService _menuUIPrefab;
 
         public override void InstallBindings()
         {
             System.Type[] types = new System.Type[]
           {
-                typeof(MenuSceneContainerHandler),
+                typeof(MenuSceneService),
                 typeof(IInitializable),
-                typeof(ILateDisposable)
+                typeof(IDisposable)
           };
             Container.Bind(types).FromComponentsInNewPrefab(_menuUIPrefab).AsSingle();
         }

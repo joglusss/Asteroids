@@ -1,4 +1,5 @@
 using Asteroids.Ship;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
@@ -24,7 +25,7 @@ namespace Asteroids.Installers
                 typeof(ShipStat), 
                 typeof(ShipWeapon),
                 typeof(IInitializable), 
-                typeof(ILateDisposable)
+                typeof(IDisposable)
             };
             Container.Bind(types).FromComponentsInNewPrefab(_shipControl).AsSingle().Lazy();
         }

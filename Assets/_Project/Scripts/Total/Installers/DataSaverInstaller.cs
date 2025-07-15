@@ -7,7 +7,8 @@ namespace Asteroids.Total.Installers
     {
         public override void InstallBindings()
         {
-            Container.BindInterfacesAndSelfTo<DataHandler>().AsSingle();
+            Container.Bind<IDataSaver>().To<LocalDataSaver>().AsSingle();
+            Container.BindInterfacesAndSelfTo<SaveManager>().AsSingle();
         }
     }
 }

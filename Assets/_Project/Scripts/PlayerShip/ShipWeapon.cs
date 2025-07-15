@@ -18,6 +18,14 @@ namespace Asteroids.Ship
         private Coroutine _laserCounter;
         private ObjectManager _objectManager;
 
+        [Inject]
+        private void Construct(ObjectManager objectManager, ShipStatModel shipStatModel, IInput inputStorage)
+        {
+            _objectManager = objectManager;
+            _model = shipStatModel;
+            _inputStorage = inputStorage;
+        }
+
         private void OnDisable()
         {
             _inputStorage.LaserShotEvent -= ShootLaser;
@@ -31,14 +39,6 @@ namespace Asteroids.Ship
 
             _inputStorage.LaserShotEvent += ShootLaser;
             _inputStorage.BulletShotEvent += ShootBullet;
-        }
-
-        [Inject]
-        private void Construct(ObjectManager objectManager, ShipStatModel shipStatModel, IInput inputStorage)
-        {
-            _objectManager = objectManager;
-            _model = shipStatModel;
-            _inputStorage = inputStorage;
         }
 
         private IEnumerator LaserCounter()

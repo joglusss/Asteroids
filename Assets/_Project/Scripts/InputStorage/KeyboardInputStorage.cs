@@ -6,7 +6,7 @@ using Zenject;
 
 namespace Asteroids.Input 
 {
-    public class KeyboardInputStorage : IInput, IInitializable, ILateDisposable
+    public class KeyboardInputStorage : IInput, IInitializable, IDisposable
     {
         public event Action<Vector2> MoveEvent;
         public event Action LaserShotEvent;
@@ -32,7 +32,7 @@ namespace Asteroids.Input
             _escape.performed += EscapeInvoke;
         }
 
-        public void LateDispose()
+        public void Dispose()
         {
             _move.performed -= MoveInvoke;
             _move.canceled -= MoveInvoke;

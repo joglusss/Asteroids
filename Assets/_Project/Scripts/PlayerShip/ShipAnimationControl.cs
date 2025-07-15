@@ -14,11 +14,11 @@ namespace Asteroids.Ship
 
         private Animator _animator;
         private SpriteRenderer _shipImage;
-        private GameSceneContainerHandler _sceneContainerHandler;
+        private GameSceneService _sceneContainerHandler;
         private bool _coroutineFlag;
 
         [Inject]
-        private void Construct(GameSceneContainerHandler sceneContainerHandler)
+        private void Construct(GameSceneService sceneContainerHandler)
         { 
             _sceneContainerHandler = sceneContainerHandler;
 

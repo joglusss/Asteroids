@@ -4,17 +4,24 @@ using Zenject;
 using Asteroids.Total;
 using R3;
 using UnityEngine.UIElements;
+using System;
 
 namespace Asteroids.Score
 {
-    public class LastScoreView : MonoBehaviour, IInitializable, ILateDisposable
+    public class LastScoreView : MonoBehaviour, IInitializable, IDisposable
     {
         [SerializeField] UIDocument _uiDocument;
         [SerializeField] private string _startText;
 
-        private DataHandler _dataHandler;
+        private SaveManager _dataHandler;
         private CompositeDisposable _compositeDisposable = new CompositeDisposable();
         private Label _currentScore;
+
+        [Inject]
+        private void Construct(SaveManager dataSaver)
+        {
+            _dataHandler = dataSaver;
+        }
 
         public void Initialize()
         {
@@ -23,7 +30,7 @@ namespace Asteroids.Score
             UpdateText(0);
         }
 
-        public void LateDispose()
+        public void Dispose()
         {
             _compositeDisposable.Dispose();
         }
@@ -31,12 +38,6 @@ namespace Asteroids.Score
         private void UpdateText(int value)
         {
             _currentScore.text = _startText + _dataHandler.LastScore;
-        }
-
-        [Inject]
-        private void Construct(DataHandler dataSaver)
-        {
-            _dataHandler = dataSaver;
         }
     }
 }

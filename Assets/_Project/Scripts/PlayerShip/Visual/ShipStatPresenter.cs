@@ -2,15 +2,23 @@ using Asteroids.SceneManage;
 using UnityEngine;
 using Zenject;
 using R3;
+using System;
 
 
 namespace Asteroids.Ship
 {
-    public class ShipStatPresenter : IInitializable, ILateDisposable
+    public class ShipStatPresenter : IInitializable, IDisposable
     {
         private ShipStatModel _model;
         private ShipStatView _view;
         private CompositeDisposable _compositeDisposable = new CompositeDisposable();
+
+        [Inject]
+        private void Construct(ShipStatModel shipStatModel, ShipStatView shipStatView)
+        {
+            _model = shipStatModel;
+            _view = shipStatView;
+        }
 
         public void Initialize()
         {
@@ -22,26 +30,19 @@ namespace Asteroids.Ship
             _model.LaserCooldownSubscribe.Subscribe(ChangeLaserCooldown).AddTo(_compositeDisposable);
         }
 
-        public void LateDispose() => _compositeDisposable.Dispose();
+        public void Dispose() => _compositeDisposable.Dispose();
 
-        [Inject]
-        private void Construct(ShipStatModel shipStatModel, ShipStatView shipStatView)
-        {
-            _model = shipStatModel;
-            _view = shipStatView;
-        }
+        private void ChangeHealth(int a) => _view.ChangeHealth(a);
 
-        public void ChangeHealth(int a) => _view.ChangeHealth(a);
+        private void ChangeCoordinates(Vector2 a) => _view.ChangeCoordinates(a);
 
-        public void ChangeCoordinates(Vector2 a) => _view.ChangeCoordinates(a);
+        private void ChangeAngle(float a) => _view.ChangeAngle(a);
 
-        public void ChangeAngle(float a) => _view.ChangeAngle(a);
+        private void ChangeSpeed(float a) => _view.ChangeSpeed(a);
 
-        public void ChangeSpeed(float a) => _view.ChangeSpeed(a);
+        private void ChangeLaserCount(int a) => _view.ChangeLaserCount(a);
 
-        public void ChangeLaserCount(int a) => _view.ChangeLaserCount(a);
-
-        public void ChangeLaserCooldown(float a) => _view.ChangeLaserCooldown(a);
+        private void ChangeLaserCooldown(float a) => _view.ChangeLaserCooldown(a);
     }
 
 }
