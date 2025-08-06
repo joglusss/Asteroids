@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1c1403deda9cec49a2bd330ebdac1a4, type: 3}
   m_Name: SceneContainer
   m_EditorClassIdentifier: 
+  _loadScene: Load
   _menuScene: Menu
   _gameScene: Game

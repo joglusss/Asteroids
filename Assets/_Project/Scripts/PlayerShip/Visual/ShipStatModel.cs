@@ -1,98 +1,102 @@
-using Asteroids.SceneManage;
+using Asteroids.Visual;
 using R3;
 using System;
-using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 using Zenject;
 
 namespace Asteroids.Ship
 {
-    public class ShipStatModel
-    {
-        public Observable<int> HealthSubscribe => _health;
-        public Observable<bool> ImmortalitySubscribe => _immortality;
-        public Observable<Vector2> CoordinatesSubscribe => _coordinates;
-        public Observable<float> AngleSubscribe => _angle;
-        public Observable<float> SpeedSubscribe => _speed;
-        public Observable<int> LaserCountSubscribe => _laserCount;
-        public Observable<float> LaserCooldownSubscribe => _laserCooldown;
-        public Observable<bool> LifeStatusSubscribe => _lifeStatus;
+	public class ShipStatModel
+	{
+		public readonly ReactiveProperty<int> _health = new();
+		public readonly ReactiveProperty<bool> _immortality = new(false);
+		public readonly ReactiveProperty<Vector2> _coordinates = new();
+		public readonly ReactiveProperty<float> _angle = new();
+		public readonly ReactiveProperty<float> _speed = new();
+		public readonly ReactiveProperty<int> _laserCount = new();
+		public readonly ReactiveProperty<float> _laserCooldown = new();
+		public readonly ReactiveProperty<bool> _lifeStatus = new(true);
+		
+		private ShipAnimationControl _shipAnimationControl;
+		private ShipStatPreference _shipStatPreference;
+		private bool RecoveryLaserCountFlag;
 
-        private ShipAnimationControl _shipAnimationControl;
-        private readonly ReactiveProperty<int> _health = new(1);
-        private readonly ReactiveProperty<bool> _immortality = new(false);
-        private readonly ReactiveProperty<Vector2> _coordinates = new();
-        private readonly ReactiveProperty<float> _angle = new();
-        private readonly ReactiveProperty<float> _speed = new();
-        private readonly ReactiveProperty<int> _laserCount = new();
-        private readonly ReactiveProperty<float> _laserCooldown = new();
-        private readonly ReactiveProperty<bool> _lifeStatus = new(true);
+		[Inject]
+		public void Construct(ShipAnimationControl shipAnimationControl, ShipStatPreference shipStatPreference)
+		{
+			_shipAnimationControl = shipAnimationControl;
+			_shipStatPreference = shipStatPreference;
 
-        public int Health
-        {
-            get => _health.Value;
-            set
-            {
-                if (_immortality.Value) return;
-                _health.Value = Math.Clamp(value, 0, int.MaxValue);
-                LifeStatus = value > 0;
-            }
-        }
+			_health.Value = shipStatPreference.MaxHealth;
+			_laserCount.Value = shipStatPreference.MaxLaserCount;
+		}
 
-        public bool Immortality
-        {
-            get => _immortality.Value;
-            set
-            {
-                _immortality.Value = value;
-                _shipAnimationControl.SwitchBlinking(value);
-            }
-        }
+		public void AddHealth(int value)
+		{ 
+			if (_immortality.Value) return;
+			_health.Value = Math.Clamp(_health.Value + value, 0, _shipStatPreference.MaxHealth);
 
-        public Vector2 Coordinates
-        { 
-            get => _coordinates.Value;
-            set => _coordinates.Value = value;
-        }
+			StartImmortalityFrame(_shipStatPreference.ImmortalityTime);
 
-        public float Angle
-        { 
-            get => _angle.Value;
-            set => _angle.Value = value;
-        }
+			if (_health.Value <= 0) Death();
+		}
 
-        public float Speed
-        { 
-            get => _speed.Value;
-            set => _speed.Value = value;
-        }
+		public void AddLaserCount(int value)
+		{
+			_laserCount.Value = Mathf.Clamp(_laserCount.Value + value, 0, _shipStatPreference.MaxLaserCount);
+			
+			if(!RecoveryLaserCountFlag)
+				RecoveryLaserCount();
+		}
 
-        public int LaserCount
-        {
-            get => _laserCount.Value;
-            set => _laserCount.Value = value;
-        }
+		public void SetCoordinates(Vector2 value) => _coordinates.Value = value;
 
-        public float LaserCooldown
-        { 
-            get => _laserCooldown.Value;
-            set => _laserCooldown.Value = value;
-        }
+		public void SetAngle(float value) => _angle.Value = value;
+		
+		public void SetSpeed(float value) => _speed.Value = value;
 
-        public bool LifeStatus
-        {
-            get => _lifeStatus.Value;
-            set 
-            {
-                _lifeStatus.Value = value;
-                if (!value) _shipAnimationControl.Death();
-            }
-        }
+		private async void RecoveryLaserCount()
+		{
+			RecoveryLaserCountFlag = true;
+			
+			_laserCooldown.Value = _shipStatPreference.LaserCooldown;
+			while (_laserCount.Value < _shipStatPreference.MaxLaserCount)
+			{ 
+				while (_laserCooldown.Value > 0.0f)
+				{ 	
+					await Task.Delay(100);
+					_laserCooldown.Value = Mathf.Clamp(_laserCooldown.Value - 0.1f, 0.0f, float.MaxValue);
+				}
 
-        [Inject]
-        public void Construct(ShipAnimationControl shipAnimationControl)
-        {
-            _shipAnimationControl = shipAnimationControl;
-        }
-    }
+				_laserCount.Value = Mathf.Clamp(_laserCount.Value + 1, 0, _shipStatPreference.MaxLaserCount);
+			}
+			
+			RecoveryLaserCountFlag = false;
+		}
+		
+		private async void StartImmortalityFrame(float time)
+		{
+			_immortality.Value = true;
+			_shipAnimationControl.SwitchBlinking(true);
+
+			float timeCounter = time;
+
+			while (time > 0.0f)
+			{ 
+				await Task.Delay(1000);
+				time = Mathf.Clamp(time - 1.0f, 0.0f, float.MaxValue);
+			}
+			
+			_immortality.Value = false;
+			_shipAnimationControl.SwitchBlinking(false);
+		}
+
+		private void Death()
+		{ 
+			_lifeStatus.Value = false;
+			_shipAnimationControl.Death();
+		}
+	}
 }

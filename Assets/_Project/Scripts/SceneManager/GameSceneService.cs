@@ -1,10 +1,4 @@
-using System.Collections.Generic;
-using TMPro;
-using UnityEngine;
-using UnityEngine.InputSystem;
 using Asteroids.Input;
-using UnityEngine.Events;
-using Asteroids.Ship;
 using Zenject;
 using System;
 

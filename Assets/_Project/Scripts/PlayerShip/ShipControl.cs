@@ -1,7 +1,5 @@
 using UnityEngine;
 using Asteroids.Helpers;
-using Asteroids.Visual;
-using Asteroids.SceneManage;
 using Zenject;
 using Asteroids.Input;
 using System;
@@ -14,7 +12,7 @@ namespace Asteroids.Ship
         [SerializeField] private float _forwardSpeed = 7.0f;
         [SerializeField] private float _angularSpeed = -1000.0f;
 
-        private ShipStatModel _model;
+        private ShipStatViewModel _viewModel;
         private IInput _inputStorage;
         private Rigidbody2D _rigidbody;
         private Vector2 _inputValue;
@@ -22,9 +20,9 @@ namespace Asteroids.Ship
         private Vector2 _centerPoint;
 
         [Inject]
-        private void Construct(ShipStatModel statModel, IInput inputStorage)
+        private void Construct(ShipStatViewModel viewModel, IInput inputStorage)
         {
-            _model = statModel;
+            _viewModel = viewModel;
             _inputStorage = inputStorage;
             _rigidbody = GetComponent<Rigidbody2D>();
         }
@@ -61,7 +59,7 @@ namespace Asteroids.Ship
 
         private void Movement()
         {
-            if (!_model.LifeStatus) return;
+            if (!_viewModel.LifeStatus.CurrentValue) return;
 
             Vector2 force = _inputValue.y > 0.0f ? _inputValue.y * _forwardSpeed * Time.deltaTime * transform.up : Vector2.zero;
             float angle = _inputValue.x * _angularSpeed * Time.deltaTime;
@@ -72,9 +70,9 @@ namespace Asteroids.Ship
 
         private void UpdateModel()
         {
-            _model.Coordinates = _rigidbody.position;
-            _model.Speed = _rigidbody.linearVelocity.magnitude;
-            _model.Angle = transform.eulerAngles.z;
+            _viewModel.SetCoordinates(_rigidbody.position);
+            _viewModel.SetSpeed(_rigidbody.linearVelocity.magnitude);
+            _viewModel.SetAngle(transform.eulerAngles.z);
         }
     }
 

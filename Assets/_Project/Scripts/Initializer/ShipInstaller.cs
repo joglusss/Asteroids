@@ -1,4 +1,5 @@
 using Asteroids.Ship;
+using Asteroids.Visual;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,28 +7,32 @@ using Zenject;
 
 namespace Asteroids.Installers
 {
-    public class ShipInstaller : MonoInstaller
-    {
-        [SerializeField] private ShipControl _shipControl;
-        [SerializeField] private ShipStatView _shipStatView;
+	public class ShipInstaller : MonoInstaller
+	{
+		[SerializeField] private ShipControl _shipControl;
+		[SerializeField] private ShipStatView _shipStatView;
+		[SerializeField] private ShipStatPreference _shipStatPreference;
+		
+		
+		public override void InstallBindings()
+		{
+			Container.Bind<ShipStatPreference>().FromInstance(_shipStatPreference);
 
-        public override void InstallBindings()
-        {
-            Container.BindInterfacesAndSelfTo<ShipStatView>().FromInstance(_shipStatView).AsSingle();
+			Container.BindInterfacesAndSelfTo<ShipStatModel>().AsSingle().NonLazy();
+			Container.BindInterfacesAndSelfTo<ShipStatViewModel>().AsSingle().NonLazy();
+			
+			Container.BindInterfacesAndSelfTo<ShipStatView>().FromInstance(_shipStatView).AsSingle();
 
-            Container.BindInterfacesAndSelfTo<ShipStatModel>().AsSingle().NonLazy();
-            Container.BindInterfacesAndSelfTo<ShipStatPresenter>().AsSingle().NonLazy();
-
-            System.Type[] types = new System.Type[] 
-            {   
-                typeof(ShipAnimationControl),
-                typeof(ShipControl), 
-                typeof(ShipStat), 
-                typeof(ShipWeapon),
-                typeof(IInitializable), 
-                typeof(IDisposable)
-            };
-            Container.Bind(types).FromComponentsInNewPrefab(_shipControl).AsSingle().Lazy();
-        }
-    }
+			System.Type[] types = new System.Type[] 
+			{   
+				typeof(ShipAnimationControl),
+				typeof(ShipControl), 
+				typeof(ShipStat), 
+				typeof(ShipWeapon),
+				typeof(IInitializable), 
+				typeof(IDisposable)
+			};
+			Container.Bind(types).FromComponentsInNewPrefab(_shipControl).AsSingle().Lazy();
+		}
+	}
 }

@@ -6,51 +6,26 @@ using Zenject;
 
 namespace Asteroids.Total
 {
-    public class SaveManager : IInitializable, IDisposable
-    {
-        public Observable<int> BestScoreSub => _bestScore;
-        public Observable<int> LastScoreSub => _lastScore;
+	public class SaveManager : IInitializable, IDisposable
+	{
+		public readonly ReactiveProperty<SaveData> Data = new();
+		
+		private IDataSaver _dataSaver;
 
-        public int BestScore
-        {
-            get => _bestScore.Value;
-            private set => _bestScore.Value = value;
-        }
-        public int LastScore
-        {
-            get => _lastScore.Value;
-            set
-            {
-                _bestScore.Value = Mathf.Max(value, BestScore);
-                _lastScore.Value = value;
-            }
-        }
+		[Inject]
+		private void Construct(IDataSaver dataSaver)
+		{ 
+			_dataSaver = dataSaver;
+		}
 
-        private readonly ReactiveProperty<int> _bestScore = new();
-        private readonly ReactiveProperty<int> _lastScore = new();
-        private IDataSaver _dataSaver;
+		public void Initialize()
+		{
+			Data.Value = _dataSaver.Load();
+		}
 
-        [Inject]
-        private void Construct(IDataSaver dataSaver)
-        { 
-            _dataSaver = dataSaver;
-        }
-
-        public void Initialize()
-        {
-            SaveData Data = _dataSaver.Load();
-
-            BestScore = Data.BestScore;
-            LastScore = Data.LastScore;
-        }
-
-        public void Dispose() 
-        {
-            _dataSaver.Save(new SaveData()
-            {
-                BestScore = BestScore,
-                LastScore = LastScore,
-            });  
-        }
-    }
+		public void Dispose() 
+		{
+			_dataSaver.Save(Data.Value);
+		}
+	}
 }
