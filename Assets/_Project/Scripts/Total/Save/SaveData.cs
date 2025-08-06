@@ -7,7 +7,7 @@ namespace Asteroids.Total
 	{
 		private int _bestScore;
 		private int _lastScore;
-		
+
 		public int BestScore
 		{
 			get => _bestScore;

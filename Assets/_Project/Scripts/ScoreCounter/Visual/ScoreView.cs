@@ -11,7 +11,6 @@ namespace Asteroids.Score
 { 
 	public class ScoreView : MonoBehaviour, IInitializable
 	{
-		// [SerializeField] UIDocument _uiDocument;
 		[SerializeField] private TMP_Text _scoreTextPrefab;
 		[SerializeField] private float _lifeTime;
 		[SerializeField] private TMP_Text _currentScore;
@@ -33,8 +32,6 @@ namespace Asteroids.Score
 			_camera = Camera.main;
 			_scoreTextQueue = new(_scoreTextPrefab, transform);
 			_waitForSeconds = new WaitForSeconds(_lifeTime);
-			
-			// _currentScore = _uiDocument.rootVisualElement.Q<Label>("LAST_SCORE");
 
 			_scoreViewModel.LastScore.Subscribe(UpdateLastScore).AddTo(_compositeDisposable);
 			_scoreViewModel.AddingScore

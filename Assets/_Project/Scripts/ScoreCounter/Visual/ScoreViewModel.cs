@@ -1,4 +1,6 @@
 
+using System;
+using Asteroids.Total;
 using R3;
 using UnityEngine;
 using Zenject;
@@ -17,10 +19,10 @@ namespace Asteroids.Score
 		{ 
 			_scoreModel = scoreModel;
 		}
-		
+
 		public void Initialize()
 		{
-			LastScore = _scoreModel.SaveData.Select(x => x.LastScore).ToReadOnlyReactiveProperty();
+			LastScore = Observable.EveryValueChanged(_scoreModel.SaveData, x => x.Value.LastScore).ToReadOnlyReactiveProperty();
 		}
 
 		public void AddScore(int value, Vector2 position)

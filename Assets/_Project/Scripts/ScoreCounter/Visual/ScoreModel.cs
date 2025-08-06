@@ -1,5 +1,6 @@
 using Asteroids.Total;
 using R3;
+using Unity.Collections;
 using Zenject;
 
 namespace Asteroids.Score
@@ -18,7 +19,7 @@ namespace Asteroids.Score
 		{
 			SaveData.Value.LastScore = 0;
 		}
-
+		
 		public void AddScore(int value) 
 		{
 			SaveData.Value.LastScore += value;

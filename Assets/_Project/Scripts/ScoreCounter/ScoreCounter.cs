@@ -12,7 +12,7 @@ namespace Asteroids.Score
 		[SerializeField] private int SmallAsteroidCost;
 		[SerializeField] private int AlienCost;
 
-		public event Action<int, Vector2> ObjectDestroyed;
+		//public event Action<int, Vector2> ObjectDestroyed;
 
 		private ObjectManager _objectManagerLink;
 		private ScoreViewModel _scoreViewModel;
@@ -40,7 +40,7 @@ namespace Asteroids.Score
 
 		private void CallMethods(int value, SpaceObject a)
 		{
-			ObjectDestroyed?.Invoke(value, (Vector2)a.transform.position);
+			//ObjectDestroyed?.Invoke(value, (Vector2)a.transform.position);
 			_scoreViewModel.AddScore(value, (Vector2)a.transform.position);
 		}
 
