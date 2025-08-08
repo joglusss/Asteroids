@@ -863,7 +863,7 @@ GameObject:
   - component: {fileID: 1067217308}
   - component: {fileID: 1067217309}
   m_Layer: 0
-  m_Name: MenuSceneContainerHandlerInstaller
+  m_Name: UIInstaller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -896,7 +896,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cc17527986b5c944ba131e195f8195b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _menuView: {fileID: 2080597061}
 --- !u!1 &1231420890
 GameObject:
   m_ObjectHideFlags: 0

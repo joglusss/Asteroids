@@ -18,11 +18,6 @@ namespace Asteroids.Menu
 			SaveData = saveManager.Data;
 			_sceneContainer = sceneContainer;
 		}
-
-		public void SetLastScore(int value)
-		{ 
-			SaveData.LastScore = value;
-		}
 		
 		public void StartGame() => _sceneContainer.LoadGameScene();
 

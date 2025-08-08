@@ -1258,7 +1258,7 @@ GameObject:
   - component: {fileID: 1301000910}
   - component: {fileID: 1301000911}
   m_Layer: 0
-  m_Name: ScoreInstaller
+  m_Name: UIInstaller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

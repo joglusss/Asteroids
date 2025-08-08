@@ -30,7 +30,6 @@ namespace Asteroids.Menu
 			_exit.OnClickAsObservable()
 				.Subscribe(e => Exit())
 				.AddTo(this);
-
 			_viewModel.BestScore
 				.Subscribe(UpdateBestScore)
 				.AddTo(this);
