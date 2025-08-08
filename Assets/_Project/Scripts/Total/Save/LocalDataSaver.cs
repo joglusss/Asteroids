@@ -9,7 +9,7 @@ namespace Asteroids.Total
 	public class LocalDataSaver : IDataSaver
 	{
 		private string SavePath => Path.Combine(Application.dataPath, "Data.json");
-
+		
 		public SaveData Load()
 		{
 			SaveData data = new SaveData();
@@ -17,7 +17,11 @@ namespace Asteroids.Total
 			if (File.Exists(SavePath))
 			{
 				var json = File.ReadAllText(SavePath);
-				data = JsonConvert.DeserializeObject<SaveData>(json);
+				
+				var settings = new JsonSerializerSettings();
+				settings.Converters.Add(new JsonReactivePropertyConvertor<int>());
+				
+				data = JsonConvert.DeserializeObject<SaveData>(json, settings);
 			}
 			
 			return data;
@@ -25,7 +29,11 @@ namespace Asteroids.Total
 
 		public void Save(SaveData data)
 		{
-			string json = JsonConvert.SerializeObject(data, Formatting.Indented);
+			var settings = new JsonSerializerSettings();
+			settings.Converters.Add(new JsonReactivePropertyConvertor<int>());
+			
+			string json = JsonConvert.SerializeObject(data, Formatting.Indented, settings);
+			
 			File.WriteAllText(SavePath, json);
 		}
 	}

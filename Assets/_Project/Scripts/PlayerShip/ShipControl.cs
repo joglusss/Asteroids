@@ -59,7 +59,7 @@ namespace Asteroids.Ship
 
         private void Movement()
         {
-            if (!_viewModel.LifeStatus.CurrentValue) return;
+            if (!_viewModel.IsAlive()) return;
 
             Vector2 force = _inputValue.y > 0.0f ? _inputValue.y * _forwardSpeed * Time.deltaTime * transform.up : Vector2.zero;
             float angle = _inputValue.x * _angularSpeed * Time.deltaTime;

@@ -1,18 +1,19 @@
 using Asteroids.SceneManage;
 using Asteroids.Total;
 using R3;
+using UnityEngine;
 using Zenject;
 
 namespace Asteroids.Menu
 {
 	public class MenuModel
 	{
-		public ReactiveProperty<SaveData> SaveData;
+		public SaveData SaveData;
 		
 		private SceneContainer _sceneContainer;
 		
 		[Inject]
-		private void Construct(SaveManager saveManager, SceneContainer sceneContainer)
+		private void Construct(SaveService saveManager, SceneContainer sceneContainer)
 		{
 			SaveData = saveManager.Data;
 			_sceneContainer = sceneContainer;
@@ -20,7 +21,7 @@ namespace Asteroids.Menu
 
 		public void SetLastScore(int value)
 		{ 
-			SaveData.Value.LastScore = value;
+			SaveData.LastScore = value;
 		}
 		
 		public void StartGame() => _sceneContainer.LoadGameScene();

@@ -4,7 +4,7 @@ using Zenject;
 
 namespace Asteroids.Installers
 {
-	public class GameScoreInstaller : MonoInstaller
+	public class UIInstaller : MonoInstaller
 	{
 		[SerializeField] private ScoreView _scoreView;
 		[SerializeField] private ScoreCounter _scoreCounter;
@@ -13,8 +13,7 @@ namespace Asteroids.Installers
 		public override void InstallBindings()
 		{
 			Container.BindInterfacesAndSelfTo<ScoreModel>().AsSingle();
-			Container.BindInterfacesAndSelfTo<ScoreViewModel>().AsSingle();
-			Container.BindInterfacesTo<ScoreView>().FromInstance(_scoreView).AsSingle();
+			Container.BindInterfacesAndSelfTo<ScoreViewModel>().AsSingle(); 
 			
 			Container.BindInterfacesAndSelfTo<ScoreCounter>().FromInstance(_scoreCounter).AsSingle();
 		}   

@@ -265,7 +265,7 @@ GameObject:
   - component: {fileID: 91708392}
   - component: {fileID: 91708391}
   m_Layer: 0
-  m_Name: GameSceneContainerHandlerInstaller
+  m_Name: SceneServiceInstaller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1857,7 +1857,7 @@ GameObject:
   - component: {fileID: 2022505171}
   - component: {fileID: 2022505172}
   m_Layer: 5
-  m_Name: Game
+  m_Name: Space
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

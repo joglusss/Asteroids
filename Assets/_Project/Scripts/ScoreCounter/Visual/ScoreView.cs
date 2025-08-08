@@ -9,14 +9,13 @@ using Zenject;
 
 namespace Asteroids.Score
 { 
-	public class ScoreView : MonoBehaviour, IInitializable
+	public class ScoreView : MonoBehaviour
 	{
 		[SerializeField] private TMP_Text _scoreTextPrefab;
 		[SerializeField] private float _lifeTime;
 		[SerializeField] private TMP_Text _currentScore;
 
 		private ScoreViewModel _scoreViewModel;
-		private CompositeDisposable _compositeDisposable = new CompositeDisposable();
 		private Camera _camera;
 		private ScoreTextQueue _scoreTextQueue;
 		private WaitForSeconds _waitForSeconds;
@@ -27,29 +26,24 @@ namespace Asteroids.Score
 			_scoreViewModel = scoreViewModel;
 		}
 
-		public void Initialize()
+		private void Start()
 		{
 			_camera = Camera.main;
 			_scoreTextQueue = new(_scoreTextPrefab, transform);
 			_waitForSeconds = new WaitForSeconds(_lifeTime);
 
-			_scoreViewModel.LastScore.Subscribe(UpdateLastScore).AddTo(_compositeDisposable);
+			_scoreViewModel.LastScore.Subscribe(UpdateLastScore).AddTo(this);
 			_scoreViewModel.AddingScore
 				.Subscribe(data => StartCoroutine(Timer(data.score, data.position)))
-				.AddTo(_compositeDisposable);
-		}
-
-		public void Dispose()
-		{
-			_compositeDisposable.Dispose();
+				.AddTo(this);
 		}
 		
-		private void UpdateLastScore (int value) => _currentScore.text = $"Score: {value}";
+		private void UpdateLastScore (string value) => _currentScore.text = value;
 		
-		private IEnumerator Timer(int value, Vector2 position)
+		private IEnumerator Timer(string value, Vector2 position)
 		{
 			TMP_Text scoreText = _scoreTextQueue.DrawObject();
-			scoreText.text = "+" + value.ToString();
+			scoreText.text = value;
 			scoreText.transform.position = _camera.WorldToScreenPoint(position);
 
 			yield return _waitForSeconds;

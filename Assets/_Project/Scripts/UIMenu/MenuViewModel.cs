@@ -1,13 +1,13 @@
-using Asteroids.SceneManage;
 using R3;
+using UnityEngine;
 using Zenject;
 
 namespace Asteroids.Menu
 {
 	public class MenuViewModel : IInitializable
 	{
-		public ReadOnlyReactiveProperty<int> BestScore { get; private set; }
-		public ReadOnlyReactiveProperty<int> LastScore { get; private set; }
+		public ReadOnlyReactiveProperty<string> BestScore { get; private set; }
+		public ReadOnlyReactiveProperty<string> LastScore { get; private set; }
 		
 		private MenuModel _menuModel;
 		
@@ -19,8 +19,12 @@ namespace Asteroids.Menu
 		
 		public void Initialize()
 		{
-			BestScore = _menuModel.SaveData.Select(x => x.BestScore).ToReadOnlyReactiveProperty();
-			LastScore = _menuModel.SaveData.Select(x => x.LastScore).ToReadOnlyReactiveProperty();
+			BestScore = _menuModel.SaveData.BestScoreSubscribe
+				.Select(x => $"Best Score:  {x}")
+				.ToReadOnlyReactiveProperty();
+			LastScore = _menuModel.SaveData.LastScoreSubscribe
+				.Select(x => $"Last Score:  {x}")
+				.ToReadOnlyReactiveProperty();
 		}		
 
 		public void StartGame() => _menuModel.StartGame();

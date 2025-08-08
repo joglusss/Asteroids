@@ -40,7 +40,7 @@ namespace Asteroids.Ship
 		
 		private void ShootBullet() 
 		{
-			if (!_viewModel.LifeStatus.CurrentValue) return;
+			if (!_viewModel.IsAlive()) return;
 
 			SpaceObject bullet = _objectManager.BulletQueue.DrawObject();
 			if (bullet != null)
@@ -51,9 +51,9 @@ namespace Asteroids.Ship
 
 		private void ShootLaser() 
 		{
-			if (!_viewModel.LifeStatus.CurrentValue) return;
+			if (!_viewModel.IsAlive()) return;
 
-			if (_viewModel.LaserCount.CurrentValue > 0)
+			if (_viewModel.GetLaserCount() > 0)
 			{
 				SpaceObject laser = _objectManager.LaserQueue.DrawObject();
 				if (laser != null)

@@ -7,14 +7,13 @@ namespace Asteroids.Ship
 { 
 	public class ShipStatViewModel : IInitializable, IDisposable
 	{
-		public ReadOnlyReactiveProperty<int> Health { get; private set; }
+		public ReadOnlyReactiveProperty<string> Health { get; private set; }
+		public ReadOnlyReactiveProperty<string> Coordinates { get; private set; }
+		public ReadOnlyReactiveProperty<string> Angle { get; private set; }
+		public ReadOnlyReactiveProperty<string> Speed { get; private set; }
+		public ReadOnlyReactiveProperty<string> LaserCount { get; private set; }
+		public ReadOnlyReactiveProperty<string> LaserCooldown { get; private set; }
 		public ReadOnlyReactiveProperty<bool> Immortality { get; private set; }
-		public ReadOnlyReactiveProperty<Vector2> Coordinates { get; private set; }
-		public ReadOnlyReactiveProperty<float> Angle { get; private set; }
-		public ReadOnlyReactiveProperty<float> Speed { get; private set; }
-		public ReadOnlyReactiveProperty<int> LaserCount { get; private set; }
-		public ReadOnlyReactiveProperty<float> LaserCooldown { get; private set; }
-		public ReadOnlyReactiveProperty<bool> LifeStatus { get; private set; }
 		
 		private ShipStatModel _model;
 		private CompositeDisposable _compositeDisposable = new CompositeDisposable();
@@ -27,16 +26,21 @@ namespace Asteroids.Ship
 
 		public void Initialize()
 		{
-			Health = _model._health;
+			Health = _model._health.Select(x => $"Health: {x}").ToReadOnlyReactiveProperty();
+			Coordinates = _model._coordinates.Select(x => $"Coordinates: {x}").ToReadOnlyReactiveProperty();
+			Angle = _model._angle.Select(x => $"Angle: {x}").ToReadOnlyReactiveProperty();
+			Speed = _model._speed.Select(x => $"Speed: {x}").ToReadOnlyReactiveProperty();
+			LaserCount = _model._laserCount.Select(x => $"Laser Count: {x}").ToReadOnlyReactiveProperty();
+			LaserCooldown = _model._laserCooldown.Select(x => $"Laser Cooldown: {x}").ToReadOnlyReactiveProperty();
 			Immortality = _model._immortality;
-			Coordinates = _model._coordinates;
-			Angle = _model._angle;
-			Speed = _model._speed;
-			LaserCount = _model._laserCount;
-			LaserCooldown = _model._laserCooldown;
-			LifeStatus = _model._lifeStatus;
 		}
 
+		public bool IsImmortal() => _model._immortality.Value;
+		
+		public bool IsAlive() => _model._lifeStatus.Value;
+
+		public int GetLaserCount() => _model._laserCount.Value;
+		
 		public void Dispose() => _compositeDisposable.Dispose();
 
 		public void AddHealth(int a) => _model.AddHealth(a);

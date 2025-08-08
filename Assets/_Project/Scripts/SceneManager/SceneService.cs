@@ -4,7 +4,7 @@ using System;
 
 namespace Asteroids.SceneManage
 {
-	public class GameSceneService : IInitializable, IDisposable
+	public class SceneService : IInitializable, IDisposable
 	{
 		private SceneContainer _sceneContainer;
 		private IInput _inputStorage;

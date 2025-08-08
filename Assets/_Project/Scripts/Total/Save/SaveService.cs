@@ -6,9 +6,9 @@ using Zenject;
 
 namespace Asteroids.Total
 {
-	public class SaveManager : IInitializable, IDisposable
+	public class SaveService : IInitializable, IDisposable
 	{
-		public readonly ReactiveProperty<SaveData> Data = new();
+		public SaveData Data { get;  private set; }
 		
 		private IDataSaver _dataSaver;
 
@@ -20,12 +20,12 @@ namespace Asteroids.Total
 
 		public void Initialize()
 		{
-			Data.Value = _dataSaver.Load();
+			Data = _dataSaver.Load();
 		}
 
 		public void Dispose() 
 		{
-			_dataSaver.Save(Data.Value);
+			_dataSaver.Save(Data);
 		}
 	}
 }

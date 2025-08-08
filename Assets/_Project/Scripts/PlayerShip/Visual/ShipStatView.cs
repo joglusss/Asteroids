@@ -6,10 +6,8 @@ using Zenject;
 
 namespace Asteroids.Ship
 {
-	public class ShipStatView : MonoBehaviour, IInitializable
+	public class ShipStatView : MonoBehaviour
 	{
-		// [SerializeField] UIDocument _uIDocument;
-		
 		[SerializeField] private TMP_Text _healthText;
 		[SerializeField] private TMP_Text _coordinatesText;
 		[SerializeField] private TMP_Text _angleText;
@@ -18,7 +16,6 @@ namespace Asteroids.Ship
 		[SerializeField] private TMP_Text _laserCooldownText;
 
 		private ShipStatViewModel _viewModel;
-		private CompositeDisposable _disposable = new();
 
 		[Inject]
 		private void Construct(ShipStatViewModel viewModel)
@@ -26,34 +23,27 @@ namespace Asteroids.Ship
 			_viewModel = viewModel;
 		}
 
-		public void Initialize()
+		public void Start()
 		{
-			// _healthText = _uIDocument.rootVisualElement.Q<Label>("HEALTH");
-			// _coordinatesText = _uIDocument.rootVisualElement.Q<Label>("COORDINATES");
-			// _angleText = _uIDocument.rootVisualElement.Q<Label>("ANGLE");
-			// _speedText = _uIDocument.rootVisualElement.Q<Label>("SPEED");
-			// _laserCountText = _uIDocument.rootVisualElement.Q<Label>("LASER_COUNT");
-			// _laserCooldownText = _uIDocument.rootVisualElement.Q<Label>("LASER_COOLDOWN");
-
-			_viewModel.Health.Subscribe(ChangeHealth).AddTo(_disposable);
-			_viewModel.Coordinates.Subscribe(ChangeCoordinates).AddTo(_disposable);
-			_viewModel.Angle.Subscribe(ChangeAngle).AddTo(_disposable);
-			_viewModel.Speed.Subscribe(ChangeSpeed).AddTo(_disposable);
-			_viewModel.LaserCount.Subscribe(ChangeLaserCount).AddTo(_disposable);
-			_viewModel.LaserCooldown.Subscribe(ChangeLaserCooldown).AddTo(_disposable);
+			_viewModel.Health.Subscribe(ChangeHealth).AddTo(this);
+			_viewModel.Coordinates.Subscribe(ChangeCoordinates).AddTo(this);
+			_viewModel.Angle.Subscribe(ChangeAngle).AddTo(this);
+			_viewModel.Speed.Subscribe(ChangeSpeed).AddTo(this);
+			_viewModel.LaserCount.Subscribe(ChangeLaserCount).AddTo(this);
+			_viewModel.LaserCooldown.Subscribe(ChangeLaserCooldown).AddTo(this);
 		}
 
-		public void ChangeHealth(int health) => _healthText.text = $"Health: {health.ToString()}";
+		public void ChangeHealth(string value) => _healthText.text = value;
 
-		public void ChangeCoordinates(Vector2 coordinate) => _coordinatesText.text = $"Coordinate: {coordinate.ToString()}";
+		public void ChangeCoordinates(string value) => _coordinatesText.text = value;
 
-		public void ChangeAngle(float angle) => _angleText.text = $"Angle: {angle.ToString()}";
+		public void ChangeAngle(string value) => _angleText.text = value;
 
-		public void ChangeSpeed(float speed) => _speedText.text = $"Speed: {speed.ToString()}";
+		public void ChangeSpeed(string value) => _speedText.text = value;
 
-		public void ChangeLaserCount(int count) => _laserCountText.text = $"Laser count: {count.ToString()}";
+		public void ChangeLaserCount(string value) => _laserCountText.text = value;
 
-		public void ChangeLaserCooldown(float time) => _laserCooldownText.text = $"Laser cooldown: {time.ToString()}";
+		public void ChangeLaserCooldown(string value) => _laserCooldownText.text = value;
 	}
 
 }

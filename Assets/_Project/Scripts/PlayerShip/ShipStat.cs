@@ -45,7 +45,7 @@ namespace Asteroids.Ship
 
 		public void Interact(SpaceObjectType collisionSpaceObjectType)
 		{
-			if (_viewModel.Immortality.CurrentValue == false && collisionSpaceObjectType != SpaceObjectType.SpaceShip)
+			if (_viewModel.IsImmortal() == false && collisionSpaceObjectType != SpaceObjectType.SpaceShip)
 			{
 				_viewModel.AddHealth(-1);
 			}

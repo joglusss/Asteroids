@@ -9,8 +9,8 @@ namespace Asteroids.Score
 {
 	public class ScoreViewModel : IInitializable
 	{
-		public ReadOnlyReactiveProperty<int> LastScore { get; private set; }
-		public ReactiveCommand<(int score, Vector2 position)> AddingScore { get; private set; } = new();
+		public ReadOnlyReactiveProperty<string> LastScore { get; private set; }
+		public ReactiveCommand<(string score, Vector2 position)> AddingScore { get; private set; } = new();
 		
 		private ScoreModel _scoreModel;
 		
@@ -22,13 +22,13 @@ namespace Asteroids.Score
 
 		public void Initialize()
 		{
-			LastScore = Observable.EveryValueChanged(_scoreModel.SaveData, x => x.Value.LastScore).ToReadOnlyReactiveProperty();
+			LastScore = _scoreModel.SaveData.LastScoreSubscribe.Select(x => $"Score: {x}").ToReadOnlyReactiveProperty();
 		}
 
 		public void AddScore(int value, Vector2 position)
 		{
 			_scoreModel.AddScore(value);
-			AddingScore.Execute((value, position));
+			AddingScore.Execute(($"+{value}", position));
 		}
 	}
 }

@@ -7,7 +7,7 @@ using Zenject;
 
 namespace Asteroids.Menu
 {
-	public class MenuView : MonoBehaviour, IInitializable, IDisposable
+	public class MenuView : MonoBehaviour
 	{
 		[SerializeField] private Button _startGame;
 		[SerializeField] private Button _exit;
@@ -15,7 +15,6 @@ namespace Asteroids.Menu
 		[SerializeField] private TMP_Text _lastScore;
 		
 		private MenuViewModel _viewModel;
-		private CompositeDisposable _disposables = new CompositeDisposable();
 		
 		[Inject]
 		private void Construct(MenuViewModel menuViewModel)
@@ -23,28 +22,35 @@ namespace Asteroids.Menu
 			_viewModel = menuViewModel;
 		}
 
-		public void Initialize()
+		private void Start()
 		{
-			_startGame.onClick.AddListener(GoToGame);
-			_exit.onClick.AddListener(Exit);
+			_startGame.OnClickAsObservable()
+				.Subscribe(e => GoToGame())
+				.AddTo(this);
+			_exit.OnClickAsObservable()
+				.Subscribe(e => Exit())
+				.AddTo(this);
 
-			_viewModel.BestScore.Subscribe(UpdateBestScore).AddTo(_disposables);
-			_viewModel.LastScore.Subscribe(UpdateLastScore).AddTo(_disposables);
+			_viewModel.BestScore
+				.Subscribe(UpdateBestScore)
+				.AddTo(this);
+			_viewModel.LastScore
+				.Subscribe(UpdateLastScore)
+				.AddTo(this);
 		}
 
-		public void Dispose()
+		private void OnDestroy()
 		{
 			_startGame.onClick.RemoveListener(GoToGame);
 			_exit.onClick.RemoveListener(Exit);
-			_disposables.Dispose();
 		}
 
 		private void GoToGame() => _viewModel.StartGame();
 
 		private void Exit() => _viewModel.ExitGame();
 
-		private void UpdateBestScore(int value) => _bestScore.text = $"BEST SCORE: {value}";
+		private void UpdateBestScore(string value) => _bestScore.text = value;
 
-		private void UpdateLastScore(int value) => _lastScore.text = $"Last score: {value}";
+		private void UpdateLastScore(string value) => _lastScore.text = value;
 	}
 }
