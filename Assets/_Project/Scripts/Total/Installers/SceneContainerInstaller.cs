@@ -1,5 +1,4 @@
 using Asteroids.SceneManage;
-using JetBrains.Annotations;
 using UnityEngine;
 using Zenject;
 
@@ -11,7 +10,7 @@ namespace Asteroids.Total
 
         public override void InstallBindings()
         {
-            Container.BindInterfacesAndSelfTo<SceneContainer>().FromScriptableObject(_sceneContainer).AsSingle();
+            Container.BindInterfacesAndSelfTo<SceneContainer>().FromScriptableObject(_sceneContainer).AsSingle().NonLazy();
         }
     }
 }

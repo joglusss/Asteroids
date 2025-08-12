@@ -1,7 +1,4 @@
-using System;
 using Asteroids.Input;
-using UnityEditor.Rendering;
-using UnityEngine;
 using Zenject;
 
 public class InputStorageInstaller : MonoInstaller

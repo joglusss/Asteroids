@@ -1,8 +1,0 @@
-<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <engine:VisualElement style="flex-grow: 1; align-items: center; justify-content: center; width: 70%; align-self: center; height: 0;">
-        <engine:Label text="Label" name="BEST_SCORE" style="width: 100%; -unity-text-align: upper-center; font-size: 50%; background-color: rgba(255, 255, 255, 0); color: rgb(255, 255, 255); -unity-font-style: bold; top: -10%;" />
-        <engine:Label text="Label" name="LAST_SCORE" style="width: 100%; -unity-text-align: middle-center; font-size: 40%; background-color: rgba(255, 255, 255, 0); color: rgb(255, 255, 255); top: -10%;" />
-        <engine:Button text="START GAME" name="START_GAME" style="width: 100%; font-size: 60%; background-color: rgba(0, 0, 0, 0); background-image: none; color: rgb(255, 255, 255); -unity-font-style: bold; border-left-color: rgba(255, 255, 255, 0); border-right-color: rgba(255, 255, 255, 0); border-top-color: rgba(255, 255, 255, 0); border-bottom-color: rgba(255, 255, 255, 0); top: 0;" />
-        <engine:Button text="EXIT" name="EXIT" style="width: 50%; font-size: 50%; background-color: rgba(188, 188, 188, 0); color: rgb(255, 255, 255); -unity-font-style: normal; border-left-color: rgba(255, 255, 255, 0); border-right-color: rgba(255, 255, 255, 0); border-top-color: rgba(255, 255, 255, 0); border-bottom-color: rgba(255, 255, 255, 0); top: 0;" />
-    </engine:VisualElement>
-</engine:UXML>

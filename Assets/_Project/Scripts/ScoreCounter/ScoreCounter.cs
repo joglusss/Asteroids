@@ -1,18 +1,15 @@
 using UnityEngine;
 using Asteroids.Objects;
 using Zenject;
-using System;
-using Asteroids.Total;
+using R3;
 
 namespace Asteroids.Score
 {
-	public class ScoreCounter: MonoBehaviour, IInitializable, IDisposable
+	public class ScoreCounter: MonoBehaviour, IInitializable
 	{
 		[SerializeField] private int AsteroidCost;
 		[SerializeField] private int SmallAsteroidCost;
 		[SerializeField] private int AlienCost;
-
-		//public event Action<int, Vector2> ObjectDestroyed;
 
 		private ObjectManager _objectManagerLink;
 		private ScoreViewModel _scoreViewModel;
@@ -23,24 +20,24 @@ namespace Asteroids.Score
 			_objectManagerLink = objectManager;
 			_scoreViewModel = scoreViewModel;
 		}
-
-		public void Dispose()
-		{
-			_objectManagerLink.AlienQueue.ObjectReturnedToQueue -= AlienDestroy;
-			_objectManagerLink.AsteroidQueue.ObjectReturnedToQueue -= AsteroidDestroy;
-			_objectManagerLink.SmallAsteroidQueue.ObjectReturnedToQueue -= SmallAsteroidDestroy;
-		}
-
 		public void Initialize()
 		{
-			_objectManagerLink.AlienQueue.ObjectReturnedToQueue += AlienDestroy;
-			_objectManagerLink.AsteroidQueue.ObjectReturnedToQueue += AsteroidDestroy;
-			_objectManagerLink.SmallAsteroidQueue.ObjectReturnedToQueue += SmallAsteroidDestroy;
+			_objectManagerLink.AlienQueue
+				.ObjectReturned
+				.Subscribe(AlienDestroy)
+				.AddTo(this);
+			_objectManagerLink.AsteroidQueue
+				.ObjectReturned
+				.Subscribe(AsteroidDestroy)
+				.AddTo(this);
+			_objectManagerLink.SmallAsteroidQueue
+				.ObjectReturned
+				.Subscribe(SmallAsteroidDestroy)
+				.AddTo(this);
 		}
 
 		private void CallMethods(int value, SpaceObject a)
 		{
-			//ObjectDestroyed?.Invoke(value, (Vector2)a.transform.position);
 			_scoreViewModel.AddScore(value, (Vector2)a.transform.position);
 		}
 

@@ -1,8 +1,7 @@
 using System.Collections.Generic;
-using System;
 using UnityEngine;
 using Unity.VisualScripting;
-using Zenject;
+using R3;
 
 namespace Asteroids.Objects
 {
@@ -13,8 +12,9 @@ namespace Asteroids.Objects
         private readonly SpaceObject _spaceObjectPrefab;
         private readonly Transform _objectsContainer;
         private readonly Queue<SpaceObject> _queue;
-
-        public event Action<SpaceObject> ObjectReturnedToQueue;
+        
+        public readonly ReactiveCommand<SpaceObject> ObjectReturned = new();
+        public readonly ReactiveCommand<SpaceObject> ObjectDrawn = new();
 
         public SpaceObjectQueue(SpaceObject prefab, ObjectManager objectManager)
         {
@@ -33,6 +33,8 @@ namespace Asteroids.Objects
             else
                 returnSpaceObject = _queue.Dequeue();
 
+            ObjectDrawn.Execute(returnSpaceObject);
+            
             returnSpaceObject.gameObject.SetActive(true);
             return returnSpaceObject;
         }
@@ -44,7 +46,7 @@ namespace Asteroids.Objects
 
             _queue.Enqueue(spaceObject);
             spaceObject.gameObject.SetActive(false);
-            ObjectReturnedToQueue?.Invoke(spaceObject);
+            ObjectReturned.Execute(spaceObject);
         }
 
         private SpaceObject CreateNewObject()

@@ -1,4 +1,3 @@
-using UnityEngine;
 using Zenject;
 
 namespace Asteroids.Total.Installers
@@ -7,8 +6,8 @@ namespace Asteroids.Total.Installers
     {
         public override void InstallBindings()
         {
-            Container.Bind<IDataSaver>().To<LocalDataSaver>().AsSingle();
-            Container.BindInterfacesAndSelfTo<SaveService>().AsSingle();
+            Container.Bind<IDataSaver>().To<LocalDataSaver>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<SaveService>().AsSingle().NonLazy();
         }
     }
 }
