@@ -1,4 +1,5 @@
 using Asteroids.Total;
+using UnityEngine;
 using Zenject;
 
 namespace Asteroids.Score
@@ -9,7 +10,7 @@ namespace Asteroids.Score
 		
 		[Inject]
 		private void Construct(SaveService saveManager)
-		{ 
+		{
 			SaveData = saveManager.Data;
 		}
 				

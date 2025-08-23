@@ -5,6 +5,7 @@ using Asteroids.Objects;
 using Asteroids.SceneManage;
 using Zenject;
 using Asteroids.Input;
+using Asteroids.Asset;
 
 namespace Asteroids.Ship
 {
@@ -24,7 +25,7 @@ namespace Asteroids.Ship
 			_viewModel = viewModel;
 			_inputStorage = inputStorage;
 		}
-
+		
 		private void OnDisable()
 		{
 			_inputStorage.LaserShotEvent -= ShootLaser;

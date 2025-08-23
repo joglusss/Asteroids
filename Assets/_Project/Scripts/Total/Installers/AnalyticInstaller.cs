@@ -6,7 +6,7 @@ namespace Asteroids.Total.Installers
     {
         public override void InstallBindings()
         {
-            Container.Bind<IAnalytic>().To<FirebaseAnalytic>().AsSingle().NonLazy();
+            Container.Bind<IAnalyticsService>().To<FirebaseAnalytic>().AsSingle().NonLazy();
         }
         
     }

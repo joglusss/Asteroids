@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Asteroids.Total
 {
-    public class FirebaseAnalytic : IAnalytic
+    public class FirebaseAnalytic : IAnalyticsService
     {
         private FirebaseAnalytic()
         {

@@ -3,6 +3,8 @@ using System.Collections;
 using Asteroids.Helpers;
 using Zenject;
 using Asteroids.Ship;
+using Asteroids.Asset;
+using Mono.Cecil.Cil;
 
 namespace Asteroids.Objects
 {
@@ -21,22 +23,26 @@ namespace Asteroids.Objects
         public Vector2[] BorderPoints { get; private set; }
         public Vector2 BorderCenter { get; private set; }
 
+        private IAssetContainer<GameObject> _asteroid;
+        
         [Inject]
         private void Construct(
             ShipControl shipControl,
-            [Inject(Id = SpaceObjectID.Bullet)] SpaceObjectQueue bullet,
-            [Inject(Id = SpaceObjectID.Asteroid)] SpaceObjectQueue asteroid,
-            [Inject(Id = SpaceObjectID.SmallAsteroid)] SpaceObjectQueue smallAsteroid,
-            [Inject(Id = SpaceObjectID.Alien)] SpaceObjectQueue alien,
-            [Inject(Id = SpaceObjectID.Laser)] SpaceObjectQueue laser)
+            [Inject(Id = SpaceObjectID.Bullet)] IAssetContainer<GameObject> bullet,
+            [Inject(Id = SpaceObjectID.Asteroid)] IAssetContainer<GameObject> asteroid,
+            [Inject(Id = SpaceObjectID.SmallAsteroid)] IAssetContainer<GameObject> smallAsteroid,
+            [Inject(Id = SpaceObjectID.Alien)] IAssetContainer<GameObject> alien,
+            [Inject(Id = SpaceObjectID.Laser)] IAssetContainer<GameObject> laser)
         {
             AlienTarget = shipControl.transform;
 
-            BulletQueue = bullet;
-            AsteroidQueue = asteroid;
-            SmallAsteroidQueue = smallAsteroid;
-            AlienQueue = alien;
-            LaserQueue = laser;
+            _asteroid = asteroid;
+            
+            AsteroidQueue = new SpaceObjectQueue(asteroid.LoadAssetSync().GetComponent<SpaceObject>(), this);
+            BulletQueue = new SpaceObjectQueue(bullet.LoadAssetSync().GetComponent<SpaceObject>(), this);
+            SmallAsteroidQueue = new SpaceObjectQueue(smallAsteroid.LoadAssetSync().GetComponent<SpaceObject>(), this);
+            AlienQueue = new SpaceObjectQueue(alien.LoadAssetSync().GetComponent<SpaceObject>(), this);
+            LaserQueue = new SpaceObjectQueue(laser.LoadAssetSync().GetComponent<SpaceObject>(), this);
         }
 
         public void Initialize()
