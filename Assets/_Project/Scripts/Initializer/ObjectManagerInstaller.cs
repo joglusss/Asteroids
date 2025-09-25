@@ -3,8 +3,6 @@ using UnityEngine;
 using Zenject;
 using UnityEngine.AddressableAssets;
 using Asteroids.Asset;
-using UnityEditor.Rendering;
-using System;
 
 namespace Asteroids.Installers
 {

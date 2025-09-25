@@ -1,13 +1,11 @@
-using System;
-using System.Threading.Tasks;
-using Zenject;
+using Cysharp.Threading.Tasks;
 
 namespace Asteroids.Asset
 { 
     public interface IAssetContainer<T> where T : UnityEngine.Object
     {
         T LoadedAsset { get; }
-        Task<T> LoadAssetAsync();
+        UniTask<T> LoadAssetAsync();
         T LoadAssetSync();
         void ReleaseAsset();
     }

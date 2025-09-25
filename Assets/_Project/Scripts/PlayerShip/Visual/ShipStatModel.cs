@@ -1,4 +1,8 @@
+using Asteroids.Ads;
+using Asteroids.SceneManage;
+using Asteroids.Total;
 using Asteroids.Visual;
+using Cysharp.Threading.Tasks;
 using R3;
 using System;
 using System.Threading.Tasks;
@@ -18,36 +22,84 @@ namespace Asteroids.Ship
 		public readonly ReactiveProperty<int> _laserCount = new();
 		public readonly ReactiveProperty<float> _laserCooldown = new();
 		public readonly ReactiveProperty<bool> _lifeStatus = new(true);
-		
+
+		private IAdsService _adsService;
 		private ShipAnimationControl _shipAnimationControl;
 		private ShipStatPreference _shipStatPreference;
-		private bool RecoveryLaserCountFlag;
+		private SceneService _sceneContainerHandler;
+		private bool _recoveryLaserCountFlag;
+		private bool _isFirstDeath = true;
 
 		[Inject]
-		public void Construct(ShipAnimationControl shipAnimationControl, ShipStatPreference shipStatPreference)
+		public void Construct(SceneService sceneContainerHandler, ShipAnimationControl shipAnimationControl, ShipStatPreference shipStatPreference, IAdsService adsService)
 		{
+			_sceneContainerHandler = sceneContainerHandler;
+		
 			_shipAnimationControl = shipAnimationControl;
 			_shipStatPreference = shipStatPreference;
 
 			_health.Value = shipStatPreference.MaxHealth;
 			_laserCount.Value = shipStatPreference.MaxLaserCount;
+
+			_adsService = adsService;
 		}
 
 		public void AddHealth(int value)
 		{ 
 			if (_immortality.Value) return;
-			_health.Value = Math.Clamp(_health.Value + value, 0, _shipStatPreference.MaxHealth);
+			
+			_health.Value =  Math.Clamp(_health.Value + value, 0, _shipStatPreference.MaxHealth);
 
-			StartImmortalityFrame(_shipStatPreference.ImmortalityTime);
-
-			if (_health.Value <= 0) Death();
+			if (_health.Value <= 0)
+			{
+				if (!_isFirstDeath)
+				{ 
+					GiveUp().Forget();
+					return;
+				}
+					
+				_lifeStatus.Value = false;
+				return;
+			}
+			else
+				_lifeStatus.Value = true;
+			
+			StartImmortalityFrame(_shipStatPreference.ImmortalityTime);			
 		}
 
+		public async UniTask Resurrect() 
+		{
+			if (_isFirstDeath)
+			{ 
+				_isFirstDeath = false;
+				
+				AdStat abc = await _adsService.ShowRewardedAd();
+
+				if (abc == AdStat.Ended)
+				{ 
+					AddHealth(_shipStatPreference.MaxHealth);
+					return;
+				}
+			}
+
+			await _shipAnimationControl.Death();
+			_sceneContainerHandler.GoToMenu();
+		}
+
+		public async UniTask GiveUp() 
+		{
+			await _shipAnimationControl.Death();
+		
+			await _adsService.ShowInterstitialAd();
+			
+			_sceneContainerHandler.GoToMenu();
+		}
+		
 		public void AddLaserCount(int value)
 		{
 			_laserCount.Value = Mathf.Clamp(_laserCount.Value + value, 0, _shipStatPreference.MaxLaserCount);
 			
-			if(!RecoveryLaserCountFlag)
+			if(!_recoveryLaserCountFlag)
 				RecoveryLaserCount();
 		}
 
@@ -59,21 +111,21 @@ namespace Asteroids.Ship
 
 		private async void RecoveryLaserCount()
 		{
-			RecoveryLaserCountFlag = true;
+			_recoveryLaserCountFlag = true;
 			
 			_laserCooldown.Value = _shipStatPreference.LaserCooldown;
 			while (_laserCount.Value < _shipStatPreference.MaxLaserCount)
 			{ 
 				while (_laserCooldown.Value > 0.0f)
 				{ 	
-					await Task.Delay(100);
+					await UniTask.Delay(100);
 					_laserCooldown.Value = Mathf.Clamp(_laserCooldown.Value - 0.1f, 0.0f, float.MaxValue);
 				}
 
 				_laserCount.Value = Mathf.Clamp(_laserCount.Value + 1, 0, _shipStatPreference.MaxLaserCount);
 			}
 			
-			RecoveryLaserCountFlag = false;
+			_recoveryLaserCountFlag = false;
 		}
 		
 		private async void StartImmortalityFrame(float time)
@@ -85,18 +137,12 @@ namespace Asteroids.Ship
 
 			while (time > 0.0f)
 			{ 
-				await Task.Delay(1000);
+				await UniTask.Delay(1000);
 				time = Mathf.Clamp(time - 1.0f, 0.0f, float.MaxValue);
 			}
 			
 			_immortality.Value = false;
 			_shipAnimationControl.SwitchBlinking(false);
-		}
-
-		private void Death()
-		{ 
-			_lifeStatus.Value = false;
-			_shipAnimationControl.Death();
 		}
 	}
 }

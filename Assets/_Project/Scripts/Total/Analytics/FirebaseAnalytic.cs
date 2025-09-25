@@ -14,7 +14,6 @@ namespace Asteroids.Total
             FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(OnDependencyStatusReceived);
         }
 
-
         public void SendGameStart() => FirebaseAnalytics.LogEvent("StartGame");
         
         public void SendGameStop(int ShootsCount, int LasersCount, int DestroyedAsteroidsCount, int DestroyedAliensCount) =>

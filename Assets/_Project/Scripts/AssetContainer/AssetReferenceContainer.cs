@@ -1,9 +1,8 @@
 using System;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
-using Zenject;
 
 namespace Asteroids.Asset
 {
@@ -12,7 +11,7 @@ namespace Asteroids.Asset
         public T LoadedAsset { get; private set; }
 
         private AssetReferenceT<T> _assetReference;
-        private TaskCompletionSource<T> _loadTaskSource;
+        private UniTaskCompletionSource<T> _loadTaskSource;
         
         public AssetReferenceContainer(AssetReferenceT<T> assetReference)
         {
@@ -23,9 +22,9 @@ namespace Asteroids.Asset
         {
             ReleaseAsset();
         }
-        
-        public async Task<T> LoadAssetAsync()
-        {   
+
+        public async UniTask<T> LoadAssetAsync()
+        { 
             if (LoadedAsset != null)
                 return LoadedAsset;
             if(_loadTaskSource != null)
@@ -39,7 +38,7 @@ namespace Asteroids.Asset
                 {
                     Debug.Log($"Asset for {handle.DebugName} failed to load.");
                     LoadedAsset = handle.Result;
-                    _loadTaskSource.SetResult(handle.Result);
+                    _loadTaskSource.TrySetResult(handle.Result);
                 }
                 else
                 {

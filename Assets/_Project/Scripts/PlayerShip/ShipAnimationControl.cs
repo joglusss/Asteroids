@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Collections;
 using UnityEngine;
 using Zenject;
+using Cysharp.Threading.Tasks;
 
 namespace Asteroids.Ship
 {
@@ -14,29 +15,26 @@ namespace Asteroids.Ship
 
         private Animator _animator;
         private SpriteRenderer _shipImage;
-        private SceneService _sceneContainerHandler;
+
         private bool _coroutineFlag;
 
-        [Inject]
-        private void Construct(SceneService sceneContainerHandler)
+        private void Start()
         { 
-            _sceneContainerHandler = sceneContainerHandler;
+            
 
             _animator = GetComponent<Animator>();
             _shipImage = GetComponent<SpriteRenderer>();
         }
 
-        public async void Death()
+        public async UniTask Death()
         {
             _animator.SetBool("Death", true);
 
             while (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Death"))
-                await Task.Yield();
+                await UniTask.Yield();
 
             while (_animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f) 
-                await Task.Yield();
-
-            _sceneContainerHandler.GoToMenu();
+                await UniTask.Yield();
         }
 
         public void SwitchBlinking(bool value)

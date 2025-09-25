@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using UnityEngine.AI;
 
 namespace Asteroids.Objects
 {
@@ -32,10 +33,18 @@ namespace Asteroids.Objects
             StartCoroutine(LifetimeCounter());
         }
 
+        protected override void Pause(bool value) 
+        {
+            if (!value)
+            { 
+                _coroutineLifetimeCounter = null;
+                ReturnToQueue();
+            }
+        }
+        
         private IEnumerator LifetimeCounter()
         {
             yield return new WaitForSeconds(_lifeTime);
-
             _coroutineLifetimeCounter = null;
             ReturnToQueue();
         }

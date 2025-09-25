@@ -1,7 +1,7 @@
 using R3;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 using Zenject;
 
 namespace Asteroids.Ship
@@ -14,6 +14,8 @@ namespace Asteroids.Ship
 		[SerializeField] private TMP_Text _speedText;
 		[SerializeField] private TMP_Text _laserCountText;
 		[SerializeField] private TMP_Text _laserCooldownText;
+		[SerializeField] private Button _adsBtn;
+		[SerializeField] private Button _giveUpBtn;
 
 		private ShipStatViewModel _viewModel;
 
@@ -31,6 +33,11 @@ namespace Asteroids.Ship
 			_viewModel.Speed.Subscribe(ChangeSpeed).AddTo(this);
 			_viewModel.LaserCount.Subscribe(ChangeLaserCount).AddTo(this);
 			_viewModel.LaserCooldown.Subscribe(ChangeLaserCooldown).AddTo(this);
+
+			_viewModel.LifeStatus.Subscribe(ShowButton).AddTo(this);
+			
+			_adsBtn.OnClickAsObservable().Subscribe(_ => _viewModel.Resurrect()).AddTo(this);
+			_giveUpBtn.OnClickAsObservable().Subscribe(_ => _viewModel.GiveUp()).AddTo(this);
 		}
 
 		public void ChangeHealth(string value) => _healthText.text = value;
@@ -44,6 +51,12 @@ namespace Asteroids.Ship
 		public void ChangeLaserCount(string value) => _laserCountText.text = value;
 
 		public void ChangeLaserCooldown(string value) => _laserCooldownText.text = value;
+		
+		public void ShowButton(bool value)
+		{
+			_adsBtn.gameObject.SetActive(!value);
+			_giveUpBtn.gameObject.SetActive(!value);
+		}
 	}
 
 }

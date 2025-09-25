@@ -9,6 +9,8 @@ namespace Asteroids.Objects
 
         protected Rigidbody2D _rigidbody;
 
+        private Vector3 _saveVelocity;
+
         [field: SerializeField] public SpaceObjectType SpaceObjectType { get; private set; }
 
         protected virtual void Awake()
@@ -27,6 +29,21 @@ namespace Asteroids.Objects
             _rigidbody.linearVelocity = Vector2.zero;
             _rigidbody.transform.position = from;
             _rigidbody.AddForce(direction.normalized * _speed, ForceMode2D.Impulse);
+        }
+
+        protected override void Pause(bool value)
+        {
+            if (!value)
+            {
+                _saveVelocity = _rigidbody.linearVelocity;
+                _rigidbody.Sleep();
+            }
+            else
+            { 
+                _rigidbody.WakeUp();
+                _rigidbody.linearVelocity = _saveVelocity;
+            }
+                
         }
 
         public void Interact(SpaceObjectType collisionSpaceObjectType)

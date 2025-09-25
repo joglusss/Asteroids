@@ -4,7 +4,6 @@ using Asteroids.Helpers;
 using Zenject;
 using Asteroids.Ship;
 using Asteroids.Asset;
-using Mono.Cecil.Cil;
 
 namespace Asteroids.Objects
 {
@@ -24,10 +23,12 @@ namespace Asteroids.Objects
         public Vector2 BorderCenter { get; private set; }
 
         private IAssetContainer<GameObject> _asteroid;
-        
+        private ShipStatViewModel _shipStatVM;
+
         [Inject]
         private void Construct(
             ShipControl shipControl,
+            ShipStatViewModel shipStatVM,
             [Inject(Id = SpaceObjectID.Bullet)] IAssetContainer<GameObject> bullet,
             [Inject(Id = SpaceObjectID.Asteroid)] IAssetContainer<GameObject> asteroid,
             [Inject(Id = SpaceObjectID.SmallAsteroid)] IAssetContainer<GameObject> smallAsteroid,
@@ -37,6 +38,7 @@ namespace Asteroids.Objects
             AlienTarget = shipControl.transform;
 
             _asteroid = asteroid;
+            _shipStatVM = shipStatVM;
             
             AsteroidQueue = new SpaceObjectQueue(asteroid.LoadAssetSync().GetComponent<SpaceObject>(), this);
             BulletQueue = new SpaceObjectQueue(bullet.LoadAssetSync().GetComponent<SpaceObject>(), this);
@@ -50,7 +52,7 @@ namespace Asteroids.Objects
             BorderSize = GameMath.CalculateBorderSize();
             BorderPoints = GameMath.CalculateBorderPoints();
             BorderCenter = GameMath.BorderCenter();
-
+            
             StartCoroutine(LaunchCycle(AsteroidQueue, _asteroidLaunchCycleSetting));
             StartCoroutine(LaunchCycle(AlienQueue, _alienLaunchCycleSetting));
         }
@@ -79,9 +81,12 @@ namespace Asteroids.Objects
                 LaunchObject(objQueue.DrawObject());
             }
 
+            yield return null;
+            
             while (enabled)
             {
-                LaunchObject(objQueue.DrawObject());
+                if(_shipStatVM.LifeStatus.CurrentValue)
+                    LaunchObject(objQueue.DrawObject());
 
                 yield return new WaitForSeconds(UnityEngine.Random.Range(minTime, maxTime));
             }

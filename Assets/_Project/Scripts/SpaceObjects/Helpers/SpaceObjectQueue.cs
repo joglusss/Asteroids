@@ -51,9 +51,9 @@ namespace Asteroids.Objects
 
         private SpaceObject CreateNewObject()
         {
-            SpaceObject newSpaceObject = UnityEngine.Object.Instantiate(_spaceObjectPrefab, _objectsContainer);
+            SpaceObject newSpaceObject = Object.Instantiate(_spaceObjectPrefab, _objectsContainer);
 
-            newSpaceObject.Initialize(_objectManager, () => ReturnObject(newSpaceObject));
+            newSpaceObject.Initialize( () => ReturnObject(newSpaceObject));
 
             return newSpaceObject;
         }

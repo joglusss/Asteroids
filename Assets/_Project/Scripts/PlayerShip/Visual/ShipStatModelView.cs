@@ -1,10 +1,11 @@
 using System;
+using Cysharp.Threading.Tasks;
 using R3;
 using UnityEngine;
 using Zenject;
 
 namespace Asteroids.Ship
-{ 
+{
 	public class ShipStatViewModel : IInitializable, IDisposable
 	{
 		public ReadOnlyReactiveProperty<string> Health { get; private set; }
@@ -14,14 +15,18 @@ namespace Asteroids.Ship
 		public ReadOnlyReactiveProperty<string> LaserCount { get; private set; }
 		public ReadOnlyReactiveProperty<string> LaserCooldown { get; private set; }
 		public ReadOnlyReactiveProperty<bool> Immortality { get; private set; }
-		
+		public ReadOnlyReactiveProperty<bool> LifeStatus { get; private set; }
+
 		private ShipStatModel _model;
 		private CompositeDisposable _compositeDisposable = new CompositeDisposable();
-		
+
 		[Inject]
 		private void Construct(ShipStatModel shipStatModel)
 		{
 			_model = shipStatModel;
+			
+			LifeStatus = _model._lifeStatus;
+			Immortality = _model._immortality;
 		}
 
 		public void Initialize()
@@ -32,15 +37,18 @@ namespace Asteroids.Ship
 			Speed = _model._speed.Select(x => $"Speed: {x}").ToReadOnlyReactiveProperty();
 			LaserCount = _model._laserCount.Select(x => $"Laser Count: {x}").ToReadOnlyReactiveProperty();
 			LaserCooldown = _model._laserCooldown.Select(x => $"Laser Cooldown: {x}").ToReadOnlyReactiveProperty();
-			Immortality = _model._immortality;
 		}
 
-		public bool IsImmortal() => _model._immortality.Value;
+		public void Resurrect() => _model.Resurrect().Forget();
 		
+		public void GiveUp() => _model.GiveUp().Forget();
+
+		public bool IsImmortal() => _model._immortality.Value;
+
 		public bool IsAlive() => _model._lifeStatus.Value;
 
 		public int GetLaserCount() => _model._laserCount.Value;
-		
+
 		public void Dispose() => _compositeDisposable.Dispose();
 
 		public void AddHealth(int a) => _model.AddHealth(a);
