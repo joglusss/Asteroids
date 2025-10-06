@@ -33,7 +33,7 @@ namespace Asteroids.Objects
             StartCoroutine(LifetimeCounter());
         }
 
-        protected override void Pause(bool value) 
+        protected override void OnPause(bool value) 
         {
             if (!value)
             { 

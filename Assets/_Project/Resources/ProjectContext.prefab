@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7737198108793815546}
-  - component: {fileID: 163335102543719985}
+  - component: {fileID: 7958964631905150712}
   m_Layer: 0
   m_Name: GameDataInstaller
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8081446118722276449}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &163335102543719985
+--- !u!114 &7958964631905150712
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,7 +41,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2456643987019100862}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec473a70cb309554493d5ef92787e818, type: 3}
+  m_Script: {fileID: 11500000, guid: 52b3e82fe2b16ad42bce8816d06de492, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &2680703690669313997
@@ -53,7 +53,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6749541030690207822}
-  - component: {fileID: 4115792772500557849}
+  - component: {fileID: 2866723389011771415}
   m_Layer: 0
   m_Name: AnalyticInstaller
   m_TagString: Untagged
@@ -76,7 +76,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8081446118722276449}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4115792772500557849
+--- !u!114 &2866723389011771415
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -85,7 +85,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2680703690669313997}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0745ab252943b7d4f9b07f0f7a4bc3f4, type: 3}
+  m_Script: {fileID: 11500000, guid: ce55ec1207564054bb6852ea580b8d1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &3045783205348378009
@@ -122,6 +122,7 @@ Transform:
   - {fileID: 180187319509566812}
   - {fileID: 6749541030690207822}
   - {fileID: 826957630416253234}
+  - {fileID: 3981866525071359613}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8463338639764130396
@@ -138,10 +139,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _scriptableObjectInstallers: []
   _monoInstallers:
-  - {fileID: 163335102543719985}
-  - {fileID: 1512826238370513975}
-  - {fileID: 4115792772500557849}
-  - {fileID: 1280015156291575863}
+  - {fileID: 7958964631905150712}
+  - {fileID: 922930688634034171}
+  - {fileID: 2866723389011771415}
+  - {fileID: 516807569197086703}
+  - {fileID: 7719054207234843871}
   _installerPrefabs: []
   _parentNewObjectsUnderContext: 1
   _editorReflectionBakingCoverageMode: 0
@@ -156,6 +158,50 @@ MonoBehaviour:
       _missingHandlerDefaultResponse: 2
       _requireStrictUnsubscribe: 0
       _defaultAsyncTickPriority: 1
+--- !u!1 &4754532155281502919
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3981866525071359613}
+  - component: {fileID: 7719054207234843871}
+  m_Layer: 0
+  m_Name: RemoteConfig
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3981866525071359613
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4754532155281502919}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8081446118722276449}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7719054207234843871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4754532155281502919}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91b7fb87b89a8a540a934073bd2a9e86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5409180791633591303
 GameObject:
   m_ObjectHideFlags: 0
@@ -165,7 +211,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 826957630416253234}
-  - component: {fileID: 1280015156291575863}
+  - component: {fileID: 516807569197086703}
   m_Layer: 0
   m_Name: AdsInstaller
   m_TagString: Untagged
@@ -188,7 +234,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8081446118722276449}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1280015156291575863
+--- !u!114 &516807569197086703
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -197,12 +243,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 5409180791633591303}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 146ac9f96b6b8a946af2748e5ee08036, type: 3}
+  m_Script: {fileID: 11500000, guid: 36830bee46c41354d971f78bc718291b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _androidGameId: 5943098
-  _iosGameId: 5944009
-  _testMode: 1
 --- !u!1 &6055776379099671468
 GameObject:
   m_ObjectHideFlags: 0
@@ -212,7 +255,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 180187319509566812}
-  - component: {fileID: 1512826238370513975}
+  - component: {fileID: 922930688634034171}
   m_Layer: 0
   m_Name: SceneContainerInstaller
   m_TagString: Untagged
@@ -235,7 +278,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8081446118722276449}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1512826238370513975
+--- !u!114 &922930688634034171
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -244,7 +287,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6055776379099671468}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b12fb4ff1619c2841a86ef3b1fcbf419, type: 3}
+  m_Script: {fileID: 11500000, guid: e620366cb17fafa4683e553665b12b17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _sceneContainer: {fileID: 11400000, guid: e82cc2936dc76d8489c0ca68bbc7f9d2, type: 2}

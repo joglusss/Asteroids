@@ -29,6 +29,9 @@ namespace Asteroids.Helpers {
             return points;
         }
 
+        
+        public static void TeleportToBorder(Rigidbody2D rb, BorderSetting borderSetting) => TeleportToBorder(rb, borderSetting.Center, borderSetting.Points);
+    
         public static void TeleportToBorder(Rigidbody2D rb, Vector2 center, Vector2[] borderPoints)
         {
             if (LineIntersect(borderPoints[0], borderPoints[1], center, rb.position, out Vector2 IntersectPoint))
@@ -43,6 +46,7 @@ namespace Asteroids.Helpers {
             if (LineIntersect(borderPoints[3], borderPoints[0], center, rb.position, out IntersectPoint))
                 rb.position = IntersectPoint + rb.linearVelocity * Time.deltaTime;
         }
+
 
         public static Vector2 TeleportToBorder(Vector2 position, Vector2 center, Vector2[] borderPoints)
         {

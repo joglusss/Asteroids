@@ -1,20 +1,32 @@
+using Asteroids.Ship;
 using UnityEngine;
+using Zenject;
 
 namespace Asteroids.Objects
 {
     public class Alien : PhysicalSpaceObject
     {
-        [SerializeField] private float _angularSpeed;
+        protected override float _speed => Config.AlienSpeed;
+        
+        private float _angularSpeed => Config.AlienAngularSpeed;
 
-        private Transform Target => ObjectManager.AlienTarget;
+        [Inject] private ShipControl _target; 
 
         private void Update()
         {
-            Vector2 force = _speed * Time.deltaTime * transform.up;
-            float angle = Vector2.SignedAngle(transform.up, Target.position - transform.position) * _angularSpeed * Time.deltaTime;
+            if (!IsPaused)
+            {
+                Vector2 force = _speed * Time.deltaTime * transform.up;
+                float angle = Vector2.SignedAngle(transform.up, _target.transform.position - transform.position) * _angularSpeed * Time.deltaTime;
 
-            _rigidbody.AddForce(force, ForceMode2D.Impulse);
-            _rigidbody.AddTorque(angle);
+                _rigidbody.AddForce(force, ForceMode2D.Impulse);
+                _rigidbody.AddTorque(angle);
+            }
+            else
+            {
+                _rigidbody.linearVelocity = Vector2.zero;
+                _rigidbody.totalTorque = 0;
+            }
         }
     }
 }

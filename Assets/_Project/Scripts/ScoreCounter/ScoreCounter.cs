@@ -2,36 +2,37 @@ using UnityEngine;
 using Asteroids.Objects;
 using Zenject;
 using R3;
+using Asteroids.Total;
 
 namespace Asteroids.Score
 {
-	public class ScoreCounter: MonoBehaviour, IInitializable
+	public class ScoreCounter: MonoBehaviour
 	{
-		[SerializeField] private int AsteroidCost;
-		[SerializeField] private int SmallAsteroidCost;
-		[SerializeField] private int AlienCost;
+		// [SerializeField] private int AsteroidCost;
+		// [SerializeField] private int SmallAsteroidCost;
+		// [SerializeField] private int AlienCost;
 
-		private ObjectManager _objectManagerLink;
 		private ScoreViewModel _scoreViewModel;
+		private Config _config;
 
 		[Inject]
-		private void Construct(ObjectManager objectManager, ScoreViewModel scoreViewModel)
+		private void Construct(
+		ScoreViewModel scoreViewModel,
+		Config config,
+		[Inject(Id = SpaceObjectID.Asteroid)] SpaceObjectQueue asteroid,
+		[Inject(Id = SpaceObjectID.Alien)] SpaceObjectQueue alien,
+		[Inject(Id = SpaceObjectID.SmallAsteroid)] SpaceObjectQueue smallAsteroid)
 		{
-			_objectManagerLink = objectManager;
+			_config = config;
 			_scoreViewModel = scoreViewModel;
-		}
-		public void Initialize()
-		{
-			_objectManagerLink.AlienQueue
-				.ObjectReturned
+			
+			alien.ObjectReturned
 				.Subscribe(AlienDestroy)
 				.AddTo(this);
-			_objectManagerLink.AsteroidQueue
-				.ObjectReturned
+			asteroid.ObjectReturned
 				.Subscribe(AsteroidDestroy)
 				.AddTo(this);
-			_objectManagerLink.SmallAsteroidQueue
-				.ObjectReturned
+			smallAsteroid.ObjectReturned
 				.Subscribe(SmallAsteroidDestroy)
 				.AddTo(this);
 		}
@@ -41,10 +42,10 @@ namespace Asteroids.Score
 			_scoreViewModel.AddScore(value, (Vector2)a.transform.position);
 		}
 
-		private void AsteroidDestroy(SpaceObject a) => CallMethods(AsteroidCost, a);
+		private void AsteroidDestroy(SpaceObject a) => CallMethods(_config.AsteroidCost, a);
 
-		private void SmallAsteroidDestroy(SpaceObject a) => CallMethods(SmallAsteroidCost,a);
+		private void SmallAsteroidDestroy(SpaceObject a) => CallMethods(_config.SmallAsteroidCost,a);
 
-		private void AlienDestroy(SpaceObject a) => CallMethods(AlienCost, a);
+		private void AlienDestroy(SpaceObject a) => CallMethods(_config.AlienCost, a);
 	}
 }

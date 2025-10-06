@@ -1,5 +1,6 @@
 using System;
 using Asteroids.Ship;
+using Asteroids.Total;
 using Mono.Cecil;
 using R3;
 using UnityEngine;
@@ -10,7 +11,9 @@ namespace Asteroids.Objects
     [RequireComponent(typeof(ZenAutoInjecter))]
     public abstract class SpaceObject : MonoBehaviour
     {
-        protected ObjectManager ObjectManager { get; private set; }
+        protected LaunchCycleManager ObjectManager { get; private set; }
+        protected Config Config { get; private set; }
+        protected bool IsPaused { get; private set; }
 
         private Action _returningDelegate;
         private ShipStatViewModel _shipStatVM;
@@ -21,24 +24,24 @@ namespace Asteroids.Objects
         }
 
         [Inject]
-        public void Construct(ObjectManager objectManager, ShipStatViewModel shipStatVM)
+        public void Construct(LaunchCycleManager objectManager, ShipStatViewModel shipStatVM, Config config)
         { 
             ObjectManager = objectManager;
-            
+            Config = config;
             _shipStatVM = shipStatVM;
         }
         
         public void Initialize(Action ReturningDelegate)
         {
             _returningDelegate = ReturningDelegate;
-            
-            _shipStatVM.LifeStatus.Skip(1).Subscribe(Pause).AddTo(this);
+            _shipStatVM.LifeStatus.Skip(1).Subscribe(OnPause).AddTo(this);
+            _shipStatVM.LifeStatus.Subscribe(value => IsPaused = !value).AddTo(this);
         }
 
         protected void ReturnToQueue() => _returningDelegate.Invoke();
 
         public abstract void Launch(Vector2 from, Vector2 direction);
-        
-        protected abstract void Pause(bool value);
+
+        protected abstract void OnPause(bool value);
     }
 }

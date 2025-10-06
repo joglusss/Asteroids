@@ -1,12 +1,9 @@
 using Asteroids.Ads;
 using Asteroids.SceneManage;
 using Asteroids.Total;
-using Asteroids.Visual;
 using Cysharp.Threading.Tasks;
 using R3;
 using System;
-using System.Threading.Tasks;
-using Unity.VisualScripting;
 using UnityEngine;
 using Zenject;
 
@@ -25,31 +22,33 @@ namespace Asteroids.Ship
 
 		private IAdsService _adsService;
 		private ShipAnimationControl _shipAnimationControl;
-		private ShipStatPreference _shipStatPreference;
+		private Config _config;
 		private SceneService _sceneContainerHandler;
 		private bool _recoveryLaserCountFlag;
 		private bool _isFirstDeath = true;
 
 		[Inject]
-		public void Construct(SceneService sceneContainerHandler, ShipAnimationControl shipAnimationControl, ShipStatPreference shipStatPreference, IAdsService adsService)
+		public void Construct(SceneService sceneContainerHandler, ShipAnimationControl shipAnimationControl, Config config, IAdsService adsService)
 		{
 			_sceneContainerHandler = sceneContainerHandler;
 		
 			_shipAnimationControl = shipAnimationControl;
-			_shipStatPreference = shipStatPreference;
+			_config = config;
 
-			_health.Value = shipStatPreference.MaxHealth;
-			_laserCount.Value = shipStatPreference.MaxLaserCount;
+			_health.Value = _config.MaxHpCount;
+			_laserCount.Value = _config.MaxLaserCount;
 
 			_adsService = adsService;
 		}
 
 		public void AddHealth(int value)
 		{ 
-			if (_immortality.Value) return;
+			if (_immortality.Value && value < 0) return;
 			
-			_health.Value =  Math.Clamp(_health.Value + value, 0, _shipStatPreference.MaxHealth);
+			_health.Value =  Math.Clamp(_health.Value + value, 0, _config.MaxHpCount);
 
+			StartImmortalityFrame(_config.ImmortalityTime);			
+			
 			if (_health.Value <= 0)
 			{
 				if (!_isFirstDeath)
@@ -63,8 +62,6 @@ namespace Asteroids.Ship
 			}
 			else
 				_lifeStatus.Value = true;
-			
-			StartImmortalityFrame(_shipStatPreference.ImmortalityTime);			
 		}
 
 		public async UniTask Resurrect() 
@@ -77,7 +74,7 @@ namespace Asteroids.Ship
 
 				if (abc == AdStat.Ended)
 				{ 
-					AddHealth(_shipStatPreference.MaxHealth);
+					AddHealth(_config.MaxHpCount);
 					return;
 				}
 			}
@@ -97,7 +94,7 @@ namespace Asteroids.Ship
 		
 		public void AddLaserCount(int value)
 		{
-			_laserCount.Value = Mathf.Clamp(_laserCount.Value + value, 0, _shipStatPreference.MaxLaserCount);
+			_laserCount.Value = Mathf.Clamp(_laserCount.Value + value, 0, _config.MaxLaserCount);
 			
 			if(!_recoveryLaserCountFlag)
 				RecoveryLaserCount();
@@ -113,8 +110,8 @@ namespace Asteroids.Ship
 		{
 			_recoveryLaserCountFlag = true;
 			
-			_laserCooldown.Value = _shipStatPreference.LaserCooldown;
-			while (_laserCount.Value < _shipStatPreference.MaxLaserCount)
+			_laserCooldown.Value = _config.LaserCooldown;
+			while (_laserCount.Value < _config.MaxLaserCount)
 			{ 
 				while (_laserCooldown.Value > 0.0f)
 				{ 	
@@ -122,7 +119,7 @@ namespace Asteroids.Ship
 					_laserCooldown.Value = Mathf.Clamp(_laserCooldown.Value - 0.1f, 0.0f, float.MaxValue);
 				}
 
-				_laserCount.Value = Mathf.Clamp(_laserCount.Value + 1, 0, _shipStatPreference.MaxLaserCount);
+				_laserCount.Value = Mathf.Clamp(_laserCount.Value + 1, 0, _config.MaxLaserCount);
 			}
 			
 			_recoveryLaserCountFlag = false;

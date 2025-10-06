@@ -8,7 +8,6 @@ namespace Asteroids.Objects
     [System.Serializable]
     public class SpaceObjectQueue
     {
-        private readonly ObjectManager _objectManager;
         private readonly SpaceObject _spaceObjectPrefab;
         private readonly Transform _objectsContainer;
         private readonly Queue<SpaceObject> _queue;
@@ -16,11 +15,10 @@ namespace Asteroids.Objects
         public readonly ReactiveCommand<SpaceObject> ObjectReturned = new();
         public readonly ReactiveCommand<SpaceObject> ObjectDrawn = new();
 
-        public SpaceObjectQueue(SpaceObject prefab, ObjectManager objectManager)
+        public SpaceObjectQueue(SpaceObject prefab, Transform objectsContainer)
         {
-            _objectManager = objectManager;
             _spaceObjectPrefab = prefab;
-            _objectsContainer = objectManager.transform;
+            _objectsContainer = objectsContainer;
             _queue = new Queue<SpaceObject>();
         }
 

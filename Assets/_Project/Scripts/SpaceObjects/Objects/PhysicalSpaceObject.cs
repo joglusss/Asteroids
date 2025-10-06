@@ -1,3 +1,4 @@
+using Asteroids.Total;
 using UnityEngine;
 
 namespace Asteroids.Objects 
@@ -5,9 +6,9 @@ namespace Asteroids.Objects
     [RequireComponent(typeof(Rigidbody2D))]
     public abstract class PhysicalSpaceObject : SpaceObject, ISpaceInteract
     {
-        [SerializeField] protected float _speed;
-
+        protected virtual float _speed => Config.AsteroidsSpeed;
         protected Rigidbody2D _rigidbody;
+
 
         private Vector3 _saveVelocity;
 
@@ -31,7 +32,7 @@ namespace Asteroids.Objects
             _rigidbody.AddForce(direction.normalized * _speed, ForceMode2D.Impulse);
         }
 
-        protected override void Pause(bool value)
+        protected override void OnPause(bool value)
         {
             if (!value)
             {
@@ -43,7 +44,6 @@ namespace Asteroids.Objects
                 _rigidbody.WakeUp();
                 _rigidbody.linearVelocity = _saveVelocity;
             }
-                
         }
 
         public void Interact(SpaceObjectType collisionSpaceObjectType)

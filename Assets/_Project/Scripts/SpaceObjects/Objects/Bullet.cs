@@ -5,6 +5,8 @@ namespace Asteroids.Objects
 {
     public class Bullet : PhysicalSpaceObject
     {
+        protected override float _speed => Config.BulletSpeed;
+    
         [SerializeField] private float _lifeTime;
 
         public override void Launch(Vector2 from, Vector2 direction)

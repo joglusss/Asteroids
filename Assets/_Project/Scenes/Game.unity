@@ -254,6 +254,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6792905}
   m_CullTransparentMesh: 1
+--- !u!1 &78106409
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 78106411}
+  - component: {fileID: 78106410}
+  m_Layer: 0
+  m_Name: BorderSetting
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &78106410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 78106409}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f183ad2ca89016c4ea88a10c06f16fef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &78106411
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 78106409}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 339660215}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &91708390
 GameObject:
   m_ObjectHideFlags: 0
@@ -342,9 +386,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35f098c0cf3848b45ba16b8f4f425aaa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AsteroidCost: 10
-  SmallAsteroidCost: 5
-  AlienCost: 15
 --- !u!1 &167669313
 GameObject:
   m_ObjectHideFlags: 0
@@ -691,7 +732,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _scriptableObjectInstallers: []
   _monoInstallers:
-  - {fileID: 1447563073}
+  - {fileID: 78106410}
+  - {fileID: 1330119530}
+  - {fileID: 1447563075}
   - {fileID: 1771090524}
   - {fileID: 1301000911}
   - {fileID: 91708391}
@@ -727,7 +770,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 78106411}
   - {fileID: 1447563074}
+  - {fileID: 1330119531}
   - {fileID: 1771090525}
   - {fileID: 1301000910}
   - {fileID: 91708392}
@@ -1849,7 +1894,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _scoreView: {fileID: 586581683}
   _scoreCounter: {fileID: 102193222}
---- !u!1 &1447563072
+--- !u!1 &1330119529
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1857,28 +1902,27 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1447563074}
-  - component: {fileID: 1447563073}
+  - component: {fileID: 1330119531}
+  - component: {fileID: 1330119530}
   m_Layer: 0
-  m_Name: ObjectManagerInstaller
+  m_Name: SpaceObjectInstaller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1447563073
+--- !u!114 &1330119530
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1447563072}
+  m_GameObject: {fileID: 1330119529}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5684e19ca967bd4c80bef20fb98436b, type: 3}
+  m_Script: {fileID: 11500000, guid: 0e96dd9a55e59604ca7ef3573e02cda2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _objectManager: {fileID: 2022505172}
   _bulletAddress:
     m_AssetGUID: 3b5afc5b6a05cbb429fd6d9c3636d26b
     m_SubObjectName: 
@@ -1909,6 +1953,38 @@ MonoBehaviour:
     m_SubObjectGUID: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
+--- !u!4 &1330119531
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1330119529}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 339660215}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1447563072
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1447563074}
+  - component: {fileID: 1447563075}
+  m_Layer: 0
+  m_Name: LaunchCycleInstaller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!4 &1447563074
 Transform:
   m_ObjectHideFlags: 0
@@ -1924,6 +2000,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 339660215}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1447563075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1447563072}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 919e7f565ddad394bb365d72ec2fe6f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _objectManager: {fileID: 2022505172}
 --- !u!1 &1467905494
 GameObject:
   m_ObjectHideFlags: 0
@@ -2469,17 +2558,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2022505170}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 145b3f149c3df7940a40eff63dbb6e22, type: 3}
+  m_Script: {fileID: 11500000, guid: 1679fb7b5c9ff08409a6dc0eaaa9c8f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _asteroidLaunchCycleSetting:
-    MinTime: 2
-    MaxTime: 5
-    StartObjectCount: 5
-  _alienLaunchCycleSetting:
-    MinTime: 5
-    MaxTime: 10
-    StartObjectCount: 0
 --- !u!1 &2028215539
 GameObject:
   m_ObjectHideFlags: 0
@@ -2657,7 +2738,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2104069470}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0745ab252943b7d4f9b07f0f7a4bc3f4, type: 3}
+  m_Script: {fileID: 11500000, guid: ce55ec1207564054bb6852ea580b8d1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807

@@ -3,25 +3,26 @@ using Asteroids.Helpers;
 using Zenject;
 using Asteroids.Input;
 using System;
+using Asteroids.Total;
 
 namespace Asteroids.Ship
 {
     [RequireComponent(typeof(Rigidbody2D))]
     public class ShipControl : MonoBehaviour, IInitializable, IDisposable
     {
-        [SerializeField] private float _forwardSpeed = 7.0f;
-        [SerializeField] private float _angularSpeed = -1000.0f;
-
+        private Config _config;
         private ShipStatViewModel _viewModel;
+        private BorderSetting _borderSetting;
         private IInput _inputStorage;
         private Rigidbody2D _rigidbody;
         private Vector2 _inputValue;
-        private Vector2[] _borderPoints;
-        private Vector2 _centerPoint;
+
 
         [Inject]
-        private void Construct(ShipStatViewModel viewModel, IInput inputStorage)
+        private void Construct(Config config, BorderSetting borderSetting, ShipStatViewModel viewModel, IInput inputStorage)
         {
+            _config = config;
+            _borderSetting = borderSetting;
             _viewModel = viewModel;
             _inputStorage = inputStorage;
             _rigidbody = GetComponent<Rigidbody2D>();
@@ -32,7 +33,7 @@ namespace Asteroids.Ship
             Movement();
             UpdateModel();
 
-            GameMath.TeleportToBorder(_rigidbody, _centerPoint, _borderPoints);
+            GameMath.TeleportToBorder(_rigidbody, _borderSetting);
         }
 
         private void OnDisable()
@@ -42,11 +43,7 @@ namespace Asteroids.Ship
 
         public void Initialize()
         {
-            _borderPoints = GameMath.CalculateBorderPoints();
-            _centerPoint = GameMath.BorderCenter();
-
-            _rigidbody.position = _centerPoint;
-
+            _rigidbody.position = _borderSetting.Center;
             _inputStorage.MoveEvent += SetInputValue;
         }
 
@@ -61,8 +58,8 @@ namespace Asteroids.Ship
         {
             if (!_viewModel.IsAlive()) return;
 
-            Vector2 force = _inputValue.y > 0.0f ? _inputValue.y * _forwardSpeed * Time.deltaTime * transform.up : Vector2.zero;
-            float angle = _inputValue.x * _angularSpeed * Time.deltaTime;
+            Vector2 force = _inputValue.y > 0.0f ? _inputValue.y * _config.SpaceShipForwardSpeed * Time.deltaTime * transform.up : Vector2.zero;
+            float angle = _inputValue.x * _config.SpaceShipAngularSpeed * Time.deltaTime;
 
             _rigidbody.AddForce(force, ForceMode2D.Impulse);
             _rigidbody.AddTorque(angle);
@@ -75,5 +72,4 @@ namespace Asteroids.Ship
             _viewModel.SetAngle(transform.eulerAngles.z);
         }
     }
-
 }

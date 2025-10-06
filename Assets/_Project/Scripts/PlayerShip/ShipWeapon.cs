@@ -11,19 +11,23 @@ namespace Asteroids.Ship
 {
 	public class ShipWeapon : MonoBehaviour, IInitializable
 	{
-		[SerializeField] private float _laserCooldownDelay;
-		[SerializeField] private int _maxLaserShot;
-
 		private ShipStatViewModel _viewModel;
 		private IInput _inputStorage;
-		private ObjectManager _objectManager;
+		private SpaceObjectQueue _bullet;
+		private SpaceObjectQueue _laser;
 
 		[Inject]
-		private void Construct(ObjectManager objectManager, ShipStatViewModel viewModel, IInput inputStorage)
+		private void Construct(
+			ShipStatViewModel viewModel, 
+			IInput inputStorage,
+			[Inject(Id = SpaceObjectID.Bullet)] SpaceObjectQueue bullet,
+            [Inject(Id = SpaceObjectID.Laser)] SpaceObjectQueue laser
+			)
 		{
-			_objectManager = objectManager;
 			_viewModel = viewModel;
 			_inputStorage = inputStorage;
+			_bullet = bullet;
+			_laser = laser;
 		}
 		
 		private void OnDisable()
@@ -43,7 +47,7 @@ namespace Asteroids.Ship
 		{
 			if (!_viewModel.IsAlive()) return;
 
-			SpaceObject bullet = _objectManager.BulletQueue.DrawObject();
+			SpaceObject bullet = _bullet.DrawObject();
 			if (bullet != null)
 			{
 				bullet.Launch(transform.position + transform.up, transform.up);
@@ -56,7 +60,7 @@ namespace Asteroids.Ship
 
 			if (_viewModel.GetLaserCount() > 0)
 			{
-				SpaceObject laser = _objectManager.LaserQueue.DrawObject();
+				SpaceObject laser = _laser.DrawObject();
 				if (laser != null)
 				{
 					_viewModel.AddLaserCount(-1);
