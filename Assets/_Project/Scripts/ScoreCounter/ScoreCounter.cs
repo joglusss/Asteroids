@@ -8,10 +8,6 @@ namespace Asteroids.Score
 {
 	public class ScoreCounter: MonoBehaviour
 	{
-		// [SerializeField] private int AsteroidCost;
-		// [SerializeField] private int SmallAsteroidCost;
-		// [SerializeField] private int AlienCost;
-
 		private ScoreViewModel _scoreViewModel;
 		private Config _config;
 

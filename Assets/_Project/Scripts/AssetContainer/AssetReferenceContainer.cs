@@ -5,7 +5,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace Asteroids.Asset
 {
-    public class AssetReferenceContainer<T> : IAssetContainer<T>, IDisposable //where T : UnityEngine.Object
+    public class AssetReferenceContainer<T> : IAssetContainer<T>, IDisposable
     {
         private T loadedAsset;
         private AssetReference _assetReference;

@@ -19,10 +19,10 @@ namespace Asteroids.Menu
 		private PurchasesService _purchasesService;
 		
 		[Inject]
-		private void Construct(MenuModel menuModel,PurchasesService puchasesService)
+		private void Construct(MenuModel menuModel,PurchasesService purchasesService)
 		{
 			_menuModel = menuModel;
-			_purchasesService = puchasesService;
+			_purchasesService = purchasesService;
 		}
 		
 		public void Initialize()
