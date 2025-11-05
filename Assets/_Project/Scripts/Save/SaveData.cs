@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using Newtonsoft.Json;
+using ObservableCollections;
 using R3;
 using UnityEngine;
 
@@ -6,15 +8,13 @@ namespace Asteroids.Total
 {
 	public class SaveData
 	{
-		[JsonIgnore]
-		public ReadOnlyReactiveProperty<int> BestScoreSubscribe => _bestScore;
-		[JsonIgnore]
-		public ReadOnlyReactiveProperty<int> LastScoreSubscribe => _lastScore;
+		[JsonIgnore] public ReadOnlyReactiveProperty<int> BestScoreSubscribe => _bestScore;
+		[JsonIgnore] public ReadOnlyReactiveProperty<int> LastScoreSubscribe => _lastScore;
+		[JsonProperty] public ObservableHashSet<string> PurchasedProduct { get; set; } = new();
+		[JsonProperty] public Config Config = new();
 		
-		[JsonProperty]
-		private ReactiveProperty<int> _bestScore = new();
-		[JsonProperty]
-		private ReactiveProperty<int> _lastScore = new();
+		[JsonProperty] private ReactiveProperty<int> _bestScore = new();
+		[JsonProperty] private ReactiveProperty<int> _lastScore = new();
 
 		[JsonIgnore]
 		public int BestScore

@@ -17,6 +17,5 @@ namespace Asteroids.Total
             serializer.Serialize(writer, value.Value);
         }
     }
-
 }
 

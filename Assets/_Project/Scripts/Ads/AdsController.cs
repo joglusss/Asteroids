@@ -2,16 +2,19 @@ using Asteroids.Total;
 using Cysharp.Threading.Tasks;
 using Unity.Services.LevelPlay;
 using UnityEngine;
+using Zenject;
 
 
 namespace Asteroids.Ads
 {
     public class AdsController : IAdsService
     {    
-        private bool _isAdsEnabled = true;
+        private bool _isAdsEnabled;
         private LevelPlayRewardedAd _rewardedAd;
         private LevelPlayInterstitialAd _interstitialAd;
         private AdStat _rewardedAdStat = AdStat.Ended;
+        
+        [Inject] PurchasesService _purchasesService;
         
         public AdsController()
         {
@@ -22,7 +25,7 @@ namespace Asteroids.Ads
             LevelPlay.Init(AdConfig.AppKey);
             
             _rewardedAd = new LevelPlayRewardedAd(AdConfig.RewardedVideoAdUnitId);
-            _interstitialAd = new LevelPlayInterstitialAd(AdConfig.InterstitalAdUnitId);
+            _interstitialAd = new LevelPlayInterstitialAd(AdConfig.InterstitialAdUnitId);
 
             _rewardedAd.OnAdLoadFailed += RewardedAdLoadFailedEvent;
             _rewardedAd.OnAdLoaded += RewardedAdLoadedEvent;
@@ -41,6 +44,8 @@ namespace Asteroids.Ads
         public async UniTask ShowInterstitialAd()
         {
             if (!_isAdsEnabled) return;
+
+            if(_purchasesService.CheckProduct(ProductID.NoAds)) return;
         
             _interstitialAd.LoadAd();
             
@@ -69,6 +74,7 @@ namespace Asteroids.Ads
         private void SdkInitializationFailedEvent(LevelPlayInitError error)
         {
             Debug.Log($"[LevelPlaySample] Received SdkInitializationFailedEvent with Error: {error}");
+            _isAdsEnabled = false;
         }
 
         private void SdkInitializationCompletedEvent(LevelPlayConfiguration configuration)
@@ -77,7 +83,7 @@ namespace Asteroids.Ads
             _isAdsEnabled = true;
             
             _rewardedAd = new LevelPlayRewardedAd(AdConfig.RewardedVideoAdUnitId);
-            _interstitialAd = new LevelPlayInterstitialAd(AdConfig.InterstitalAdUnitId);
+            _interstitialAd = new LevelPlayInterstitialAd(AdConfig.InterstitialAdUnitId);
         }
     }
 

@@ -3,7 +3,7 @@ namespace Asteroids.Ads
     public static class AdConfig
     {
         public static string AppKey => GetAppKey();
-        public static string InterstitalAdUnitId => GetInterstitialAdUnitId();
+        public static string InterstitialAdUnitId => GetInterstitialAdUnitId();
         public static string RewardedVideoAdUnitId => GetRewardedVideoAdUnitId();
 
         static string GetAppKey()

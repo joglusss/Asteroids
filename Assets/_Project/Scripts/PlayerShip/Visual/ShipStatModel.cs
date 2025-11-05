@@ -4,6 +4,7 @@ using Asteroids.Total;
 using Cysharp.Threading.Tasks;
 using R3;
 using System;
+using System.Threading;
 using UnityEngine;
 using Zenject;
 
@@ -47,7 +48,7 @@ namespace Asteroids.Ship
 			
 			_health.Value =  Math.Clamp(_health.Value + value, 0, _config.MaxHpCount);
 
-			StartImmortalityFrame(_config.ImmortalityTime);			
+			StartImmortalityFrame(_config.ImmortalityTime, _shipAnimationControl.GetCancellationTokenOnDestroy()).Forget();			
 			
 			if (_health.Value <= 0)
 			{
@@ -125,7 +126,7 @@ namespace Asteroids.Ship
 			_recoveryLaserCountFlag = false;
 		}
 		
-		private async void StartImmortalityFrame(float time)
+		private async UniTaskVoid StartImmortalityFrame(float time, CancellationToken token)
 		{
 			_immortality.Value = true;
 			_shipAnimationControl.SwitchBlinking(true);
@@ -133,8 +134,8 @@ namespace Asteroids.Ship
 			float timeCounter = time;
 
 			while (time > 0.0f)
-			{ 
-				await UniTask.Delay(1000);
+			{
+				await UniTask.Delay(1000, cancellationToken: token).SuppressCancellationThrow();
 				time = Mathf.Clamp(time - 1.0f, 0.0f, float.MaxValue);
 			}
 			

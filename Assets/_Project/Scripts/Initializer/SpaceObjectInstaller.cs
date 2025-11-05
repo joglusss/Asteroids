@@ -9,11 +9,11 @@ namespace Asteroids.Installers
 { 
     public class SpaceObjectInstaller : MonoInstaller
     {
-        [SerializeField] private AssetReferenceT<GameObject> _bulletAddress;
-        [SerializeField] private AssetReferenceT<GameObject> _asteroidAddress;
-        [SerializeField] private AssetReferenceT<GameObject> _smallAsteroidAddress;
-        [SerializeField] private AssetReferenceT<GameObject> _alienAddress;
-        [SerializeField] private AssetReferenceT<GameObject> _laserAddress;
+        [SerializeField] private AssetReference _bulletAddress;
+        [SerializeField] private AssetReference _asteroidAddress;
+        [SerializeField] private AssetReference _smallAsteroidAddress;
+        [SerializeField] private AssetReference _alienAddress;
+        [SerializeField] private AssetReference _laserAddress;
 
         private Transform _spaceObjectContainer;
         
@@ -28,14 +28,14 @@ namespace Asteroids.Installers
             BindSpaceObject(_laserAddress, SpaceObjectID.Laser);
         }
         
-        private void BindSpaceObject(AssetReferenceT<GameObject> address, SpaceObjectID ID)
+        private void BindSpaceObject(AssetReference address, SpaceObjectID ID)
         { 
-            var tempContainer = new AssetReferenceContainer<GameObject>(address);
+            var tempContainer = new AssetReferenceContainer<SpaceObject>(address);
             Container.Bind<SpaceObjectQueue>()
                 .WithId(ID)
                 .AsCached()
-                .WithArguments(tempContainer.LoadSync().GetComponent<SpaceObject>(),_spaceObjectContainer);
-            Container.BindInterfacesTo<AssetReferenceContainer<GameObject>>()
+                .WithArguments(tempContainer.LoadSync(),_spaceObjectContainer);
+            Container.BindInterfacesTo<AssetReferenceContainer<SpaceObject>>()
                 .FromInstance(tempContainer);
         }
     }

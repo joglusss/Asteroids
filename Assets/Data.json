@@ -1,4 +1,32 @@
 {
+  "Config": {
+    "MaxLaserCount": 3,
+    "LaserCooldown": 5.0,
+    "MaxHpCount": 3,
+    "ImmortalityTime": 2.0,
+    "AsteroidCost": 15,
+    "AlienCost": 25,
+    "SmallAsteroidCost": 5,
+    "Asteroids": {
+      "MinTime": 8.0,
+      "MaxTime": 10.0,
+      "StartObjectCount": 20
+    },
+    "Alien": {
+      "MinTime": 8.0,
+      "MaxTime": 10.0,
+      "StartObjectCount": 0
+    },
+    "SpaceShipForwardSpeed": 7.0,
+    "SpaceShipAngularSpeed": -1000.0,
+    "AsteroidsSpeed": 1.0,
+    "SmallAsteroidsSpeed": 3.0,
+    "AlienSpeed": 10.0,
+    "AlienAngularSpeed": 50.0,
+    "BulletSpeed": 15.0
+  },
   "_bestScore": 7150,
-  "_lastScore": 335
+  "_lastScore": 535,
+  "PurchasedProduct": [
+  ]
 }

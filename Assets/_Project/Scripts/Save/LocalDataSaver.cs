@@ -20,6 +20,7 @@ namespace Asteroids.Total
 				
 				var settings = new JsonSerializerSettings();
 				settings.Converters.Add(new JsonReactivePropertyConvertor<int>());
+				settings.Converters.Add(new JsonObservableHashSetConverter<string>());
 				
 				data = JsonConvert.DeserializeObject<SaveData>(json, settings);
 			}
@@ -31,6 +32,7 @@ namespace Asteroids.Total
 		{
 			var settings = new JsonSerializerSettings();
 			settings.Converters.Add(new JsonReactivePropertyConvertor<int>());
+			settings.Converters.Add(new JsonObservableHashSetConverter<string>());
 			
 			string json = JsonConvert.SerializeObject(data, Formatting.Indented, settings);
 			
@@ -38,5 +40,3 @@ namespace Asteroids.Total
 		}
 	}
 }
-
-

@@ -4,15 +4,15 @@ using Cysharp.Threading.Tasks;
 using Firebase.RemoteConfig;
 using Newtonsoft.Json;
 using UnityEngine;
+using Zenject;
 
 namespace Asteroids.Total
 { 
     public class RemoteConfig
     {
-        private string SavePath => Path.Combine(Application.dataPath, "LastFetchConfig.json");
-        
-        public async UniTask<Config> GetConfig()
+        public async UniTask<Config> GetConfig(SaveService saveService)
         {
+        
             TimeSpan cacheExpiration = TimeSpan.FromSeconds(30);
             var fetchTask = FirebaseRemoteConfig.DefaultInstance.FetchAsync(cacheExpiration);
             await fetchTask.AsUniTask();
@@ -25,14 +25,12 @@ namespace Asteroids.Total
                 
                 string json = FirebaseRemoteConfig.DefaultInstance.GetValue("TotalRemoteConfig").StringValue;
                 config = JsonConvert.DeserializeObject<Config>(json);
-                File.WriteAllText(SavePath, json);
+                
+                saveService.Data.Config = config;
             }
             else
             { 
-                Debug.LogWarning("Failed to fetch remote config.");
-                
-                var json = File.ReadAllText(SavePath);
-                config = JsonConvert.DeserializeObject<Config>(json);
+                config = saveService.Data.Config;
             }
             
             return config; 

@@ -9,8 +9,11 @@ namespace Asteroids.Menu
 {
 	public class MenuView : MonoBehaviour
 	{
+		[SerializeField] private CanvasGroup _panel;
 		[SerializeField] private Button _startGame;
 		[SerializeField] private Button _exit;
+		[SerializeField] private Button _toPurchaseMenu;
+		
 		[SerializeField] private TMP_Text _bestScore;
 		[SerializeField] private TMP_Text _lastScore;
 		
@@ -36,6 +39,13 @@ namespace Asteroids.Menu
 			_viewModel.LastScore
 				.Subscribe(UpdateLastScore)
 				.AddTo(this);
+			_viewModel.OpenedWindow
+				.Subscribe(w => Show(w == MenuWindow.Main))
+				.AddTo(this);
+			_toPurchaseMenu
+				.OnClickAsObservable()
+				.Subscribe(_ => ToPurchaseMenu())
+				.AddTo(this);
 		}
 
 		private void OnDestroy()
@@ -44,6 +54,13 @@ namespace Asteroids.Menu
 			_exit.onClick.RemoveListener(Exit);
 		}
 
+		private void Show(bool value)
+        {
+            _panel.alpha = value ? 1 : 0;
+            _panel.interactable = value;
+            _panel.blocksRaycasts = value;
+        }
+		
 		private void GoToGame() => _viewModel.StartGame();
 
 		private void Exit() => _viewModel.ExitGame();
@@ -51,5 +68,7 @@ namespace Asteroids.Menu
 		private void UpdateBestScore(string value) => _bestScore.text = value;
 
 		private void UpdateLastScore(string value) => _lastScore.text = value;
+
+		private void ToPurchaseMenu() => _viewModel.OpenedWindow.Value = MenuWindow.Purchase;
 	}
 }

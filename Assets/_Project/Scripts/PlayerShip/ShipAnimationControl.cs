@@ -4,6 +4,7 @@ using System.Collections;
 using UnityEngine;
 using Zenject;
 using Cysharp.Threading.Tasks;
+using System.Threading;
 
 namespace Asteroids.Ship
 {
@@ -16,7 +17,7 @@ namespace Asteroids.Ship
         private Animator _animator;
         private SpriteRenderer _shipImage;
 
-        private bool _coroutineFlag;
+        private bool _timerFlag;
 
         private void Start()
         { 
@@ -41,32 +42,31 @@ namespace Asteroids.Ship
         {
             if (value)
             {
-                _coroutineFlag = true;
-                StartCoroutine(TimeCounter());
+                _timerFlag = true;
+                TimeCounter(this.destroyCancellationToken).Forget();
             }
             else
             {
-                _coroutineFlag = false;
+                _timerFlag = false;
             }
         }
 
-        private IEnumerator TimeCounter()
+        private async UniTaskVoid TimeCounter(CancellationToken token)
         {
-
             Color color = _shipImage.color;
 
             float time = 0.0f;
-            while (_coroutineFlag && gameObject.activeInHierarchy)
+            while (_timerFlag && gameObject.activeInHierarchy)
             {
                 color.a = Mathf.Abs(Mathf.Sin(time * _scaleBlinking));
                 _shipImage.color = color;
 
                 time += Time.deltaTime;
-                yield return null;
+                await UniTask.NextFrame(token);
             }
 
             color.a = 1;
             _shipImage.color = color;
-        }
+        } 
     }
 }
