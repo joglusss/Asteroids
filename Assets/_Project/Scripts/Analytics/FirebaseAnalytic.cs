@@ -1,17 +1,27 @@
 using System;
 using System.Threading.Tasks;
+using Asteroids.Total.Installers;
+using Cysharp.Threading.Tasks;
 using Firebase;
 using Firebase.Analytics;
 using Firebase.Extensions;
 using UnityEngine;
+using Zenject;
 
 namespace Asteroids.Total
 {
-    public class FirebaseAnalytic : IAnalyticsService
+    public class FirebaseAnalytic : IAnalyticsService, IInitializable, IReadyFlag
     {
-        private FirebaseAnalytic()
+        public bool IsReady {get; private set; }
+    
+        public async void Initialize()
         {
-            FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(OnDependencyStatusReceived);
+            Debug.Log("Start FirebaseAnalytic Initializing");
+            
+            await FirebaseApp.CheckAndFixDependenciesAsync().AsUniTask();
+            
+            IsReady = true;
+            Debug.Log("FirebaseAnalytic Initialized");
         }
 
         public void SendGameStart() => FirebaseAnalytics.LogEvent("StartGame");

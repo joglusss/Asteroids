@@ -8,7 +8,7 @@ namespace Asteroids.Total.Installers
     {
         public override void InstallBindings()
         {
-            Container.BindInterfacesTo<AnalyticsController>();
+            Container.BindInterfacesTo<AnalyticsController>().AsSingle();
         }
         
     }

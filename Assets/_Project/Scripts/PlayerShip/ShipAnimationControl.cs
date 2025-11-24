@@ -27,15 +27,15 @@ namespace Asteroids.Ship
             _shipImage = GetComponent<SpriteRenderer>();
         }
 
-        public async UniTask Death()
+        public async UniTask Death(CancellationToken token)
         {
             _animator.SetBool("Death", true);
 
             while (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Death"))
-                await UniTask.Yield();
+                await UniTask.Yield(token);
 
             while (_animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f) 
-                await UniTask.Yield();
+                await UniTask.Yield(token);
         }
 
         public void SwitchBlinking(bool value)

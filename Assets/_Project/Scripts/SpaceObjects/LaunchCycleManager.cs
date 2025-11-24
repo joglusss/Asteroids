@@ -22,11 +22,11 @@ namespace Asteroids.Objects
         private void Construct(
             ShipStatViewModel shipStatVM,
             BorderSetting borderSetting,
-            Config config,
+            SaveService saveService,
             [Inject(Id = SpaceObjectID.Asteroid)] SpaceObjectQueue asteroid,
             [Inject(Id = SpaceObjectID.Alien)] SpaceObjectQueue alien)
         {
-            _config = config;
+            _config = saveService.Data.Config;
             _asteroidQueue = asteroid;
             _borderSetting =  borderSetting;
             _alienQueue = alien;

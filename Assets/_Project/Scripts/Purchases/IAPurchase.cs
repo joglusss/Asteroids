@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using R3;
@@ -8,15 +9,13 @@ using UnityEngine.Purchasing;
 
 namespace Asteroids.Total
 {
-    public class IAPurchase : IPurchases
+    public class IAPurchase : IPurchases, IDisposable
     {
         public Subject<(bool, string)> OnPurchaseSucceeded { get; set; } = new();
         public ReactiveProperty<string> OnPurchaseFailed { get; set; } = new();
         public ReactiveProperty<bool> OnPurchaseWaiting { get; set; } = new();
 
         private StoreController _storeController;
-
-
 
         public void Initialize(List<string> purchaseID)
         {
@@ -35,6 +34,15 @@ namespace Asteroids.Total
             List<ProductDefinition> initalProductToFetch = purchaseID.Select(x => new ProductDefinition(x, ProductType.NonConsumable)).ToList();
             
             _storeController.FetchProducts(initalProductToFetch);
+        }
+        
+        public void Dispose()
+        {
+            _storeController.OnPurchasePending -= OnPurchasePendingHandler;  
+            _storeController.OnProductsFetched -= OnProductsFetchedHandler;
+            _storeController.OnPurchasesFetched -= OnPurchasesFetched;  
+            _storeController.OnPurchaseConfirmed -= OnPurchaseConfirmHandler;
+            _storeController.OnPurchaseFailed -= OnPurchaseFailedHandler;
         }
         
         public void BuyProduct(string id)

@@ -9,7 +9,7 @@ namespace Asteroids.Total.Installers
     {
         public override void InstallBindings()
         {
-            Container.Bind<IAdsService>().To<AdsController>().AsSingle().NonLazy();
+            Container.BindInterfacesTo<AdsController>().AsSingle().NonLazy();
         }
     }
 }

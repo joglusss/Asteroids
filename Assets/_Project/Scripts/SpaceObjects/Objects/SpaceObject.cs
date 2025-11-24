@@ -24,10 +24,10 @@ namespace Asteroids.Objects
         }
 
         [Inject]
-        public void Construct(LaunchCycleManager objectManager, ShipStatViewModel shipStatVM, Config config)
+        public void Construct(LaunchCycleManager objectManager, ShipStatViewModel shipStatVM, SaveService saveService)
         { 
             ObjectManager = objectManager;
-            Config = config;
+            Config = saveService.Data.Config;
             _shipStatVM = shipStatVM;
         }
         

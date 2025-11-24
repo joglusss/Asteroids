@@ -25,29 +25,29 @@ namespace Asteroids.Ship
 		{
 			_model = shipStatModel;
 			
-			LifeStatus = _model._lifeStatus;
-			Immortality = _model._immortality;
+			LifeStatus = _model.LifeStatus;
+			Immortality = _model.Immortality;
 		}
 
 		public void Initialize()
 		{
-			Health = _model._health.Select(x => $"Health: {x}").ToReadOnlyReactiveProperty();
-			Coordinates = _model._coordinates.Select(x => $"Coordinates: {x}").ToReadOnlyReactiveProperty();
-			Angle = _model._angle.Select(x => $"Angle: {x}").ToReadOnlyReactiveProperty();
-			Speed = _model._speed.Select(x => $"Speed: {x}").ToReadOnlyReactiveProperty();
-			LaserCount = _model._laserCount.Select(x => $"Laser Count: {x}").ToReadOnlyReactiveProperty();
-			LaserCooldown = _model._laserCooldown.Select(x => $"Laser Cooldown: {x}").ToReadOnlyReactiveProperty();
+			Health = _model.Health.Select(x => $"Health: {x}").ToReadOnlyReactiveProperty();
+			Coordinates = _model.Coordinates.Select(x => $"Coordinates: {x}").ToReadOnlyReactiveProperty();
+			Angle = _model.Angle.Select(x => $"Angle: {x}").ToReadOnlyReactiveProperty();
+			Speed = _model.Speed.Select(x => $"Speed: {x}").ToReadOnlyReactiveProperty();
+			LaserCount = _model.LaserCount.Select(x => $"Laser Count: {x}").ToReadOnlyReactiveProperty();
+			LaserCooldown = _model.LaserCooldown.Select(x => $"Laser Cooldown: {x}").ToReadOnlyReactiveProperty();
 		}
 
 		public void Resurrect() => _model.Resurrect().Forget();
 		
 		public void GiveUp() => _model.GiveUp().Forget();
 
-		public bool IsImmortal() => _model._immortality.Value;
+		public bool IsImmortal() => _model.Immortality.Value;
 
-		public bool IsAlive() => _model._lifeStatus.Value;
+		public bool IsAlive() => _model.LifeStatus.Value;
 
-		public int GetLaserCount() => _model._laserCount.Value;
+		public int GetLaserCount() => _model.LaserCount.Value;
 
 		public void Dispose() => _compositeDisposable.Dispose();
 

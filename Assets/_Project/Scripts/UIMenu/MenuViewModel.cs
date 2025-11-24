@@ -14,16 +14,20 @@ namespace Asteroids.Menu
 		public ReactiveProperty<MenuWindow> OpenedWindow { get; private set; } = new(MenuWindow.Main);
 		public ReadOnlyReactiveProperty<string> OnPurchasedProductChange { get; private set; }
 		public Subject<bool> TransactionStarted { get; private set; } = new();
+		public Observable<Subject<SaverType>> SaveTypeChoose { get; private set; }
 		
 		private MenuModel _menuModel;
 		private PurchasesService _purchasesService;
 		
 		[Inject]
-		private void Construct(MenuModel menuModel,PurchasesService purchasesService)
+		private void Construct(MenuModel menuModel,PurchasesService purchasesService, SaveService saverService)
 		{
 			_menuModel = menuModel;
 			_purchasesService = purchasesService;
-		}
+
+			SaveTypeChoose = saverService.SaveChoiceRequest
+				.AsObservable();
+        }
 		
 		public void Initialize()
 		{

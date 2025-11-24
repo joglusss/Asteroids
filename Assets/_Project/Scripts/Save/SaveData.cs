@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using ObservableCollections;
@@ -12,7 +13,8 @@ namespace Asteroids.Total
 		[JsonIgnore] public ReadOnlyReactiveProperty<int> LastScoreSubscribe => _lastScore;
 		[JsonProperty] public ObservableHashSet<string> PurchasedProduct { get; set; } = new();
 		[JsonProperty] public Config Config = new();
-		
+		[JsonProperty] public DateTime DateSaving = new();
+
 		[JsonProperty] private ReactiveProperty<int> _bestScore = new();
 		[JsonProperty] private ReactiveProperty<int> _lastScore = new();
 
@@ -32,5 +34,16 @@ namespace Asteroids.Total
 				_lastScore.Value = value;
 			}
 		}
+
+		public void Rewrite(SaveData newData)
+		{
+			PurchasedProduct.Clear();
+			PurchasedProduct.AddRange(newData.PurchasedProduct);
+
+			Config = newData.Config;
+			DateSaving = newData.DateSaving;
+			BestScore = newData.BestScore;
+			LastScore = newData.LastScore;
+        }
 	}
 }

@@ -5,9 +5,9 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace Asteroids.Asset
 {
-    public class AssetReferenceContainer<T> : IAssetContainer<T>, IDisposable
+    public class AssetReferenceContainer<T> : IDisposable
     {
-        private T loadedAsset;
+        private T _loadedAsset;
         private AssetReference _assetReference;
         
         public AssetReferenceContainer(AssetReference assetReference)
@@ -22,12 +22,12 @@ namespace Asteroids.Asset
         
         public T LoadSync()
         {
-            if (loadedAsset != null)
-                return loadedAsset;
+            if (_loadedAsset != null)
+                return _loadedAsset;
 
             var op = _assetReference.LoadAssetAsync<GameObject>();
             
-            return loadedAsset = op.WaitForCompletion().GetComponent<T>();
+            return _loadedAsset = op.WaitForCompletion().GetComponent<T>();
         }
 
         public void Release()

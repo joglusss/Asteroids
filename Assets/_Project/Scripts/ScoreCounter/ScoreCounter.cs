@@ -14,12 +14,12 @@ namespace Asteroids.Score
 		[Inject]
 		private void Construct(
 		ScoreViewModel scoreViewModel,
-		Config config,
+		SaveService saveService,
 		[Inject(Id = SpaceObjectID.Asteroid)] SpaceObjectQueue asteroid,
 		[Inject(Id = SpaceObjectID.Alien)] SpaceObjectQueue alien,
 		[Inject(Id = SpaceObjectID.SmallAsteroid)] SpaceObjectQueue smallAsteroid)
 		{
-			_config = config;
+			_config = saveService.Data.Config;
 			_scoreViewModel = scoreViewModel;
 			
 			alien.ObjectReturned

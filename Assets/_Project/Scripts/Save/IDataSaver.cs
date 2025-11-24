@@ -1,8 +1,10 @@
-﻿namespace Asteroids.Total
+﻿using Cysharp.Threading.Tasks;
+
+namespace Asteroids.Total
 {
     public interface IDataSaver
     {
         public void Save(SaveData data);
-        public SaveData Load();
+        public UniTask<SaveData> Load();
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using UnityEngine;
 using Newtonsoft.Json;
+using Cysharp.Threading.Tasks;
 
 
 namespace Asteroids.Total 
@@ -10,7 +11,7 @@ namespace Asteroids.Total
 	{
 		private string SavePath => Path.Combine(Application.dataPath, "Data.json");
 		
-		public SaveData Load()
+		public UniTask<SaveData> Load()
 		{
 			SaveData data = new SaveData();
 
@@ -24,8 +25,8 @@ namespace Asteroids.Total
 				
 				data = JsonConvert.DeserializeObject<SaveData>(json, settings);
 			}
-			
-			return data;
+						
+			return UniTask.FromResult(data);
 		}
 
 		public void Save(SaveData data)
@@ -37,6 +38,8 @@ namespace Asteroids.Total
 			string json = JsonConvert.SerializeObject(data, Formatting.Indented, settings);
 			
 			File.WriteAllText(SavePath, json);
+			
+			Debug.Log("Save LocalData");
 		}
 	}
 }

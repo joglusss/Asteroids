@@ -11,7 +11,6 @@ namespace Asteroids.Installers
         {
             Container.Bind<BorderSetting>().AsSingle();
         }
-        
     }
 }
 

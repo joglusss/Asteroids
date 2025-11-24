@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Asteroids.Total.Installers;
 using Cysharp.Threading.Tasks;
 using Firebase.RemoteConfig;
 using Newtonsoft.Json;
@@ -8,34 +9,40 @@ using Zenject;
 
 namespace Asteroids.Total
 { 
-    public class RemoteConfig
+    public class RemoteConfig : IReadyFlag
     {
-        public async UniTask<Config> GetConfig(SaveService saveService)
+        public bool IsReady {get; private set;}
+        
+        [Inject]
+        public async UniTaskVoid GetConfig(SaveService saveService)
         {
+             Debug.Log("Start Config Initializing");
         
             TimeSpan cacheExpiration = TimeSpan.FromSeconds(30);
             var fetchTask = FirebaseRemoteConfig.DefaultInstance.FetchAsync(cacheExpiration);
             await fetchTask.AsUniTask();
-
-            Config config;
             
             if (fetchTask.IsCompletedSuccessfully && FirebaseRemoteConfig.DefaultInstance.Info.LastFetchStatus == LastFetchStatus.Success)
             {
                 await FirebaseRemoteConfig.DefaultInstance.ActivateAsync().AsUniTask();
                 
                 string json = FirebaseRemoteConfig.DefaultInstance.GetValue("TotalRemoteConfig").StringValue;
-                config = JsonConvert.DeserializeObject<Config>(json);
+                Config config = JsonConvert.DeserializeObject<Config>(json);
+
+                Debug.Log("Config was loaded from cloud");
                 
-                saveService.Data.Config = config;
+                saveService.Config = config;
             }
             else
             { 
-                config = saveService.Data.Config;
+                Debug.Log("Config was loaded from JSON");
             }
-            
-            return config; 
-        }
-    }
 
+            Debug.Log("Config Initialized");
+            IsReady = true;
+        }
+
+
+    }
 }
 

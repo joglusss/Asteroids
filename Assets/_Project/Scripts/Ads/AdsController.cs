@@ -1,3 +1,5 @@
+using System;
+using System.Threading;
 using Asteroids.Total;
 using Cysharp.Threading.Tasks;
 using Unity.Services.LevelPlay;
@@ -7,7 +9,7 @@ using Zenject;
 
 namespace Asteroids.Ads
 {
-    public class AdsController : IAdsService
+    public class AdsController : IAdsService, IDisposable
     {    
         private bool _isAdsEnabled;
         private LevelPlayRewardedAd _rewardedAd;
@@ -33,6 +35,17 @@ namespace Asteroids.Ads
             _rewardedAd.OnAdRewarded += OnAdRewardedEvent;
         }
 
+        public void Dispose()
+        {
+            LevelPlay.OnInitSuccess -= SdkInitializationCompletedEvent;
+            LevelPlay.OnInitFailed -= SdkInitializationFailedEvent;
+        
+            _rewardedAd.OnAdLoadFailed -= RewardedAdLoadFailedEvent;
+            _rewardedAd.OnAdLoaded -= RewardedAdLoadedEvent;
+            _rewardedAd.OnAdClosed -= OnAdClosedEvent;
+            _rewardedAd.OnAdRewarded -= OnAdRewardedEvent;
+        }
+        
         private void OnAdRewardedEvent(LevelPlayAdInfo info, LevelPlayReward reward) => _rewardedAdStat = AdStat.Ended;
 
         private void OnAdClosedEvent(LevelPlayAdInfo info) => _rewardedAdStat = AdStat.Closed;
@@ -41,7 +54,7 @@ namespace Asteroids.Ads
 
         private void RewardedAdLoadFailedEvent(LevelPlayAdError error) => _rewardedAdStat = AdStat.FailedLoad;
 
-        public async UniTask ShowInterstitialAd()
+        public async UniTask ShowInterstitialAd(CancellationToken token)
         {
             if (!_isAdsEnabled) return;
 
@@ -49,37 +62,37 @@ namespace Asteroids.Ads
         
             _interstitialAd.LoadAd();
             
-            await UniTask.WaitUntil(() => _interstitialAd.IsAdReady());
+            await UniTask.WaitUntil(() => _interstitialAd.IsAdReady(), cancellationToken: token);
             
             _interstitialAd.ShowAd();
         }
 
-        public async UniTask<AdStat> ShowRewardedAd()
+        public async UniTask<AdStat> ShowRewardedAd(CancellationToken token)
         {
             if (!_isAdsEnabled) return AdStat.FailedLoad;
         
              _rewardedAd.LoadAd();
 
-            await UniTask.WaitUntil(() => _rewardedAdStat == AdStat.Loaded || _rewardedAdStat == AdStat.FailedLoad);
+            await UniTask.WaitUntil(() => _rewardedAdStat == AdStat.Loaded || _rewardedAdStat == AdStat.FailedLoad, cancellationToken: token);
 
             if (_rewardedAdStat == AdStat.FailedLoad) return _rewardedAdStat;
             
             _rewardedAd.ShowAd();
 
-            await UniTask.WaitUntil(() => _rewardedAdStat == AdStat.Ended || _rewardedAdStat == AdStat.Closed);
+            await UniTask.WaitUntil(() => _rewardedAdStat == AdStat.Ended || _rewardedAdStat == AdStat.Closed, cancellationToken: token);
             
             return _rewardedAdStat;
         }
         
         private void SdkInitializationFailedEvent(LevelPlayInitError error)
         {
-            Debug.Log($"[LevelPlaySample] Received SdkInitializationFailedEvent with Error: {error}");
+            Debug.Log($"AdsController initialization failed: {error}");
             _isAdsEnabled = false;
         }
 
         private void SdkInitializationCompletedEvent(LevelPlayConfiguration configuration)
         {
-            Debug.Log($"[LevelPlaySample] Received SdkInitializationCompletedEvent with Config: {configuration}");
+            Debug.Log($"AdsController Initialized: {configuration}");
             _isAdsEnabled = true;
             
             _rewardedAd = new LevelPlayRewardedAd(AdConfig.RewardedVideoAdUnitId);

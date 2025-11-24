@@ -7,13 +7,9 @@ namespace Asteroids.Total.Installers
 { 
     public class ConfigInstaller : MonoInstaller
     {
-        public override async void InstallBindings()
+        public override void InstallBindings()
         {
-            var config =  await new RemoteConfig().GetConfig(Container.Resolve<SaveService>());
-            
-            Container.Bind<Config>().FromInstance(config).AsSingle();
-        }
+            Container.BindInterfacesAndSelfTo<RemoteConfig>().AsSingle().NonLazy();
+        } 
     }
 }
-
-
