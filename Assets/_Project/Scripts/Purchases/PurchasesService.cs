@@ -49,7 +49,7 @@ namespace Asteroids.Total
         {
             string id = _enumToString[productID];
 
-            return _saveService.Data.PurchasedProduct.Contains(id);
+            return _saveService.DataState.PurchasedProduct.Contains(id);
         }
 
         public void BuyProduct(ProductID productID) => _purchases.BuyProduct(_enumToString[productID]);
@@ -57,7 +57,7 @@ namespace Asteroids.Total
         private void OnPurchaseSucceeded((bool,string) ctx)
         {
             PurchaseSucceeded.OnNext(true);
-            _saveService.Data.PurchasedProduct.Add(ctx.Item2);
+            _saveService.DataState.PurchasedProduct.Add(ctx.Item2);
             _saveService.ForceSave();
         }
 

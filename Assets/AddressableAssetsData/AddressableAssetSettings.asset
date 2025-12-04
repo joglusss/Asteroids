@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 468a46d0ae32c3544b7d98094e6448a9, type: 3}
   m_Name: AddressableAssetSettings
   m_EditorClassIdentifier: 
-  m_DefaultGroup: e73b96c4ca7027e449d81b57895e8bc2
+  m_DefaultGroup: 0af7776bfef462343a9020b538108c49
   m_currentHash:
     serializedVersion: 2
-    Hash: 6ff1d58ecbac6257426a20ae91699f12
+    Hash: 7a5bf2aca9404e7476adfdb9642d0f0f
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_CatalogRequestsTimeout: 0
@@ -59,7 +59,7 @@ MonoBehaviour:
   m_BuildAddressablesWithPlayerBuild: 0
   m_overridePlayerVersion: '[UnityEditor.PlayerSettings.bundleVersion]'
   m_GroupAssets:
-  - {fileID: 11400000, guid: e2ea6f667526c414baf6dac596ef5e54, type: 2}
+  - {fileID: 11400000, guid: 18f83948e3423ed418a075ff8f5072fa, type: 2}
   m_BuildSettings:
     m_LogResourceManagerExceptions: 1
     m_BundleBuildPath: Temp/com.unity.addressables/AssetBundles
@@ -72,7 +72,7 @@ MonoBehaviour:
       - m_Id: 1d3266d6a7b73a840b7d9112b813119a
         m_Value: '[UnityEngine.AddressableAssets.Addressables.BuildPath]/[BuildTarget]'
       - m_Id: 2172c076dc6d3c5428f00e5a9fbf218a
-        m_Value: <undefined>
+        m_Value: https://downloader.disk.yandex.ru/zip/0c4f516a633d265528f5b0012973b30e1f5d4b8ca1297288d0d3b6cf92aa1100/69307cb1/aUI5U3hmbXdPdUF4RXNwUzdid3ppcXVUVUgwR0doNVcyNmtXeGY4cXdyQzBsNi9qb2RaL2ZXNVIrYVFnaERkN3EvSjZicG1SeU9Kb25UM1ZvWG5EYWc9PTo=?uid=0&filename=Android.zip&disposition=attachment&hash=iB9SxfmwOuAxEspS7bwziquTUH0GGh5W26kWxf8qwrC0l6/jodZ/fW5R%2BaQghDd7q/J6bpmRyOJonT3VoXnDag%3D%3D%3A&limit=0&owner_uid=693379839&tknv=v3
       - m_Id: 74bdc6086e133664d92173aa7a99207d
         m_Value: 'ServerData/[BuildTarget]'
       - m_Id: bf5980883b01589449bf4ec1f252265a

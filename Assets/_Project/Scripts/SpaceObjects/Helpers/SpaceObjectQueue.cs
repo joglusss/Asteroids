@@ -37,7 +37,7 @@ namespace Asteroids.Objects
             return returnSpaceObject;
         }
 
-        public void ReturnObject(SpaceObject spaceObject) 
+        private void ReturnObject(SpaceObject spaceObject) 
         {
             if (_queue.Contains(spaceObject) || spaceObject == null || spaceObject.IsDestroyed())
                 return;
@@ -51,7 +51,7 @@ namespace Asteroids.Objects
         {
             SpaceObject newSpaceObject = Object.Instantiate(_spaceObjectPrefab, _objectsContainer);
 
-            newSpaceObject.Initialize( () => ReturnObject(newSpaceObject));
+            newSpaceObject.OnLifeEnd.Subscribe(x => ReturnObject(x)).AddTo(newSpaceObject);
 
             return newSpaceObject;
         }

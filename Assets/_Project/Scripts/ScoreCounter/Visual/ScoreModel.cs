@@ -6,22 +6,22 @@ namespace Asteroids.Score
 {
 	public class ScoreModel : IInitializable
 	{
-		public SaveData SaveData { get; private set; }
+		public SaveDataState SaveData { get; private set; }
 		
 		[Inject]
 		private void Construct(SaveService saveManager)
 		{
-			SaveData = saveManager.Data;
+			SaveData = saveManager.DataState;
 		}
 				
 		public void Initialize()
 		{
-			SaveData.LastScore = 0;
+			SaveData.LastScore.Value = 0;
 		}
 		
 		public void AddScore(int value) 
 		{
-			SaveData.LastScore += value;
+			SaveData.LastScore.Value += value;
 		} 
 	}
 }

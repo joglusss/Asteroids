@@ -26,7 +26,7 @@ namespace Asteroids.Objects
             [Inject(Id = SpaceObjectID.Asteroid)] SpaceObjectQueue asteroid,
             [Inject(Id = SpaceObjectID.Alien)] SpaceObjectQueue alien)
         {
-            _config = saveService.Data.Config;
+            _config = saveService.DataState.Config;
             _asteroidQueue = asteroid;
             _borderSetting =  borderSetting;
             _alienQueue = alien;

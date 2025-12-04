@@ -36,7 +36,7 @@ namespace Asteroids.Ship
 			_sceneContainerHandler = sceneContainerHandler;
 		
 			_shipAnimationControl = shipAnimationControl;
-			_config = saveService.Data.Config;
+			_config = saveService.DataState.Config;
 
 			Health.Value = _config.MaxHpCount;
 			LaserCount.Value = _config.MaxLaserCount;

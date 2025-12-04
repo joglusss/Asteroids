@@ -8,14 +8,14 @@ namespace Asteroids.Menu
 {
 	public class MenuModel
 	{
-		public SaveData SaveData;
+		public SaveDataState SaveData;
 		
 		private SceneContainer _sceneContainer;
 		
 		[Inject]
 		private void Construct(SaveService saveManager, SceneContainer sceneContainer)
 		{
-			SaveData = saveManager.Data;
+			SaveData = saveManager.DataState;
 			_sceneContainer = sceneContainer;
 		}
 		

@@ -21,7 +21,7 @@ namespace Asteroids.Ship
         [Inject]
         private void Construct(SaveService saveService, BorderSetting borderSetting, ShipStatViewModel viewModel, IInput inputStorage)
         {
-            _config = saveService.Data.Config;
+            _config = saveService.DataState.Config;
             _borderSetting = borderSetting;
             _viewModel = viewModel;
             _inputStorage = inputStorage;

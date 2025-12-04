@@ -22,7 +22,7 @@ namespace Asteroids.Score
 
 		public void Initialize()
 		{
-			LastScore = _scoreModel.SaveData.LastScoreSubscribe.Select(x => $"Score: {x}").ToReadOnlyReactiveProperty();
+			LastScore = _scoreModel.SaveData.LastScore.Select(x => $"Score: {x}").ToReadOnlyReactiveProperty();
 		}
 
 		public void AddScore(int value, Vector2 position)

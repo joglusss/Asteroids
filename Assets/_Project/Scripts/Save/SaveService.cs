@@ -12,8 +12,8 @@ namespace Asteroids.Total
 {
 	public class SaveService : IDisposable, IReadyFlag
 	{
-		public SaveData Data { get;  private set; }
-		public Config Config { get => Data.Config; set => SetConfig(value).Forget(); }
+		public SaveDataState DataState { get; private set; } = new();
+		public Config Config { get => _data.Config; set => SetConfig(value).Forget(); }
 
         public bool IsReady { get; private set; }
 
@@ -22,7 +22,8 @@ namespace Asteroids.Total
 		private IDataSaver _localDataSaver;
 		private IDataSaver _cloudDataSaver;
 		private CancellationTokenSource _cts = new();
-        public bool _isDataLoaded;
+		private SaveData _data;
+        private bool _isDataLoaded;
 
         [Inject]
 		private  async Task Construct(
@@ -40,14 +41,14 @@ namespace Asteroids.Total
 							
 			if(cloudData == null)
             {
-                Data = localData;
+                _data = localData;
 				Debug.Log($"Data was loaded from local");
             }
 			else if (cloudData.DateSaving < localData.DateSaving)
 			{	
 				if(cloudData.DateSaving == default(DateTime))
                 {
-                    Data = localData;
+                    _data = localData;
                     Debug.Log($"Data was loaded from local");
                 }
 				else
@@ -56,7 +57,8 @@ namespace Asteroids.Total
 					SaveChoiceRequest.OnNext(answerSubject);
 
                     IsReady = true;
-					Data = new();
+					_data = new();
+                    DataState.Initialize(_data);
 
                     Debug.Log("SaveService Initialized, Wait user choose");
 
@@ -65,26 +67,29 @@ namespace Asteroids.Total
 
 					if (answer == SaverType.Cloud)
 					{
-						Data.Rewrite(cloudData);
-						Debug.Log($"Data was loaded from cloud");
+						_data.Rewrite(cloudData);
+                        Debug.Log($"Data was loaded from cloud");
 					}	
 					else
 					{
-                        Data.Rewrite(localData);
+                        _data.Rewrite(localData);
 						Debug.Log($"Data was loaded from local");
 					}
 
-					_isDataLoaded = true;
+                    DataState.Initialize(_data);
+                    _isDataLoaded = true;
                     return;
                 }
 			}
 			else
             {
-                Data = cloudData;
-				Debug.Log($"Data was loaded from cloud");
+                _data = cloudData;
+                Debug.Log($"Data was loaded from cloud");
             }
-			
-			IsReady = true;
+
+            DataState.Initialize(_data);
+
+            IsReady = true;
 			_isDataLoaded = true;
             SaveChoiceRequest.OnCompleted();
             Debug.Log("SaveService Initialized");
@@ -93,16 +98,18 @@ namespace Asteroids.Total
 		public void Dispose() 
 		{
 			_cts.Cancel();
-		
-			if(IsReady && _isDataLoaded)
+
+			DataState.Dispose();
+
+            if (IsReady && _isDataLoaded)
 				ForceSave();
 		}
 		
 		public void ForceSave()
         {
-			Data.DateSaving = System.DateTime.Now;
-			_localDataSaver.Save(Data);
-			_cloudDataSaver.Save(Data);
+			_data.DateSaving = System.DateTime.Now;
+			_localDataSaver.Save(_data);
+			_cloudDataSaver.Save(_data);
         }
 
 		private async UniTaskVoid SetConfig(Config config)
@@ -110,7 +117,7 @@ namespace Asteroids.Total
 			await UniTask.WaitWhile(() => !_isDataLoaded, cancellationToken: _cts.Token);
 
 			Debug.Log("SetConfig");
-			Data.Config = config;
+			_data.Config = config;
         }
 	}
 }

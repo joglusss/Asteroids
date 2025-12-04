@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Default Local Group
+  m_Name: Packed Assets
   m_EditorClassIdentifier: 
-  m_GroupName: Default Local Group
-  m_GUID: e73b96c4ca7027e449d81b57895e8bc2
+  m_GroupName: Packed Assets
+  m_GUID: 0af7776bfef462343a9020b538108c49
   m_SerializeEntries:
   - m_GUID: 3b5afc5b6a05cbb429fd6d9c3636d26b
     m_Address: Assets/_Project/Prefabs/SpaceObjectPrefab/Bullet.prefab
@@ -44,5 +44,5 @@ MonoBehaviour:
   m_Settings: {fileID: 11400000, guid: a8078cb498a1cf544be2485fb2d78959, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 41c0825a05456bb4f8e77c9c3454228e, type: 2}
-    - {fileID: 11400000, guid: 3904b13475441b142995575248c52d99, type: 2}
+    - {fileID: 11400000, guid: f89ab5fc0bfe5694f85f5bd44e39352b, type: 2}
+    - {fileID: 11400000, guid: 3e7b582db11880d478e66cd707a7efb0, type: 2}

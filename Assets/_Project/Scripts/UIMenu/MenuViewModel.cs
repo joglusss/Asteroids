@@ -33,10 +33,10 @@ namespace Asteroids.Menu
 		{
 			_purchasesService.PurchaseSucceeded.Subscribe(_ => TransactionStarted.OnNext(false));
 		
-			BestScore = _menuModel.SaveData.BestScoreSubscribe
+			BestScore = _menuModel.SaveData.BestScore
 				.Select(x => $"Best Score:  {x}")
 				.ToReadOnlyReactiveProperty();
-			LastScore = _menuModel.SaveData.LastScoreSubscribe
+			LastScore = _menuModel.SaveData.LastScore
 				.Select(x => $"Last Score:  {x}")
 				.ToReadOnlyReactiveProperty();
 

@@ -19,7 +19,7 @@ namespace Asteroids.Score
 		[Inject(Id = SpaceObjectID.Alien)] SpaceObjectQueue alien,
 		[Inject(Id = SpaceObjectID.SmallAsteroid)] SpaceObjectQueue smallAsteroid)
 		{
-			_config = saveService.Data.Config;
+			_config = saveService.DataState.Config;
 			_scoreViewModel = scoreViewModel;
 			
 			alien.ObjectReturned
