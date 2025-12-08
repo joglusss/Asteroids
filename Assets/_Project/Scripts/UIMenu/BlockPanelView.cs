@@ -1,9 +1,7 @@
 using R3;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.UI;
 using Zenject;
-using TMPro;
 
 namespace Asteroids.Menu
 {

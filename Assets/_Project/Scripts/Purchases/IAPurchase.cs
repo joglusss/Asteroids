@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using R3;
-using Unity.Collections;
-using Unity.Services.Core;
 using UnityEngine;
 using UnityEngine.Purchasing;
 

@@ -3,7 +3,6 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 using UnityEngine.UI;
-using System.Collections.Generic;
 
 namespace Asteroids.Menu
 {

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using R3;
-using UnityEngine;
 
 namespace Asteroids.Total
 {

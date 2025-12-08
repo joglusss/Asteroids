@@ -1,11 +1,7 @@
-using System.Collections;
 using UnityEngine;
-using Asteroids.Visual;
 using Asteroids.Objects;
-using Asteroids.SceneManage;
 using Zenject;
 using Asteroids.Input;
-using Asteroids.Asset;
 
 namespace Asteroids.Ship
 {

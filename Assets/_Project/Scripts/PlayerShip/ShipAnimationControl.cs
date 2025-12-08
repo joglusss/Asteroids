@@ -1,8 +1,4 @@
-using Asteroids.SceneManage;
-using System.Threading.Tasks;
-using System.Collections;
 using UnityEngine;
-using Zenject;
 using Cysharp.Threading.Tasks;
 using System.Threading;
 

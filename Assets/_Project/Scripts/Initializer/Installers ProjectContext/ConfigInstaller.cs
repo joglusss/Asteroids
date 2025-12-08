@@ -1,6 +1,3 @@
-
-using Cysharp.Threading.Tasks;
-using UnityEngine;
 using Zenject;
 
 namespace Asteroids.Total.Installers
@@ -9,7 +6,7 @@ namespace Asteroids.Total.Installers
     {
         public override void InstallBindings()
         {
-            Container.BindInterfacesAndSelfTo<RemoteConfig>().AsSingle().NonLazy();
+           Container.BindInterfacesAndSelfTo<RemoteConfig>().AsSingle().NonLazy(); 
         } 
     }
 }

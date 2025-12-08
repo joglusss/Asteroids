@@ -2,16 +2,9 @@ using UnityEngine;
 using Unity.Services.Core;
 using Unity.Services.Authentication;
 using Unity.Services.CloudSave;
-using Unity.Services.CloudSave.Models;
-using Unity.Services.CloudSave.Models.Data.Player;
-using SaveOptions = Unity.Services.CloudSave.Models.Data.Player.SaveOptions;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using Zenject;
 using System;
-using Firebase.Extensions;
-using System.Threading.Tasks;
-
 namespace Asteroids.Total
 {
     public class CloudDataSaver: IDataSaver
@@ -20,7 +13,10 @@ namespace Asteroids.Total
         
         public async UniTask<SaveData> Load()
         {
-            if(_initialized == false)
+            if (Application.internetReachability == NetworkReachability.NotReachable)
+                return null;
+
+            if (_initialized == false)
             {   
                 try
                 {

@@ -1,5 +1,3 @@
-using System;
-
 namespace Asteroids.Menu
 {
     public enum MenuWindow

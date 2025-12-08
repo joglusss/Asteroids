@@ -1,4 +1,3 @@
-using System;
 using Asteroids.Objects;
 using Newtonsoft.Json;
 

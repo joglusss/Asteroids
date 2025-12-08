@@ -1,5 +1,3 @@
-using System;
-
 namespace Asteroids.Objects
 {
     public class SmallAsteroid : Asteroid

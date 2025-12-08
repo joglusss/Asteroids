@@ -2,7 +2,6 @@ using Asteroids.Total;
 using Cysharp.Threading.Tasks;
 using ObservableCollections;
 using R3;
-using UnityEngine;
 using Zenject;
 
 namespace Asteroids.Menu

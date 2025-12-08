@@ -1,10 +1,8 @@
-using System;
 using System.Collections;
 using Asteroids.Helpers;
 using R3;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UIElements;
 using Zenject;
 
 namespace Asteroids.Score

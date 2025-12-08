@@ -1,5 +1,3 @@
-using System;
-
 namespace Asteroids.Ads
 {   
     public enum AdStat

@@ -1,7 +1,4 @@
 using Asteroids.Menu;
-using Asteroids.SceneManage;
-using System;
-using UnityEngine;
 using Zenject;
 
 namespace Asteroids.Installers

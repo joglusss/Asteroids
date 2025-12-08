@@ -15,9 +15,9 @@ MonoBehaviour:
   m_DefaultGroup: 0af7776bfef462343a9020b538108c49
   m_currentHash:
     serializedVersion: 2
-    Hash: 7a5bf2aca9404e7476adfdb9642d0f0f
+    Hash: a4fc407d89d7131f39be8dd1fd90f207
   m_OptimizeCatalogSize: 0
-  m_BuildRemoteCatalog: 0
+  m_BuildRemoteCatalog: 1
   m_CatalogRequestsTimeout: 0
   m_DisableCatalogUpdateOnStart: 0
   m_InternalIdNamingMode: 0
@@ -50,9 +50,9 @@ MonoBehaviour:
   m_CheckForContentUpdateRestrictionsOption: 0
   m_MonoScriptBundleCustomNaming: 
   m_RemoteCatalogBuildPath:
-    m_Id: 
+    m_Id: 74bdc6086e133664d92173aa7a99207d
   m_RemoteCatalogLoadPath:
-    m_Id: 
+    m_Id: 2172c076dc6d3c5428f00e5a9fbf218a
   m_ContentStateBuildPathProfileVariableName: <default settings path>
   m_CustomContentStateBuildPath: 
   m_ContentStateBuildPath: 
@@ -72,7 +72,7 @@ MonoBehaviour:
       - m_Id: 1d3266d6a7b73a840b7d9112b813119a
         m_Value: '[UnityEngine.AddressableAssets.Addressables.BuildPath]/[BuildTarget]'
       - m_Id: 2172c076dc6d3c5428f00e5a9fbf218a
-        m_Value: https://downloader.disk.yandex.ru/zip/0c4f516a633d265528f5b0012973b30e1f5d4b8ca1297288d0d3b6cf92aa1100/69307cb1/aUI5U3hmbXdPdUF4RXNwUzdid3ppcXVUVUgwR0doNVcyNmtXeGY4cXdyQzBsNi9qb2RaL2ZXNVIrYVFnaERkN3EvSjZicG1SeU9Kb25UM1ZvWG5EYWc9PTo=?uid=0&filename=Android.zip&disposition=attachment&hash=iB9SxfmwOuAxEspS7bwziquTUH0GGh5W26kWxf8qwrC0l6/jodZ/fW5R%2BaQghDd7q/J6bpmRyOJonT3VoXnDag%3D%3D%3A&limit=0&owner_uid=693379839&tknv=v3
+        m_Value: 'https://storage.yandexcloud.net/asteroid/[BuildTarget]'
       - m_Id: 74bdc6086e133664d92173aa7a99207d
         m_Value: 'ServerData/[BuildTarget]'
       - m_Id: bf5980883b01589449bf4ec1f252265a

@@ -1,5 +1,3 @@
-using System;
-
 namespace Asteroids.Total
 { 
     public struct StopGameLogParameters

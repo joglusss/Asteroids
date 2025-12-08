@@ -1,5 +1,4 @@
 using Asteroids.SceneManage;
-using UnityEngine;
 using Zenject;
 
 public class SceneServiceInstaller: MonoInstaller

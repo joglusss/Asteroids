@@ -1,7 +1,5 @@
 using Asteroids.SceneManage;
 using Asteroids.Total;
-using R3;
-using UnityEngine;
 using Zenject;
 
 namespace Asteroids.Menu

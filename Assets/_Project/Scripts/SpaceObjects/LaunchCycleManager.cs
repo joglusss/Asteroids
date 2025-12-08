@@ -1,9 +1,7 @@
 using UnityEngine;
-using System.Collections;
 using Asteroids.Helpers;
 using Zenject;
 using Asteroids.Ship;
-using Asteroids.Asset;
 using Asteroids.Total;
 using Cysharp.Threading.Tasks;
 using System.Threading;

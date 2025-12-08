@@ -1,5 +1,4 @@
 using Asteroids.Total;
-using UnityEngine;
 using Zenject;
 
 namespace Asteroids.Score

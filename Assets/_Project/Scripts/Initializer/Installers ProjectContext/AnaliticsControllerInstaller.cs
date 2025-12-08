@@ -1,4 +1,3 @@
-using System;
 using Asteroids.Analytic;
 using Zenject;
 
