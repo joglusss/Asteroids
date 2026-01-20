@@ -6,7 +6,6 @@ using Unity.Services.LevelPlay;
 using UnityEngine;
 using Zenject;
 
-
 namespace Asteroids.Ads
 {
     public class AdsController : IAdsService, IDisposable
@@ -69,7 +68,7 @@ namespace Asteroids.Ads
 
         public async UniTask<AdStat> ShowRewardedAd(CancellationToken token)
         {
-            if (!_isAdsEnabled) return AdStat.FailedLoad;
+            if (!_isAdsEnabled) return AdStat.Ended;
         
              _rewardedAd.LoadAd();
 

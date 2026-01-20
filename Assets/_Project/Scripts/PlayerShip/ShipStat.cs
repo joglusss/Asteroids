@@ -13,7 +13,6 @@ namespace Asteroids.Ship
 		[SerializeField] private float _immortalityTime;
 
 		private ShipStatViewModel _viewModel;
-		private Coroutine _frameCounter;
 		private Collider2D _collider;
 		private CompositeDisposable _disposables = new CompositeDisposable();
 

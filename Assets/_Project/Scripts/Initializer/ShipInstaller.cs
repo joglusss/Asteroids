@@ -12,7 +12,6 @@ namespace Asteroids.Installers
 		[SerializeField] private ShipStatView _shipStatView;
 		[SerializeField] private ShipStatPreference _shipStatPreference;
 		
-		
 		public override void InstallBindings()
 		{
 			Container.Bind<ShipStatPreference>().FromInstance(_shipStatPreference);

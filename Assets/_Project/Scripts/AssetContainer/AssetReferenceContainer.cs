@@ -1,37 +1,32 @@
-using System;
+using Asteroids.Total.Installers;
+using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 namespace Asteroids.Asset
 {
-    public class AssetReferenceContainer<T> : IDisposable
+    public class AssetReferenceContainer<T> : IReadyFlag
     {
         private T _loadedAsset;
         private AssetReference _assetReference;
-        
+
+        public bool IsReady { get; private set; }
+
         public AssetReferenceContainer(AssetReference assetReference)
         {
             _assetReference = assetReference;
         }
-
-        public void Dispose()
-        {
-            Release();
-        }
         
-        public T LoadSync()
+        public async Task<T> LoadAsync()
         {
             if (_loadedAsset != null)
                 return _loadedAsset;
 
-            var op = _assetReference.LoadAssetAsync<GameObject>();
-            
-            return _loadedAsset = op.WaitForCompletion().GetComponent<T>();
-        }
+            var op = await _assetReference.LoadAssetAsync<GameObject>();
 
-        public void Release()
-        { 
-            _assetReference.ReleaseAsset();
+            IsReady = true;
+            return _loadedAsset = op.GetComponent<T>();
         }
     }
 }

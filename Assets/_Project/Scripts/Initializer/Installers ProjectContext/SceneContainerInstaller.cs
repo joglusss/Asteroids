@@ -11,7 +11,7 @@ namespace Asteroids.Total
 {
     public class SceneContainerInstaller : MonoInstaller
     {
-        [SerializeField] public SceneContainer _sceneContainer;
+        [SerializeField] private SceneContainer _sceneContainer;
 
         public override void InstallBindings()
         {

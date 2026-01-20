@@ -1,3 +1,4 @@
+using DG.Tweening;
 using R3;
 using TMPro;
 using UnityEngine;
@@ -56,7 +57,13 @@ namespace Asteroids.Ship
 		{
 			_adsBtn.gameObject.SetActive(!value);
 			_giveUpBtn.gameObject.SetActive(!value);
-		}
+
+            _adsBtn.transform.localScale = Vector3.zero;
+            _giveUpBtn.transform.localScale = Vector3.zero;
+
+			_adsBtn.transform.DOScale(Vector3.one, 3.0f);
+            _giveUpBtn.transform.DOScale(Vector3.one, 3.0f);
+        }
 	}
 
 }

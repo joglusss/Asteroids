@@ -9,7 +9,6 @@ namespace Asteroids.Installers
 		[SerializeField] private ScoreView _scoreView;
 		[SerializeField] private ScoreCounter _scoreCounter;
 
-
 		public override void InstallBindings()
 		{
 			Container.BindInterfacesAndSelfTo<ScoreModel>().AsSingle();

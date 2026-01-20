@@ -1,5 +1,6 @@
 using Asteroids.Asset;
 using Asteroids.Objects;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using Zenject;
@@ -14,28 +15,26 @@ namespace Asteroids.Installers
         [SerializeField] private AssetReference _alienAddress;
         [SerializeField] private AssetReference _laserAddress;
 
-        private Transform _spaceObjectContainer;
-        
         public override void InstallBindings()
         {
-            _spaceObjectContainer = new GameObject("SpaceObjectContainer").transform;
-        
-            BindSpaceObject(_bulletAddress, SpaceObjectID.Bullet);
-            BindSpaceObject(_asteroidAddress, SpaceObjectID.Asteroid);
-            BindSpaceObject(_smallAsteroidAddress, SpaceObjectID.SmallAsteroid);
-            BindSpaceObject(_alienAddress, SpaceObjectID.Alien);
-            BindSpaceObject(_laserAddress, SpaceObjectID.Laser);
+            BindSpaceObject(_bulletAddress, SpaceObjectID.Bullet).Forget();
+            BindSpaceObject(_asteroidAddress, SpaceObjectID.Asteroid).Forget();
+            BindSpaceObject(_smallAsteroidAddress, SpaceObjectID.SmallAsteroid).Forget();
+            BindSpaceObject(_alienAddress, SpaceObjectID.Alien).Forget();
+            BindSpaceObject(_laserAddress, SpaceObjectID.Laser).Forget();
         }
         
-        private void BindSpaceObject(AssetReference address, SpaceObjectID ID)
+        private async UniTask BindSpaceObject(AssetReference address, SpaceObjectID id)
         { 
             var tempContainer = new AssetReferenceContainer<SpaceObject>(address);
-            Container.Bind<SpaceObjectQueue>()
-                .WithId(ID)
-                .AsCached()
-                .WithArguments(tempContainer.LoadSync(),_spaceObjectContainer);
             Container.BindInterfacesTo<AssetReferenceContainer<SpaceObject>>()
                 .FromInstance(tempContainer);
+
+            var spaceObject = await tempContainer.LoadAsync();
+
+            Container.Bind<SpaceObject>().WithId(id).FromInstance(spaceObject).AsCached();
+
+            Debug.Log($"Load Asset Space Object {id}");
         }
     }
 }

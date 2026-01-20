@@ -29,9 +29,9 @@ namespace Asteroids.Total
             _storeController.OnPurchaseConfirmed += OnPurchaseConfirmHandler;
             _storeController.OnPurchaseFailed += OnPurchaseFailedHandler;
 
-            List<ProductDefinition> initalProductToFetch = purchaseID.Select(x => new ProductDefinition(x, ProductType.NonConsumable)).ToList();
+            List<ProductDefinition> initialProductToFetch = purchaseID.Select(x => new ProductDefinition(x, ProductType.NonConsumable)).ToList();
             
-            _storeController.FetchProducts(initalProductToFetch);
+            _storeController.FetchProducts(initialProductToFetch);
         }
         
         public void Dispose()

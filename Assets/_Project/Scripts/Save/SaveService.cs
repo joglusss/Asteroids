@@ -9,7 +9,7 @@ using Zenject;
 
 namespace Asteroids.Total
 {
-	public class SaveService : IDisposable, IReadyFlag
+	public class SaveService : IInitializable, IDisposable, IReadyFlag
 	{
 		public SaveDataState DataState { get; private set; } = new();
 		public Config Config { get => _data.Config; set => SetConfig(value).Forget(); }
@@ -29,58 +29,61 @@ namespace Asteroids.Total
 		[Inject(Id = SaverType.Local)]IDataSaver localDataSaver, 
 		[Inject(Id = SaverType.Cloud)]IDataSaver cloudDataSaver)
 		{	
-			Debug.Log("Start SaveService Initializing");
-				
 			_localDataSaver = localDataSaver;
 			_cloudDataSaver = cloudDataSaver;
+		}
 
-			var localData = await _localDataSaver.Load();
-			var cloudData = await _cloudDataSaver.Load();
-			
-							
-			if(cloudData == null)
+		public async void Initialize()
+		{
+            Debug.Log("Start SaveService Initializing");
+
+            var localData = await _localDataSaver.Load();
+            var cloudData = await _cloudDataSaver.Load();
+
+
+            if (cloudData == null)
             {
                 _data = localData;
-				Debug.Log($"Data was loaded from local");
+                Debug.Log($"Data was loaded from local");
             }
-			else if (cloudData.DateSaving < localData.DateSaving)
-			{	
-				if(cloudData.DateSaving == default(DateTime))
+            else if (cloudData.DateSaving < localData.DateSaving)
+            {
+                if (cloudData.DateSaving == default(DateTime))
                 {
                     _data = localData;
                     Debug.Log($"Data was loaded from local");
                 }
-				else
+                else
                 {
-					var answerSubject = new Subject<SaverType>();				
-					SaveChoiceRequest.OnNext(answerSubject);
+                    var answerSubject = new Subject<SaverType>();
+                    SaveChoiceRequest.OnNext(answerSubject);
 
                     IsReady = true;
-					_data = new();
+                    _data = new();
                     DataState.Initialize(_data);
 
                     Debug.Log("SaveService Initialized, Wait user choose");
 
                     SaverType answer = await answerSubject.FirstAsync(cancellationToken: _cts.Token);
-					SaveChoiceRequest.OnCompleted();
+                    SaveChoiceRequest.OnCompleted();
 
-					if (answer == SaverType.Cloud)
-					{
-						_data.Rewrite(cloudData);
+                    if (answer == SaverType.Cloud)
+                    {
+                        _data.Rewrite(cloudData);
                         Debug.Log($"Data was loaded from cloud");
-					}	
-					else
-					{
+                    }
+                    else
+                    {
                         _data.Rewrite(localData);
-						Debug.Log($"Data was loaded from local");
-					}
+                        Debug.Log($"Data was loaded from local");
+                    }
 
                     DataState.Initialize(_data);
                     _isDataLoaded = true;
                     return;
                 }
-			}
-			else
+            }
+            else
             {
                 _data = cloudData;
                 Debug.Log($"Data was loaded from cloud");
@@ -89,10 +92,10 @@ namespace Asteroids.Total
             DataState.Initialize(_data);
 
             IsReady = true;
-			_isDataLoaded = true;
+            _isDataLoaded = true;
             SaveChoiceRequest.OnCompleted();
             Debug.Log("SaveService Initialized");
-		}
+        }
 
 		public void Dispose() 
 		{

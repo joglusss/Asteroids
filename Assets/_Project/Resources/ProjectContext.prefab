@@ -1,5 +1,79 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &259937551677168391
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 545530752795085778}
+  - component: {fileID: 1655816334343228757}
+  m_Layer: 0
+  m_Name: SpaceObjectInstaller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &545530752795085778
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 259937551677168391}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8081446118722276449}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1655816334343228757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 259937551677168391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e96dd9a55e59604ca7ef3573e02cda2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _bulletAddress:
+    m_AssetGUID: 3b5afc5b6a05cbb429fd6d9c3636d26b
+    m_SubObjectName: 
+    m_SubObjectGUID: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  _asteroidAddress:
+    m_AssetGUID: 5e9c2894da350eb4c9f13ec35095f3ad
+    m_SubObjectName: 
+    m_SubObjectGUID: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  _smallAsteroidAddress:
+    m_AssetGUID: 76723c8e0447dc4458af676c21b4efff
+    m_SubObjectName: 
+    m_SubObjectGUID: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  _alienAddress:
+    m_AssetGUID: 81057fc3c741b434b8ca44cf3afe1ae2
+    m_SubObjectName: 
+    m_SubObjectGUID: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  _laserAddress:
+    m_AssetGUID: ec933ab2f97963442a3dca4a3dd57b5d
+    m_SubObjectName: 
+    m_SubObjectGUID: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
 --- !u!1 &324778325733551557
 GameObject:
   m_ObjectHideFlags: 0
@@ -162,12 +236,14 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 545530752795085778}
   - {fileID: 7737198108793815546}
   - {fileID: 180187319509566812}
   - {fileID: 6749541030690207822}
   - {fileID: 826957630416253234}
   - {fileID: 3981866525071359613}
   - {fileID: 8242942147686355807}
+  - {fileID: 7756040454716151960}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8463338639764130396
@@ -190,6 +266,8 @@ MonoBehaviour:
   - {fileID: 516807569197086703}
   - {fileID: 5053552529274038561}
   - {fileID: 7719054207234843871}
+  - {fileID: 1655816334343228757}
+  - {fileID: 6032068047391090604}
   _installerPrefabs: []
   _parentNewObjectsUnderContext: 1
   _editorReflectionBakingCoverageMode: 0
@@ -337,3 +415,65 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sceneContainer: {fileID: 11400000, guid: e82cc2936dc76d8489c0ca68bbc7f9d2, type: 2}
+--- !u!1 &8849774953813319094
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7756040454716151960}
+  - component: {fileID: 6032068047391090604}
+  m_Layer: 0
+  m_Name: EffectInstaller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7756040454716151960
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8849774953813319094}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8081446118722276449}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6032068047391090604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8849774953813319094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bd746539c71c46469968df56c5d0df6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _shootSpark:
+    m_AssetGUID: 9b94acd83de9e0f4b9feb46f01fb37dd
+    m_SubObjectName: 
+    m_SubObjectGUID: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  _explode:
+    m_AssetGUID: 10702367512a1a84a880dec8ce6a3d76
+    m_SubObjectName: 
+    m_SubObjectGUID: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  _smallExplode:
+    m_AssetGUID: f5b8ff09f1d71424cb873fc34dbd2600
+    m_SubObjectName: 
+    m_SubObjectGUID: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0

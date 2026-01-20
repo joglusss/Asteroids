@@ -99,6 +99,8 @@ GameObject:
   - component: {fileID: 7710362874925532662}
   - component: {fileID: 3258883915110224196}
   - component: {fileID: 3575450431718996818}
+  - component: {fileID: 9065398715176173370}
+  - component: {fileID: 8987896185090880926}
   m_Layer: 5
   m_Name: Alien
   m_TagString: Untagged
@@ -197,6 +199,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20edbca434c997841828c8c4fc1a1bbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 10
   <SpaceObjectType>k__BackingField: 1
-  _angularSpeed: 100
+--- !u!114 &9065398715176173370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4911351516887001622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 717a02054ef2699498e6bd4234fd7995, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _containerSource: 2
+--- !u!114 &8987896185090880926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4911351516887001622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52714fae5f7e57749997f2fb9a44a144, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _onLaunch: 0
+  _onDestroy: 1

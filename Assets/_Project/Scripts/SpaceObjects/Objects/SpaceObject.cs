@@ -3,6 +3,7 @@ using Asteroids.Total;
 using R3;
 using UnityEngine;
 using Zenject;
+using Asteroids.Effect;
 
 namespace Asteroids.Objects
 {
@@ -10,9 +11,12 @@ namespace Asteroids.Objects
     public abstract class SpaceObject : MonoBehaviour
     {
         public Subject<SpaceObject> OnLifeEnd = new();
+        public ReactiveCommand OnLaunch = new();
+        public ReactiveCommand OnDestroy = new();
         protected LaunchCycleManager ObjectManager { get; private set; }
         protected Config Config { get; private set; }
         protected bool IsPaused { get; private set; }
+
 
         private ShipStatViewModel _shipStatVM;
 
@@ -22,7 +26,7 @@ namespace Asteroids.Objects
         }
 
         [Inject]
-        public void Construct(LaunchCycleManager objectManager, ShipStatViewModel shipStatVM, SaveService saveService)
+        public void Construct(LaunchCycleManager objectManager, ShipStatViewModel shipStatVM, SaveService saveService, EffectPlayer effectPlayer)
         { 
             ObjectManager = objectManager;
             Config = saveService.DataState.Config;

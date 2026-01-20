@@ -15,6 +15,11 @@ MonoBehaviour:
   m_GroupName: Packed Assets
   m_GUID: 0af7776bfef462343a9020b538108c49
   m_SerializeEntries:
+  - m_GUID: 10702367512a1a84a880dec8ce6a3d76
+    m_Address: Assets/_Project/Prefabs/Effects/Explode.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3b5afc5b6a05cbb429fd6d9c3636d26b
     m_Address: Assets/_Project/Prefabs/SpaceObjectPrefab/Bullet.prefab
     m_ReadOnly: 0
@@ -35,8 +40,18 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9b94acd83de9e0f4b9feb46f01fb37dd
+    m_Address: Assets/_Project/Prefabs/Effects/ShotSpark.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ec933ab2f97963442a3dca4a3dd57b5d
     m_Address: Assets/_Project/Prefabs/SpaceObjectPrefab/Laser.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f5b8ff09f1d71424cb873fc34dbd2600
+    m_Address: Assets/_Project/Prefabs/Effects/SmallExplode.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

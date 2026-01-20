@@ -17,8 +17,6 @@ namespace Asteroids.Ship
 
         private void Start()
         { 
-            
-
             _animator = GetComponent<Animator>();
             _shipImage = GetComponent<SpriteRenderer>();
         }

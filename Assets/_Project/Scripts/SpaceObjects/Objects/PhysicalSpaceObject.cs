@@ -6,9 +6,8 @@ namespace Asteroids.Objects
     [RequireComponent(typeof(Rigidbody2D))]
     public abstract class PhysicalSpaceObject : SpaceObject, ISpaceInteract
     {
-        protected virtual float _speed => Config.AsteroidsSpeed;
+        protected virtual float Speed => Config.AsteroidsSpeed;
         protected Rigidbody2D _rigidbody;
-
 
         private Vector3 _saveVelocity;
 
@@ -29,7 +28,7 @@ namespace Asteroids.Objects
         {
             _rigidbody.linearVelocity = Vector2.zero;
             _rigidbody.transform.position = from;
-            _rigidbody.AddForce(direction.normalized * _speed, ForceMode2D.Impulse);
+            _rigidbody.AddForce(direction.normalized * Speed, ForceMode2D.Impulse);
         }
 
         protected override void OnPause(bool value)

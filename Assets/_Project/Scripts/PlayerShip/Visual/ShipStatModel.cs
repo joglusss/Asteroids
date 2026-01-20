@@ -139,8 +139,6 @@ namespace Asteroids.Ship
 			Immortality.Value = true;
 			_shipAnimationControl.SwitchBlinking(true);
 
-			float timeCounter = time;
-
 			while (time > 0.0f)
 			{
 				await UniTask.Delay(1000, cancellationToken: token).SuppressCancellationThrow();

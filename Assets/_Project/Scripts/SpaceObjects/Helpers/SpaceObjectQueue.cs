@@ -51,6 +51,7 @@ namespace Asteroids.Objects
         {
             SpaceObject newSpaceObject = Object.Instantiate(_spaceObjectPrefab, _objectsContainer);
 
+            newSpaceObject.Initialize();
             newSpaceObject.OnLifeEnd.Subscribe(x => ReturnObject(x)).AddTo(newSpaceObject);
 
             return newSpaceObject;

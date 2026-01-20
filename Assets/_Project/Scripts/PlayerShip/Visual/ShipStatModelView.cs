@@ -17,6 +17,8 @@ namespace Asteroids.Ship
 		public ReadOnlyReactiveProperty<bool> Immortality { get; private set; }
 		public ReadOnlyReactiveProperty<bool> LifeStatus { get; private set; }
 
+
+
 		private ShipStatModel _model;
 		private CompositeDisposable _compositeDisposable = new CompositeDisposable();
 

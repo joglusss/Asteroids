@@ -47,7 +47,7 @@ namespace Asteroids.Total
 
         public void Dispose()
         {
-            _compositeDisposable.Dispose();
+            _compositeDisposable?.Dispose();
         }
     }
 }

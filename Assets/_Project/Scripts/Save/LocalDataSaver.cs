@@ -3,7 +3,6 @@ using UnityEngine;
 using Newtonsoft.Json;
 using Cysharp.Threading.Tasks;
 
-
 namespace Asteroids.Total 
 {
 	public class LocalDataSaver : IDataSaver
