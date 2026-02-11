@@ -5,13 +5,13 @@ using Zenject;
 
 namespace Asteroids.Menu
 {
-    public class BlockPanelView : MonoBehaviour
+    public class BlockPanelView : MonoBehaviour, IInitializable
     {
         [SerializeField] private CanvasGroup _panel;
         
         [Inject] private MenuViewModel _menuViewModel;
 
-        private void Start()
+        public void Initialize()
         {
             _menuViewModel.TransactionStarted.Subscribe(Show).AddTo(this);
             Show(false);

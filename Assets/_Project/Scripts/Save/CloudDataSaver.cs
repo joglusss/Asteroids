@@ -42,11 +42,11 @@ namespace Asteroids.Total
             return null;
         }
         
-		public void Save(SaveData data)
+		public async UniTask Save(SaveData data)
         {
-            Dictionary<string, object> save = new Dictionary<string, object> {{"Data", data}};   
-            CloudSaveService.Instance.Data.Player.SaveAsync(save);
-            
+            Dictionary<string, object> save = new Dictionary<string, object> {{"Data", data}};
+            await CloudSaveService.Instance.Data.Player.SaveAsync(save).AsUniTask();
+
             Debug.Log("Save CloudData");
         }
     }

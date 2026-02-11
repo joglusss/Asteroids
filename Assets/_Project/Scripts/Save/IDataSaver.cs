@@ -4,7 +4,7 @@ namespace Asteroids.Total
 {
     public interface IDataSaver
     {
-        public void Save(SaveData data);
+        public UniTask Save(SaveData data);
         public UniTask<SaveData> Load();
     }
 }

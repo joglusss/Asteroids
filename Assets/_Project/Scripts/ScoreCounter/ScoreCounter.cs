@@ -1,13 +1,16 @@
-using UnityEngine;
 using Asteroids.Objects;
-using Zenject;
-using R3;
 using Asteroids.Total;
+using Cysharp.Threading.Tasks;
+using R3;
+using System;
+using UnityEngine;
+using Zenject;
 
 namespace Asteroids.Score
 {
-	public class ScoreCounter: MonoBehaviour
+	public class ScoreCounter : IDisposable
 	{
+		private CompositeDisposable _disposable = new();
 		private ScoreViewModel _scoreViewModel;
 		private Config _config;
 
@@ -24,16 +27,21 @@ namespace Asteroids.Score
 			
 			alien.ObjectReturned
 				.Subscribe(AlienDestroy)
-				.AddTo(this);
+				.AddTo(_disposable);
 			asteroid.ObjectReturned
 				.Subscribe(AsteroidDestroy)
-				.AddTo(this);
+				.AddTo(_disposable);
 			smallAsteroid.ObjectReturned
 				.Subscribe(SmallAsteroidDestroy)
-				.AddTo(this);
+				.AddTo(_disposable);
 		}
 
-		private void CallMethods(int value, SpaceObject a)
+        public void Dispose()
+        {
+            _disposable.Dispose();
+        }
+
+        private void CallMethods(int value, SpaceObject a)
 		{
 			_scoreViewModel.AddScore(value, (Vector2)a.transform.position);
 		}
@@ -43,5 +51,5 @@ namespace Asteroids.Score
 		private void SmallAsteroidDestroy(SpaceObject a) => CallMethods(_config.SmallAsteroidCost,a);
 
 		private void AlienDestroy(SpaceObject a) => CallMethods(_config.AlienCost, a);
-	}
+    }
 }

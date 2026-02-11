@@ -7,7 +7,7 @@ using Zenject;
 
 namespace Asteroids.Menu
 {
-    public class PurchaseItemView : MonoBehaviour
+    public class PurchaseItemView : MonoBehaviour, IInitializable
     {
         [SerializeField] private ProductID _id;
         [SerializeField] private Button _button;
@@ -15,7 +15,7 @@ namespace Asteroids.Menu
         
         [Inject] private MenuViewModel _menuViewModel;
         
-        public void Start()
+        public void Initialize()
         {
             CheckBoughtStatus();
             _button.OnClickAsObservable().Subscribe(_ => SendRequest()).AddTo(this);

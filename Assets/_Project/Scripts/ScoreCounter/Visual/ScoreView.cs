@@ -7,7 +7,7 @@ using Zenject;
 
 namespace Asteroids.Score
 { 
-	public class ScoreView : MonoBehaviour
+	public class ScoreView : MonoBehaviour, IInitializable
 	{
 		[SerializeField] private TMP_Text _scoreTextPrefab;
 		[SerializeField] private float _lifeTime;
@@ -21,12 +21,12 @@ namespace Asteroids.Score
 		[Inject]
 		private void Construct(ScoreViewModel scoreViewModel)
 		{
-			_scoreViewModel = scoreViewModel;
-		}
+            _scoreViewModel = scoreViewModel;
+        }
 
-		private void Start()
+		public void Initialize()
 		{
-			_camera = Camera.main;
+            _camera = Camera.main;
 			_scoreTextQueue = new(_scoreTextPrefab, transform);
 			_waitForSeconds = new WaitForSeconds(_lifeTime);
 

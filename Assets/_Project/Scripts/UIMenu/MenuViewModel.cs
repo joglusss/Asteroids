@@ -55,6 +55,6 @@ namespace Asteroids.Menu
 
 		public void StartGame() => _menuModel.StartGame();
 
-		public void ExitGame() => _menuModel.ExitGame();
+		public void ExitGame() => _menuModel.ExitGame().Forget();
 	}
 }

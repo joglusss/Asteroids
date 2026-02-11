@@ -27,16 +27,16 @@ namespace Asteroids.Total
 			return UniTask.FromResult(data);
 		}
 
-		public void Save(SaveData data)
+		public async UniTask Save(SaveData data)
 		{
 			var settings = new JsonSerializerSettings();
 			settings.Converters.Add(new JsonReactivePropertyConvertor<int>());
 			settings.Converters.Add(new JsonObservableHashSetConverter<string>());
 			
 			string json = JsonConvert.SerializeObject(data, Formatting.Indented, settings);
-			
-			File.WriteAllText(SavePath, json);
-			
+
+			await File.WriteAllTextAsync(SavePath, json).AsUniTask();
+
 			Debug.Log("Save LocalData");
 		}
 	}

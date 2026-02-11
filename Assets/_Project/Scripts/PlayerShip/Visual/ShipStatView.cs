@@ -7,7 +7,7 @@ using Zenject;
 
 namespace Asteroids.Ship
 {
-	public class ShipStatView : MonoBehaviour
+	public class ShipStatView : MonoBehaviour, IInitializable
 	{
 		[SerializeField] private TMP_Text _healthText;
 		[SerializeField] private TMP_Text _coordinatesText;
@@ -26,7 +26,7 @@ namespace Asteroids.Ship
 			_viewModel = viewModel;
 		}
 
-		public void Start()
+		public void Initialize()
 		{
 			_viewModel.Health.Subscribe(ChangeHealth).AddTo(this);
 			_viewModel.Coordinates.Subscribe(ChangeCoordinates).AddTo(this);

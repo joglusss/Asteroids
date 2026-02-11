@@ -6,7 +6,7 @@ using Zenject;
 
 namespace Asteroids.Menu
 {
-	public class MenuView : MonoBehaviour
+	public class MenuView : MonoBehaviour, IInitializable
 	{
 		[SerializeField] private CanvasGroup _panel;
 		[SerializeField] private Button _startGame;
@@ -24,7 +24,7 @@ namespace Asteroids.Menu
 			_viewModel = menuViewModel;
 		}
 
-		private void Start()
+		public void Initialize()
 		{
 			_startGame.OnClickAsObservable()
 				.Subscribe(e => GoToGame())

@@ -25,8 +25,10 @@
     "AlienAngularSpeed": 50.0,
     "BulletSpeed": 15.0
   },
-  "DateSaving": "2026-01-20T19:17:30.8336217+05:00",
-  "BestScore": 580,
-  "LastScore": 580,
-  "PurchasedProduct": []
+  "DateSaving": "2026-02-11T19:23:10.8199225+05:00",
+  "BestScore": 345,
+  "LastScore": 345,
+  "PurchasedProduct": [
+    "AdsDisable"
+  ]
 }

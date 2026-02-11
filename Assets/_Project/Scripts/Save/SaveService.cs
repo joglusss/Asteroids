@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using Zenject;
+using static UnityEngine.Rendering.DebugUI.Table;
 
 namespace Asteroids.Total
 {
@@ -23,9 +24,10 @@ namespace Asteroids.Total
 		private CancellationTokenSource _cts = new();
 		private SaveData _data;
         private bool _isDataLoaded;
+        private bool _isSaving;
 
         [Inject]
-		private  async Task Construct(
+		private void Construct(
 		[Inject(Id = SaverType.Local)]IDataSaver localDataSaver, 
 		[Inject(Id = SaverType.Cloud)]IDataSaver cloudDataSaver)
 		{	
@@ -33,13 +35,17 @@ namespace Asteroids.Total
 			_cloudDataSaver = cloudDataSaver;
 		}
 
-		public async void Initialize()
+		public void Initialize()
 		{
+            SaveLoading().Forget();
+        }
+
+        private async UniTask SaveLoading()
+        {
             Debug.Log("Start SaveService Initializing");
 
             var localData = await _localDataSaver.Load();
             var cloudData = await _cloudDataSaver.Load();
-
 
             if (cloudData == null)
             {
@@ -64,7 +70,7 @@ namespace Asteroids.Total
 
                     Debug.Log("SaveService Initialized, Wait user choose");
 
-                    SaverType answer = await answerSubject.FirstAsync(cancellationToken: _cts.Token);
+                    SaverType answer = await answerSubject.FirstAsync(cancellationToken: _cts.Token).AsUniTask();
                     SaveChoiceRequest.OnCompleted();
 
                     if (answer == SaverType.Cloud)
@@ -104,14 +110,30 @@ namespace Asteroids.Total
 			DataState.Dispose();
 
             if (IsReady && _isDataLoaded)
-				ForceSave();
+                ForceSave().Forget();
 		}
 		
-		public void ForceSave()
+		public async UniTask ForceSave()
         {
-			_data.DateSaving = System.DateTime.Now;
-			_localDataSaver.Save(_data);
-			_cloudDataSaver.Save(_data);
+            if (_isSaving)
+                return;
+
+            _isSaving = true;
+
+            DateTime now = DateTime.Now;
+            _data.DateSaving = new DateTime(
+                now.Year,
+                now.Month,
+                now.Day,
+                now.Hour,
+                now.Minute,
+                0
+            ); 
+
+            await _localDataSaver.Save(_data);
+            await _cloudDataSaver.Save(_data);
+
+            _isSaving = false;
         }
 
 		private async UniTaskVoid SetConfig(Config config)

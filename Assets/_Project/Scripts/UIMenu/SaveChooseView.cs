@@ -7,7 +7,7 @@ using Zenject;
 
 namespace Asteroids.Menu
 { 
-    public class SaveChooseView : MonoBehaviour
+    public class SaveChooseView : MonoBehaviour, IInitializable
     {
         [SerializeField] private CanvasGroup _panel;
         [SerializeField] private Button _cloudBtn;
@@ -17,7 +17,7 @@ namespace Asteroids.Menu
 
         private Subject<SaverType> _answer = new();
 
-        private void Start()
+        public void Initialize()
         {
             Show(false);
 

@@ -20,7 +20,7 @@ namespace Asteroids.Ship
             [Inject(Id = SpaceObjectID.Laser)] SpaceObjectQueue laser
 			)
 		{
-			_viewModel = viewModel;
+            _viewModel = viewModel;
 			_inputStorage = inputStorage;
 			_bullet = bullet;
 			_laser = laser;
@@ -34,8 +34,7 @@ namespace Asteroids.Ship
 
 		public void Initialize()
 		{
-
-			_inputStorage.LaserShotEvent += ShootLaser;
+            _inputStorage.LaserShotEvent += ShootLaser;
 			_inputStorage.BulletShotEvent += ShootBullet;
 		}
 		

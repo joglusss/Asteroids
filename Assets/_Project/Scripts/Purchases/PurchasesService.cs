@@ -57,7 +57,7 @@ namespace Asteroids.Total
         {
             PurchaseSucceeded.OnNext(true);
             _saveService.DataState.PurchasedProduct.Add(ctx.Item2);
-            _saveService.ForceSave();
+            _saveService.ForceSave().Forget();
         }
 
         private void OnPurchaseFailed(string reason)
