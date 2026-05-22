@@ -6,7 +6,7 @@ using R3;
 namespace Asteroids.Objects
 {
     [System.Serializable]
-    public class SpaceObjectQueue
+    public class SpaceObjectPool
     {
         private readonly SpaceObject _spaceObjectPrefab;
         private readonly Transform _objectsContainer;
@@ -15,7 +15,7 @@ namespace Asteroids.Objects
         public readonly ReactiveCommand<SpaceObject> ObjectReturned = new();
         public readonly ReactiveCommand<SpaceObject> ObjectDrawn = new();
 
-        public SpaceObjectQueue(SpaceObject prefab, Transform objectsContainer)
+        public SpaceObjectPool(SpaceObject prefab, Transform objectsContainer)
         {
             _spaceObjectPrefab = prefab;
             _objectsContainer = objectsContainer;

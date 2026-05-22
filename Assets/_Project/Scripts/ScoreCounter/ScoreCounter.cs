@@ -18,9 +18,9 @@ namespace Asteroids.Score
 		private void Construct(
 		ScoreViewModel scoreViewModel,
 		SaveService saveService,
-		[Inject(Id = SpaceObjectID.Asteroid)] SpaceObjectQueue asteroid,
-		[Inject(Id = SpaceObjectID.Alien)] SpaceObjectQueue alien,
-		[Inject(Id = SpaceObjectID.SmallAsteroid)] SpaceObjectQueue smallAsteroid)
+		[Inject(Id = SpaceObjectID.Asteroid)] SpaceObjectPool asteroid,
+		[Inject(Id = SpaceObjectID.Alien)] SpaceObjectPool alien,
+		[Inject(Id = SpaceObjectID.SmallAsteroid)] SpaceObjectPool smallAsteroid)
 		{
 			_config = saveService.DataState.Config;
 			_scoreViewModel = scoreViewModel;

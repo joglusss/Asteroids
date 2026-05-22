@@ -13,7 +13,6 @@ namespace Asteroids.Objects
         public Subject<SpaceObject> OnLifeEnd = new();
         public ReactiveCommand OnLaunch = new();
         public ReactiveCommand OnDestroy = new();
-        protected LaunchCycleManager ObjectManager { get; private set; }
         protected Config Config { get; private set; }
         protected bool IsPaused { get; private set; }
 
@@ -26,9 +25,8 @@ namespace Asteroids.Objects
         }
 
         [Inject]
-        public void Construct(LaunchCycleManager objectManager, ShipStatViewModel shipStatVM, SaveService saveService, EffectPlayer effectPlayer)
+        public void Construct(ShipStatViewModel shipStatVM, SaveService saveService)
         { 
-            ObjectManager = objectManager;
             Config = saveService.DataState.Config;
             _shipStatVM = shipStatVM;
         }

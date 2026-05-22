@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace Asteroids.Helpers
 {
-    public class ScoreTextQueue
+    public class ScoreTextPool
     {
         private readonly TMP_Text _objectPrefab;
         private readonly Transform _scoreTextContainer;
         private readonly Queue<TMP_Text> _queue;
 
-        public ScoreTextQueue(TMP_Text objectPrefab, Transform scoreTextContainer)
+        public ScoreTextPool(TMP_Text objectPrefab, Transform scoreTextContainer)
         {
             _objectPrefab = objectPrefab;
             _scoreTextContainer = scoreTextContainer;

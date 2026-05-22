@@ -9,15 +9,15 @@ namespace Asteroids.Ship
 	{
 		private ShipStatViewModel _viewModel;
 		private IInput _inputStorage;
-		private SpaceObjectQueue _bullet;
-		private SpaceObjectQueue _laser;
+		private SpaceObjectPool _bullet;
+		private SpaceObjectPool _laser;
 
 		[Inject]
 		private void Construct(
 			ShipStatViewModel viewModel, 
 			IInput inputStorage,
-			[Inject(Id = SpaceObjectID.Bullet)] SpaceObjectQueue bullet,
-            [Inject(Id = SpaceObjectID.Laser)] SpaceObjectQueue laser
+			[Inject(Id = SpaceObjectID.Bullet)] SpaceObjectPool bullet,
+            [Inject(Id = SpaceObjectID.Laser)] SpaceObjectPool laser
 			)
 		{
             _viewModel = viewModel;

@@ -15,7 +15,7 @@ namespace Asteroids.Score
 
 		private ScoreViewModel _scoreViewModel;
 		private Camera _camera;
-		private ScoreTextQueue _scoreTextQueue;
+		private ScoreTextPool _scoreTextPool;
 		private WaitForSeconds _waitForSeconds;
 		
 		[Inject]
@@ -27,7 +27,7 @@ namespace Asteroids.Score
 		public void Initialize()
 		{
             _camera = Camera.main;
-			_scoreTextQueue = new(_scoreTextPrefab, transform);
+			_scoreTextPool = new(_scoreTextPrefab, transform);
 			_waitForSeconds = new WaitForSeconds(_lifeTime);
 
 			_scoreViewModel.LastScore.Subscribe(UpdateLastScore).AddTo(this);
@@ -40,13 +40,13 @@ namespace Asteroids.Score
 		
 		private IEnumerator Timer(string value, Vector2 position)
 		{
-			TMP_Text scoreText = _scoreTextQueue.DrawObject();
+			TMP_Text scoreText = _scoreTextPool.DrawObject();
 			scoreText.text = value;
 			scoreText.transform.position = _camera.WorldToScreenPoint(position);
 
 			yield return _waitForSeconds;
 
-			_scoreTextQueue.ReturnObject(scoreText);
+			_scoreTextPool.ReturnObject(scoreText);
 		}
 	}
 }

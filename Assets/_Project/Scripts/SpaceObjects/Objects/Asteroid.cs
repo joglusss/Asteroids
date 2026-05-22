@@ -12,7 +12,7 @@ namespace Asteroids.Objects
     
         [SerializeField] private bool _isSeparable;
 
-        [Inject(Id = SpaceObjectID.SmallAsteroid)] private SpaceObjectQueue _smallQueue;
+        [Inject(Id = SpaceObjectID.SmallAsteroid)] private SpaceObjectPool _smallPool;
         [Inject] private BorderSetting _borderSetting;
 
         private void Update()
@@ -24,7 +24,7 @@ namespace Asteroids.Objects
         {
             if (_isSeparable)
                 for (int i = 0; i < 3; i++)
-                    _smallQueue.DrawObject().Launch(_rigidbody.position, new Vector2(UnityEngine.Random.Range(-1.0f, 1.0f), UnityEngine.Random.Range(-1.0f, 1.0f)));
+                    _smallPool.DrawObject().Launch(_rigidbody.position, new Vector2(UnityEngine.Random.Range(-1.0f, 1.0f), UnityEngine.Random.Range(-1.0f, 1.0f)));
 
             OnDestroy.Execute(Unit.Default);
 

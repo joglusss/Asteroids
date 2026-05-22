@@ -15,11 +15,11 @@ namespace Asteroids.Analytic
         [Inject]
         private void Construct(
             IAnalyticsService analytic,
-            [Inject(Id = SpaceObjectID.Asteroid)] SpaceObjectQueue asteroid,
-            [Inject(Id = SpaceObjectID.Alien)] SpaceObjectQueue alien,
-            [Inject(Id = SpaceObjectID.SmallAsteroid)] SpaceObjectQueue smallAsteroid,
-            [Inject(Id = SpaceObjectID.Bullet)] SpaceObjectQueue bullet,
-            [Inject(Id = SpaceObjectID.Laser)] SpaceObjectQueue laser
+            [Inject(Id = SpaceObjectID.Asteroid)] SpaceObjectPool asteroid,
+            [Inject(Id = SpaceObjectID.Alien)] SpaceObjectPool alien,
+            [Inject(Id = SpaceObjectID.SmallAsteroid)] SpaceObjectPool smallAsteroid,
+            [Inject(Id = SpaceObjectID.Bullet)] SpaceObjectPool bullet,
+            [Inject(Id = SpaceObjectID.Laser)] SpaceObjectPool laser
         )
         { 
             _analytic = analytic;

@@ -7,28 +7,26 @@ namespace Asteroids.Installers
 { 
     public class LaunchCycleManagerInstaller : MonoInstaller
     {
-        [SerializeField] private LaunchCycleManager _objectManager;
-
         private Transform _spaceObjectContainer;
 
         public override void InstallBindings()
         {
             _spaceObjectContainer = new GameObject("SpaceObjectContainer").transform;
 
-            BindSpaceObjectQueue(SpaceObjectID.Bullet).Forget();
-            BindSpaceObjectQueue(SpaceObjectID.Asteroid).Forget();
-            BindSpaceObjectQueue(SpaceObjectID.SmallAsteroid).Forget();
-            BindSpaceObjectQueue(SpaceObjectID.Alien).Forget();
-            BindSpaceObjectQueue(SpaceObjectID.Laser).Forget();
+            BindSpaceObjectQueue(SpaceObjectID.Bullet);
+            BindSpaceObjectQueue(SpaceObjectID.Asteroid);
+            BindSpaceObjectQueue(SpaceObjectID.SmallAsteroid);
+            BindSpaceObjectQueue(SpaceObjectID.Alien);
+            BindSpaceObjectQueue(SpaceObjectID.Laser);
 
-            Container.BindInterfacesAndSelfTo<LaunchCycleManager>().FromInstance(_objectManager).AsSingle();
+            Container.BindInterfacesAndSelfTo<LaunchCycleManager>().AsSingle();
         }
 
-        private async UniTask BindSpaceObjectQueue(SpaceObjectID id)
+        private void BindSpaceObjectQueue(SpaceObjectID id)
         {
             var gameObject = Container.ResolveId<SpaceObject>(id);
 
-            Container.Bind<SpaceObjectQueue>()
+            Container.Bind<SpaceObjectPool>()
                 .WithId(id)
                 .AsCached()
                 .WithArguments(gameObject, _spaceObjectContainer);
